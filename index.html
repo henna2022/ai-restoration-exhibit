@@ -934,7 +934,64 @@ body {
   color:var(--text-medium);
   font-weight:600;
 }
-</style>
+/* ─── 반응형 (태블릿: 768px ~ 1024px) ─── */
+@media (min-width:768px) and (max-width:1024px) {
+  .main-content { max-width:100%; padding:0 24px 60px; }
+  .section-card { padding:28px 28px; }
+  .sumaknew-workspace { grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  .hero { padding:40px 20px 24px; }
+  .hero h1 { font-size:clamp(24px,4vw,38px); }
+  .hero-desc { font-size:16px; }
+  .progress-section { max-width:100%; padding:0 20px; }
+  .section-title { font-size:20px; }
+  .quiz-options { grid-template-columns:1fr 1fr; gap:10px; }
+  .quiz-option { font-size:15px; padding:12px 14px; }
+  .pattern-cell { width:56px; height:56px; }
+  .pattern-cell svg { width:38px; height:38px; }
+  .color-btn { width:52px; height:52px; }
+  .dancheong-svg-wrapper svg { max-width:360px; }
+  .symmetry-container { grid-template-columns:1fr 50px 1fr; gap:10px; }
+  .site-header { padding:10px 20px; }
+  .site-header .logo { font-size:16px; gap:10px; }
+  .museum-logo-img { height:40px; }
+  .lang-btn { padding:5px 13px; font-size:14px; }
+  .proceed-btn { font-size:16px; padding:12px 30px; }
+  .next-btn { font-size:15px; padding:10px 24px; }
+}
+
+/* ─── 반응형 (모바일: ~767px) ─── */
+@media (max-width:767px) {
+  .main-content { padding:0 14px 50px; }
+  .section-card { padding:20px 18px; border-radius:14px; }
+  .sumaknew-workspace { grid-template-columns:1fr; }
+  .quiz-options { grid-template-columns:1fr; }
+  .symmetry-container { grid-template-columns:1fr; grid-template-rows:auto auto auto; }
+  .hero { padding:30px 16px 20px; }
+  .hero h1 { font-size:clamp(22px,6vw,32px); }
+  .hero-desc { font-size:15px; line-height:1.75; }
+  .progress-section { padding:0 14px; }
+  .step-label { font-size:12px; }
+  .step-circle { width:32px; height:32px; font-size:15px; }
+  .section-title { font-size:18px; }
+  .section-subtitle { font-size:14px; }
+  .quiz-option { font-size:15px; padding:12px 14px; }
+  .quiz-option .opt-cell { width:40px; height:40px; }
+  .pattern-cell { width:52px; height:52px; }
+  .pattern-cell svg { width:34px; height:34px; }
+  .color-btn { width:46px; height:46px; }
+  .color-btn-label { font-size:11px; }
+  .dancheong-svg-wrapper svg { max-width:100%; }
+  .site-header { padding:10px 16px; }
+  .site-header .logo { font-size:14px; gap:8px; }
+  .museum-logo-img { height:34px; }
+  .lang-btn { padding:4px 11px; font-size:13px; }
+  .celebration-title { font-size:22px; }
+  .celebration-text { font-size:15px; }
+  .proceed-btn { font-size:15px; padding:11px 24px; }
+  .next-btn { font-size:14px; padding:9px 20px; }
+  .panel-body { min-height:200px; }
+  .section-card::before { height:3px; }
+}</style>
 </head>
 <body>
 
@@ -1114,47 +1171,47 @@ function setLang(lang) {
 const PATTERNS = {
   lotus: {
     name_ko: '연꽃', name_en: 'Lotus',
-    svg: `<img src="icon/lotus.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/lotus.svg" width="40" height="40" style="object-fit:contain;">`
   },
   cloud: {
     name_ko: '구름', name_en: 'Cloud',
-    svg: `<img src="icon/cloud.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/cloud.svg" width="40" height="40" style="object-fit:contain;">`
   },
   crane: {
     name_ko: '학', name_en: 'Crane',
-    svg: `<img src="icon/crane.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/crane.svg" width="40" height="40" style="object-fit:contain;">`
   },
   plum: {
     name_ko: '매화', name_en: 'Plum Blossom',
-    svg: `<img src="icon/plum.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/plum.svg" width="40" height="40" style="object-fit:contain;">`
   },
   phoenix: {
     name_ko: '봉황', name_en: 'Phoenix',
-    svg: `<img src="icon/phoenix.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/phoenix.svg" width="40" height="40" style="object-fit:contain;">`
   },
   wave: {
     name_ko: '파도', name_en: 'Wave',
-    svg: `<img src="icon/wave.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/wave.svg" width="35" height="35" style="object-fit:contain;">`
   },
   phoenix: {
     name_ko: '봉황', name_en: 'Phoenix',
-    svg: `<img src="icon/phoenix.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/phoenix.svg" width="40" height="40" style="object-fit:contain;">`
   },
   wave: {
     name_ko: '파도', name_en: 'Wave',
-    svg: `<img src="icon/wave.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/wave.svg" width="40" height="40" style="object-fit:contain;">`
   },
   bamboo: {
     name_ko: '대나무', name_en: 'Bamboo',
-    svg: `<img src="icon/bamboo.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/bamboo.svg" width="40" height="40" style="object-fit:contain;">`
   },
   turtle: {
     name_ko: '거북', name_en: 'Turtle',
-    svg: `<img src="icon/turtle.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/turtle.svg" width="40" height="40" style="object-fit:contain;">`
   },
   peony: {
     name_ko: '모란', name_en: 'Peony',
-    svg: `<img src="icon/peony.svg" width="44" height="44" style="object-fit:contain;">`
+    svg: `<img src="icon/peony.svg" width="40" height="40" style="object-fit:contain;">`
   }
 };
 
