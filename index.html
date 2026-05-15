@@ -1057,6 +1057,95 @@ body {
   .next-btn { font-size:14px; padding:9px 20px; }
   .panel-body { min-height:200px; }
   .section-card::before { height:3px; }
+}/* ─── LEVEL 1.5 — 띠 패턴 ─── */
+.band-progress {
+  text-align:center;
+  font-size:15px;
+  font-weight:600;
+  color:var(--text-medium);
+  margin-bottom:14px;
+}
+.band-question-area {
+  background:white;
+  border:1.5px solid var(--border-warm);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.band-question-row {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  width:100%;
+}
+.band-half {
+  height:80px;
+  width:auto;
+  max-width:42%;
+  object-fit:cover;
+}
+.band-blank {
+  width:120px;
+  height:80px;
+  border:2.5px dashed var(--primary);
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  font-weight:900;
+  color:var(--primary);
+  background:rgba(139,26,26,.04);
+  flex-shrink:0;
+}
+.band-options {
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:10px;
+  margin-bottom:18px;
+}
+.band-option {
+  background:white;
+  border:2px solid var(--border-warm);
+  border-radius:10px;
+  padding:10px;
+  cursor:pointer;
+  transition:all .2s;
+  position:relative;
+}
+.band-option:hover {
+  border-color:var(--primary);
+  transform:translateY(-2px);
+}
+.band-option img {
+  width:100%;
+  height:60px;
+  object-fit:cover;
+  display:block;
+  border-radius:4px;
+}
+.band-option-num {
+  position:absolute;
+  top:4px; left:6px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--text-medium);
+}
+.band-option.correct {
+  border-color:var(--success);
+  background:rgba(46,107,48,.08);
+  pointer-events:none;
+}
+.band-option.wrong {
+  border-color:#c0392b;
+  animation:shake .4s;
+}
+@media (max-width:767px) {
+  .band-options { grid-template-columns:repeat(2, 1fr); }
+  .band-blank { width:80px; height:60px; font-size:24px; }
+  .band-half { height:60px; }
 }</style>
 </head>
 <body>
@@ -1126,11 +1215,35 @@ body {
       <span data-ko="다음 문제" data-en="Next Question">다음 문제</span> &rarr;
     </button>
     <button class="next-btn green-btn" id="l1-finish-btn" style="display:none" onclick="finishLevel1()">
-      <span data-ko="레벨 2로 이동" data-en="Go to Level 2">레벨 2로 이동</span> &rarr;
+      <span data-ko="다음 미션으로" data-en="Next Mission">다음 미션으로</span> &rarr;
     </button>
   </div>
 </div>
-
+<!-- ===== LEVEL 1.5 — 띠 패턴 찾기 ===== -->
+<div class="section-card hidden-section" id="band-card">
+  <div class="section-title">
+    <span class="level-badge">LEVEL 1.5</span>
+    <span data-ko="띠 무늬 빈칸 채우기" data-en="Fill the Band Pattern">띠 무늬 빈칸 채우기</span>
+  </div>
+  <p class="section-subtitle" style="margin-top:6px" data-ko="끊어진 띠의 빈칸에 들어갈 무늬를 골라주세요!" data-en="Choose the pattern that fits the missing space in the band!">
+    끊어진 띠의 빈칸에 들어갈 무늬를 골라주세요!
+  </p>
+  <div class="band-progress" id="band-progress">문제 1 / 2</div>
+  <div class="band-question-area">
+    <div class="band-question-row">
+      <img class="band-half" id="band-left" src="" alt="">
+      <div class="band-blank" id="band-blank">?</div>
+      <img class="band-half" id="band-right" src="" alt="">
+    </div>
+  </div>
+  <div class="band-options" id="band-options"></div>
+  <div class="feedback-bubble" id="band-feedback"></div>
+  <div style="text-align:center">
+    <button class="next-btn green-btn" id="band-finish-btn" style="display:none" onclick="finishBand()">
+      <span data-ko="다음 미션으로" data-en="Next Mission">다음 미션으로</span> &rarr;
+    </button>
+  </div>
+</div>
 <!-- ===== LEVEL 2 ===== -->
 <div class="section-card hidden-section" id="level2-card">
   <div class="section-title-row">
@@ -1435,10 +1548,8 @@ function nextL1Quiz() { l1Current++; renderL1Quiz(); }
 
 function finishLevel1() {
   markStepDone('prog-1');
-  markStepActive('prog-2');
-  document.getElementById('level2-card').classList.remove('hidden-section');
-  renderL2Quiz();
-  document.getElementById('level2-card').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('level1-card').classList.add('hidden-section');
+  startBandQuiz();
 }
 
 // ============================================================
@@ -2183,7 +2294,98 @@ function finishTaegeuk() {
   spawnConfetti();
   document.getElementById('celebration-card').scrollIntoView({behavior:'smooth',block:'start'});
 }
+// ============================================================
+// LEVEL 1.5 — 띠 패턴 빈칸 채우기
+// ============================================================
+const BAND_PATTERNS = [
+  { key:'cloud',  name_ko:'구름',   name_en:'Cloud' },
+  { key:'zigzag', name_ko:'지그재그', name_en:'Zigzag' },
+  { key:'lotus',  name_ko:'연꽃잎', name_en:'Lotus Leaf' },
+  { key:'wave',   name_ko:'파도',   name_en:'Wave' },
+  { key:'vine',   name_ko:'덩굴',   name_en:'Vine' }
+];
 
+const BAND_QUIZZES = [
+  { full:'band/band_full_1.png', answer:'cloud' },
+  { full:'band/band_full_2.png', answer:'wave' }
+];
+
+let bandIndex = 0;
+let bandDone = false;
+
+function renderBandQuiz() {
+  const q = BAND_QUIZZES[bandIndex];
+  document.getElementById('band-progress').textContent =
+    (LANG==='ko' ? '문제 ' : 'Question ') + (bandIndex+1) + ' / ' + BAND_QUIZZES.length;
+
+  // 양옆 이미지는 같은 full 이미지를 사용 (CSS로 잘라서 보여줌)
+  document.getElementById('band-left').src = q.full;
+  document.getElementById('band-left').style.objectPosition = 'left';
+  document.getElementById('band-right').src = q.full;
+  document.getElementById('band-right').style.objectPosition = 'right';
+
+  // 보기 5개
+  const box = document.getElementById('band-options');
+  box.innerHTML = BAND_PATTERNS.map((p, i) => `
+    <div class="band-option" data-key="${p.key}" onclick="selectBand('${p.key}')">
+      <span class="band-option-num">${i+1}</span>
+      <img src="band/band_${p.key}.png" alt="${LANG==='ko'?p.name_ko:p.name_en}">
+    </div>
+  `).join('');
+
+  const fb = document.getElementById('band-feedback');
+  fb.className = 'feedback-bubble';
+  fb.textContent = '';
+  document.getElementById('band-finish-btn').style.display = 'none';
+  bandDone = false;
+}
+
+function selectBand(key) {
+  if (bandDone) return;
+  const q = BAND_QUIZZES[bandIndex];
+  const opt = document.querySelector(`.band-option[data-key="${key}"]`);
+  const fb = document.getElementById('band-feedback');
+
+  if (key === q.answer) {
+    opt.classList.add('correct');
+    bandDone = true;
+    document.querySelectorAll('.band-option').forEach(b => {
+      if (b.dataset.key !== key) b.style.pointerEvents = 'none';
+    });
+    fb.className = 'feedback-bubble correct show';
+    fb.textContent = LANG==='ko' ? '정답이에요! 👏' : 'Correct! 👏';
+
+    setTimeout(() => {
+      if (bandIndex < BAND_QUIZZES.length - 1) {
+        bandIndex++;
+        renderBandQuiz();
+      } else {
+        // 모든 문제 완료
+        fb.textContent = LANG==='ko' ? '🎉 모든 띠 무늬를 복원했어요!' : '🎉 All bands restored!';
+        document.getElementById('band-finish-btn').style.display = 'inline-flex';
+      }
+    }, 1200);
+  } else {
+    opt.classList.add('wrong');
+    setTimeout(() => opt.classList.remove('wrong'), 600);
+    fb.className = 'feedback-bubble wrong show';
+    fb.textContent = LANG==='ko' ? '다시 한 번 살펴보세요!' : 'Look carefully and try again!';
+  }
+}
+
+function startBandQuiz() {
+  bandIndex = 0;
+  document.getElementById('band-card').classList.remove('hidden-section');
+  renderBandQuiz();
+  document.getElementById('band-card').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function finishBand() {
+  document.getElementById('band-card').classList.add('hidden-section');
+  document.getElementById('level2-card').classList.remove('hidden-section');
+  renderL2Quiz();
+  document.getElementById('level2-card').scrollIntoView({behavior:'smooth', block:'start'});
+}
 // ============================================================
 // INIT
 // ============================================================
