@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 복원가 체험 | 서울로봇인공지능과학관</title>
+<title>한국 전통 문양 복원 체험 | 서울로봇인공지능과학관</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
@@ -936,6 +936,70 @@ body {
   color:var(--text-medium);
   font-weight:600;
 }
+/* ─── LEVEL 4 — 삼태극 ─── */
+#taegeuk-svg { max-width:400px; width:100%; }
+.taegeuk-questions {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin:20px auto;
+  max-width:500px;
+}
+.taegeuk-q-row {
+  background:white;
+  border:1.5px solid var(--border-warm);
+  border-radius:12px;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.taegeuk-q-num {
+  width:36px; height:36px;
+  border-radius:50%;
+  background:var(--primary);
+  color:white;
+  font-size:18px;
+  font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.taegeuk-q-label {
+  font-size:16px;
+  font-weight:600;
+  color:var(--text-dark);
+}
+.taegeuk-color-options {
+  display:flex;
+  gap:8px;
+  margin-left:auto;
+  flex-wrap:wrap;
+}
+.taegeuk-color-btn {
+  width:40px; height:40px;
+  border-radius:50%;
+  border:2px solid rgba(0,0,0,.15);
+  cursor:pointer;
+  transition:all .2s;
+}
+.taegeuk-color-btn:hover { transform:scale(1.15); }
+.taegeuk-color-btn.selected {
+  border-color:var(--gold);
+  border-width:3px;
+  transform:scale(1.15);
+  box-shadow:0 0 0 3px rgba(201,168,76,.3);
+}
+.taegeuk-color-btn.correct {
+  border-color:var(--success);
+  border-width:3px;
+  pointer-events:none;
+}
+.taegeuk-color-btn.wrong {
+  border-color:#c0392b;
+  border-width:3px;
+  opacity:.5;
+}
 /* ─── 반응형 (태블릿: 768px ~ 1024px) ─── */
 @media (min-width:768px) and (max-width:1024px) {
   .main-content { max-width:100%; padding:0 24px 60px; }
@@ -1114,13 +1178,33 @@ body {
     <div class="feedback-bubble" id="danch-feedback"></div>
     <div class="danch-progress" id="danch-progress"></div>
   </div>
+  <button class="next-btn green-btn" id="l3-finish-btn" style="display:none" onclick="goToTaegeuk()">
+   <span data-ko="완성! 다음 미션으로" data-en="Done! Next Mission">완성! 다음 미션으로</span> &rarr;
+  </button>
+  </div>
+</div>
+<!-- ===== LEVEL 3.5 — 삼태극 색깔 맞추기 ===== -->
+<div class="section-card hidden-section" id="taegeuk-card">
+  <div class="section-title">
+    <span class="level-badge">LEVEL 4</span>
+    <span data-ko="삼태극 색깔 맞추기" data-en="Sam-Taegeuk Color Quiz">삼태극 색깔 맞추기</span>
+  </div>
+  <p class="section-subtitle" style="margin-top:6px" data-ko="삼태극의 일부가 가려져 있어요. 1, 2, 3번 자리에 들어갈 색을 맞춰보세요!" data-en="Parts of the Sam-Taegeuk are hidden. Guess the colors at positions 1, 2, and 3!">
+    삼태극의 일부가 가려져 있어요. 1, 2, 3번 자리에 들어갈 색을 맞춰보세요!
+  </p>
+  <div class="dancheong-container">
+    <div class="dancheong-svg-wrapper">
+      <svg id="taegeuk-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="taegeuk-questions" id="taegeuk-questions"></div>
+    <div class="feedback-bubble" id="taegeuk-feedback"></div>
+  </div>
   <div style="text-align:center">
-    <button class="next-btn green-btn" id="l3-finish-btn" style="display:none" onclick="finishLevel3()">
-      <span data-ko="완성! AI 복원으로 이동" data-en="Done! Move to AI Restoration">완성! AI 복원으로 이동</span> &rarr;
+    <button class="next-btn green-btn" id="taegeuk-finish-btn" style="display:none" onclick="finishTaegeuk()">
+      <span data-ko="완성! 다음으로 이동" data-en="Done! Next">완성! 다음으로 이동</span> &rarr;
     </button>
   </div>
 </div>
-
 <!-- ===== CELEBRATION ===== -->
 <div class="section-card hidden-section" id="celebration-card">
   <div class="celebration-content">
@@ -1129,8 +1213,8 @@ body {
     <p class="celebration-text" data-ko="패턴 탐정이 된 것을 축하합니다! 레벨 1, 2, 3을 모두 통과하였습니다." data-en="Congratulations, Pattern Detective! You passed all 3 levels.">
       패턴 탐정이 된 것을 축하합니다! 레벨 1, 2, 3을 모두 통과하였습니다.
     </p>
-    <p class="celebration-text" style="font-size:17px;color:var(--text-light)" data-ko="여러분은 인공지능처럼 패턴을 분석할 수 있어요." data-en="You can analyze patterns just like artificial intelligence.">
-      여러분은 인공지능처럼 패턴을 분석할 수 있어요.
+    <p class="celebration-text" style="font-size:17px;color:var(--text-light)" data-ko="여러분은 인공지능처럼 패턴을 분석하여 복원해보았습니다." data-en="You analyzed patterns and restored them just like artificial intelligence.">
+      여러분은 인공지능처럼 패턴을 분석하여 복원해보았습니다.
     </p>
     <div class="trad-divider">
       <div class="trad-divider-line"></div>
@@ -1140,8 +1224,8 @@ body {
     <p style="font-size:20px;font-weight:700;color:var(--primary);margin-bottom:8px" data-ko="순서, 대칭, 색 — 세 가지 패턴을 모두 완성했습니다." data-en="Sequence, symmetry, color — you mastered all three patterns.">
       순서, 대칭, 색 — 세 가지 패턴을 모두 완성했습니다.
     </p>
-    <p style="font-size:17px;color:var(--text-medium);line-height:1.85;margin-bottom:4px" data-ko="여러분은 이제 진정한 AI 복원가입니다." data-en="You are now a true AI Restorer.">
-      여러분은 이제 진정한 AI 복원가입니다.
+    <p style="font-size:17px;color:var(--text-medium);line-height:1.85;margin-bottom:4px" data-ko="여러분은 이제 진정한 복원가입니다." data-en="You are now a true Restorer.">
+      여러분은 이제 진정한 복원가입니다.
     </p>
     <p style="font-size:16px;color:var(--text-light);margin-top:8px" data-ko="서울로봇인공지능과학관에서 만나요." data-en="See you at the Seoul Robot &amp; AI Science Museum.">
       서울로봇인공지능과학관에서 만나요.
@@ -1918,10 +2002,10 @@ function updateDanchProgress() {
 
 function finishLevel3() {
   markStepDone('prog-3');
-  markStepDone('prog-4');
-  document.getElementById('celebration-card').classList.remove('hidden-section');
-  spawnConfetti();
-  document.getElementById('celebration-card').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('level3-card').classList.add('hidden-section');
+  document.getElementById('taegeuk-card').classList.remove('hidden-section');
+  renderTaegeuk();
+  document.getElementById('taegeuk-card').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ============================================================
@@ -1964,6 +2048,141 @@ function spawnConfetti() {
   }
 }
 
+// ============================================================
+// LEVEL 4 — 삼태극 색깔 맞추기
+// ============================================================
+const TAEGEUK_COLORS = {
+  red:    { hex:'#D32F2F', name_ko:'빨강', name_en:'Red' },
+  yellow: { hex:'#F9C53A', name_ko:'노랑', name_en:'Yellow' },
+  blue:   { hex:'#2B4A8C', name_ko:'파랑', name_en:'Blue' },
+  green:  { hex:'#2A6B3A', name_ko:'초록', name_en:'Green' },
+  black:  { hex:'#1A1A1A', name_ko:'검정', name_en:'Black' }
+};
+const TAEGEUK_KEYS = ['red','yellow','blue','green','black'];
+
+let taegeukAnswers = {}; // {1:'red', 2:'yellow', 3:'blue'}
+let taegeukSelected = {1:null, 2:null, 3:null};
+let taegeukDone = {1:false, 2:false, 3:false};
+
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderTaegeuk() {
+  // 5개 색 중 3개를 랜덤으로 선택
+  const picked = shuffleArr(TAEGEUK_KEYS).slice(0, 3);
+  taegeukAnswers = { 1: picked[0], 2: picked[1], 3: picked[2] };
+  taegeukSelected = {1:null, 2:null, 3:null};
+  taegeukDone = {1:false, 2:false, 3:false};
+
+  const svg = document.getElementById('taegeuk-svg');
+  const c1 = TAEGEUK_COLORS[picked[0]].hex;
+  const c2 = TAEGEUK_COLORS[picked[1]].hex;
+  const c3 = TAEGEUK_COLORS[picked[2]].hex;
+
+  // 삼태극 SVG (3개의 곡선이 만나는 형태)
+  svg.innerHTML = `
+    <!-- 바깥 원 -->
+    <circle cx="200" cy="200" r="160" fill="white" stroke="#333" stroke-width="3"/>
+    <!-- 1번 (상단) - 노랑 자리 -->
+    <path d="M 200,200 L 200,40 A 160,160 0 0 1 338.6,280 Z
+             M 200,200 A 80,80 0 0 0 269.3,240 A 80,80 0 0 1 200,200 Z"
+          fill="${c2}" fill-rule="evenodd"/>
+    <!-- 3번 (좌하) - 파랑 자리 -->
+    <path d="M 200,200 L 338.6,280 A 160,160 0 0 1 61.4,280 Z
+             M 200,200 A 80,80 0 0 1 130.7,240 A 80,80 0 0 0 200,200 Z"
+          fill="${c3}" fill-rule="evenodd"/>
+    <!-- 2번 (우하) - 빨강 자리 -->
+    <path d="M 200,200 L 61.4,280 A 160,160 0 0 1 200,40 Z
+             M 200,200 A 80,80 0 0 0 200,120 A 80,80 0 0 1 200,200 Z"
+          fill="${c1}" fill-rule="evenodd"/>
+    <!-- 가림막 박스 + 번호 -->
+    <g id="taegeuk-mask-1">
+      <rect x="160" y="60" width="90" height="90" fill="white" stroke="#333" stroke-width="2.5" rx="4"/>
+      <text x="205" y="115" text-anchor="middle" font-size="42" font-weight="900" fill="#333" font-family="Noto Serif KR, serif">1</text>
+    </g>
+    <g id="taegeuk-mask-2">
+      <rect x="240" y="220" width="90" height="90" fill="white" stroke="#333" stroke-width="2.5" rx="4"/>
+      <text x="285" y="275" text-anchor="middle" font-size="42" font-weight="900" fill="#333" font-family="Noto Serif KR, serif">2</text>
+    </g>
+    <g id="taegeuk-mask-3">
+      <rect x="80" y="220" width="90" height="90" fill="white" stroke="#333" stroke-width="2.5" rx="4"/>
+      <text x="125" y="275" text-anchor="middle" font-size="42" font-weight="900" fill="#333" font-family="Noto Serif KR, serif">3</text>
+    </g>
+  `;
+
+  renderTaegeukQuestions();
+}
+
+function renderTaegeukQuestions() {
+  const box = document.getElementById('taegeuk-questions');
+  box.innerHTML = [1,2,3].map(num => `
+    <div class="taegeuk-q-row">
+      <div class="taegeuk-q-num">${num}</div>
+      <div class="taegeuk-q-label" data-ko="번 자리의 색깔은?" data-en="What's the color here?">${LANG==='ko'?'번 자리의 색깔은?':"What's the color here?"}</div>
+      <div class="taegeuk-color-options">
+        ${TAEGEUK_KEYS.map(key => `
+          <div class="taegeuk-color-btn" 
+               style="background:${TAEGEUK_COLORS[key].hex}"
+               data-num="${num}" data-color="${key}"
+               onclick="selectTaegeukColor(${num},'${key}')"
+               title="${LANG==='ko'?TAEGEUK_COLORS[key].name_ko:TAEGEUK_COLORS[key].name_en}"></div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectTaegeukColor(num, colorKey) {
+  if (taegeukDone[num]) return;
+  const correct = taegeukAnswers[num];
+  const btns = document.querySelectorAll(`.taegeuk-color-btn[data-num="${num}"]`);
+
+  if (colorKey === correct) {
+    // 정답
+    taegeukDone[num] = true;
+    btns.forEach(b => {
+      if (b.dataset.color === colorKey) b.classList.add('correct');
+      else b.style.pointerEvents = 'none';
+    });
+    // 가림막 제거
+    const mask = document.getElementById(`taegeuk-mask-${num}`);
+    if (mask) mask.style.display = 'none';
+
+    const fb = document.getElementById('taegeuk-feedback');
+    fb.className = 'feedback-bubble correct show';
+    fb.textContent = LANG==='ko' ? `정답! ${num}번 자리는 ${TAEGEUK_COLORS[colorKey].name_ko}이에요!` : `Correct! Position ${num} is ${TAEGEUK_COLORS[colorKey].name_en}!`;
+
+    // 모두 맞췄으면 완료 버튼
+    if (Object.values(taegeukDone).every(v => v)) {
+      setTimeout(() => {
+        fb.textContent = LANG==='ko' ? '🎉 삼태극을 모두 복원했어요!' : '🎉 You restored the Sam-Taegeuk!';
+        document.getElementById('taegeuk-finish-btn').style.display = 'inline-flex';
+      }, 800);
+    }
+  } else {
+    // 오답
+    const clicked = [...btns].find(b => b.dataset.color === colorKey);
+    clicked.classList.add('wrong');
+    setTimeout(() => clicked.classList.remove('wrong'), 800);
+    const fb = document.getElementById('taegeuk-feedback');
+    fb.className = 'feedback-bubble wrong show';
+    fb.textContent = LANG==='ko' ? '다시 한 번 살펴보세요!' : 'Look carefully and try again!';
+  }
+}
+
+function finishTaegeuk() {
+  markStepDone('prog-4');
+  document.getElementById('taegeuk-card').classList.add('hidden-section');
+  document.getElementById('celebration-card').classList.remove('hidden-section');
+  spawnConfetti();
+  document.getElementById('celebration-card').scrollIntoView({behavior:'smooth',block:'start'});
+}
 
 // ============================================================
 // INIT
