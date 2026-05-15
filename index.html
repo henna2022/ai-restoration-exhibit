@@ -1114,229 +1114,47 @@ function setLang(lang) {
 const PATTERNS = {
   lotus: {
     name_ko: '연꽃', name_en: 'Lotus',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- back petals -->
-      <ellipse cx="22" cy="14" rx="4" ry="9" fill="#E89090" transform="rotate(-45,22,22)"/>
-      <ellipse cx="22" cy="14" rx="4" ry="9" fill="#E89090" transform="rotate(45,22,22)"/>
-      <ellipse cx="22" cy="14" rx="4" ry="9" fill="#E89090" transform="rotate(-90,22,22)"/>
-      <ellipse cx="22" cy="14" rx="4" ry="9" fill="#E89090" transform="rotate(90,22,22)"/>
-      <!-- front petals (deeper pink) -->
-      <ellipse cx="22" cy="13" rx="4.5" ry="9" fill="#D85580" stroke="#9B2A4F" stroke-width="1"/>
-      <ellipse cx="22" cy="13" rx="4.5" ry="9" fill="#D85580" stroke="#9B2A4F" stroke-width="1" transform="rotate(72,22,22)"/>
-      <ellipse cx="22" cy="13" rx="4.5" ry="9" fill="#D85580" stroke="#9B2A4F" stroke-width="1" transform="rotate(144,22,22)"/>
-      <ellipse cx="22" cy="13" rx="4.5" ry="9" fill="#D85580" stroke="#9B2A4F" stroke-width="1" transform="rotate(216,22,22)"/>
-      <ellipse cx="22" cy="13" rx="4.5" ry="9" fill="#D85580" stroke="#9B2A4F" stroke-width="1" transform="rotate(288,22,22)"/>
-      <!-- center -->
-      <circle cx="22" cy="22" r="4.5" fill="#F4C840" stroke="#9B2A4F" stroke-width="1"/>
-      <circle cx="22" cy="22" r="1.5" fill="#9B2A4F"/>
-    </svg>`
+    svg: `<img src="icon/lotus.svg" width="44" height="44" style="object-fit:contain;">`
   },
   cloud: {
     name_ko: '구름', name_en: 'Cloud',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- traditional Korean swirl cloud (구름문) -->
-      <path d="M 4,28
-               Q 4,20 11,20
-               Q 13,12 21,14
-               Q 26,9 32,15
-               Q 40,15 40,23
-               Q 42,28 38,32
-               Q 36,36 30,34
-               Q 24,38 18,34
-               Q 11,38 7,33
-               Q 2,32 4,28 Z"
-            fill="#3A8A78" stroke="#1F5446" stroke-width=".8"/>
-      <!-- spiral inside (white) -->
-      <path d="M 22,24
-               m -4.5,0
-               a 4.5,4.5 0 1,1 9,0
-               a 3.5,3.5 0 1,1 -7,0
-               a 2.5,2.5 0 1,1 5,0"
-            fill="none" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
-      <!-- left small swirl hint -->
-      <path d="M 11,26 q 2,-2 4,-1" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
-    </svg>`
+    svg: `<img src="icon/cloud.svg" width="44" height="44" style="object-fit:contain;">`
   },
   crane: {
     name_ko: '학', name_en: 'Crane',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- crane flying — wings up, body below, head with red crown -->
-      <!-- body -->
-      <ellipse cx="22" cy="26" rx="6" ry="3" fill="#222" />
-      <!-- left wing up -->
-      <path d="M 22,24 Q 14,12 4,18 Q 10,22 16,22 Q 19,24 22,24 Z"
-            fill="#222"/>
-      <!-- right wing up -->
-      <path d="M 22,24 Q 30,12 40,18 Q 34,22 28,22 Q 25,24 22,24 Z"
-            fill="#222"/>
-      <!-- neck and head -->
-      <path d="M 16,26 Q 12,30 8,33" stroke="#222" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <circle cx="7.5" cy="33.5" r="2" fill="#222"/>
-      <!-- red crown -->
-      <circle cx="6" cy="32" r="1.6" fill="#D94040"/>
-      <!-- beak -->
-      <path d="M 6,34 L 3,36" stroke="#222" stroke-width="1.2" stroke-linecap="round"/>
-      <!-- legs -->
-      <path d="M 23,28 L 24,38" stroke="#222" stroke-width="1.2" stroke-linecap="round"/>
-      <path d="M 26,28 L 28,38" stroke="#222" stroke-width="1.2" stroke-linecap="round"/>
-    </svg>`
+    svg: `<img src="icon/crane.svg" width="44" height="44" style="object-fit:contain;">`
   },
   plum: {
     name_ko: '매화', name_en: 'Plum Blossom',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- 5 round petals (outline-style like reference) -->
-      <g fill="none" stroke="#D9303A" stroke-width="2.2" stroke-linejoin="round">
-        <circle cx="22" cy="11" r="6.5"/>
-        <circle cx="33" cy="19" r="6.5" transform="rotate(72,22,22)"/>
-        <circle cx="33" cy="19" r="6.5" transform="rotate(144,22,22)"/>
-        <circle cx="33" cy="19" r="6.5" transform="rotate(216,22,22)"/>
-        <circle cx="33" cy="19" r="6.5" transform="rotate(288,22,22)"/>
-      </g>
-      <!-- center filled -->
-      <circle cx="22" cy="22" r="2.5" fill="#D9303A"/>
-      <!-- stamens (5 dots around center) -->
-      <g fill="#D9303A">
-        <circle cx="22" cy="16" r=".9"/>
-        <circle cx="26.7" cy="19.5" r=".9"/>
-        <circle cx="25" cy="25" r=".9"/>
-        <circle cx="19" cy="25" r=".9"/>
-        <circle cx="17.3" cy="19.5" r=".9"/>
-      </g>
-    </svg>`
+    svg: `<img src="icon/plum.svg" width="44" height="44" style="object-fit:contain;">`
   },
   phoenix: {
     name_ko: '봉황', name_en: 'Phoenix',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- body (S-curve) -->
-      <path d="M 12,32 Q 14,22 22,20 Q 30,18 30,12"
-            fill="none" stroke="#C8895A" stroke-width="3" stroke-linecap="round"/>
-      <!-- head + crest -->
-      <circle cx="30" cy="11" r="3" fill="#C8895A"/>
-      <path d="M 30,8 L 31,5 L 32,8 M 28,7 L 27,4" stroke="#C8895A" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-      <!-- beak -->
-      <path d="M 33,11 L 36,12" stroke="#C8895A" stroke-width="1.5" stroke-linecap="round"/>
-      <!-- upper wing -->
-      <path d="M 22,20 Q 18,10 8,8 Q 14,14 16,18 Q 12,15 6,14 Q 12,18 16,22"
-            fill="#C8895A" stroke="#8B5A2A" stroke-width=".5"/>
-      <!-- tail feathers (3 swooshes) -->
-      <path d="M 12,32 Q 6,32 4,36 Q 10,36 14,34" fill="#C8895A" stroke="#8B5A2A" stroke-width=".5"/>
-      <path d="M 14,34 Q 8,38 6,42 Q 14,40 18,36" fill="#C8895A" stroke="#8B5A2A" stroke-width=".5"/>
-      <path d="M 18,36 Q 16,40 22,42 Q 24,38 22,34" fill="#C8895A" stroke="#8B5A2A" stroke-width=".5"/>
-      <!-- eye -->
-      <circle cx="30" cy="11" r=".8" fill="white"/>
-    </svg>`
+    svg: `<img src="icon/phoenix.svg" width="44" height="44" style="object-fit:contain;">`
   },
   wave: {
     name_ko: '파도', name_en: 'Wave',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- traditional Korean wave pattern (청해파문) — concentric semicircles -->
-      <g fill="none" stroke="#2C5FA8" stroke-width="1.4">
-        <!-- back row -->
-        <path d="M 2,22 A 7,7 0 0 1 16,22" />
-        <path d="M 4,22 A 5,5 0 0 1 14,22" />
-        <path d="M 6,22 A 3,3 0 0 1 12,22" />
-        <path d="M 16,22 A 7,7 0 0 1 30,22" />
-        <path d="M 18,22 A 5,5 0 0 1 28,22" />
-        <path d="M 20,22 A 3,3 0 0 1 26,22" />
-        <path d="M 30,22 A 7,7 0 0 1 44,22" />
-        <path d="M 32,22 A 5,5 0 0 1 42,22" />
-        <path d="M 34,22 A 3,3 0 0 1 40,22" />
-      </g>
-      <g fill="none" stroke="#4A85D0" stroke-width="1.4">
-        <!-- front row offset -->
-        <path d="M -5,34 A 7,7 0 0 1 9,34" />
-        <path d="M -3,34 A 5,5 0 0 1 7,34" />
-        <path d="M -1,34 A 3,3 0 0 1 5,34" />
-        <path d="M 9,34 A 7,7 0 0 1 23,34" />
-        <path d="M 11,34 A 5,5 0 0 1 21,34" />
-        <path d="M 13,34 A 3,3 0 0 1 19,34" />
-        <path d="M 23,34 A 7,7 0 0 1 37,34" />
-        <path d="M 25,34 A 5,5 0 0 1 35,34" />
-        <path d="M 27,34 A 3,3 0 0 1 33,34" />
-        <path d="M 37,34 A 7,7 0 0 1 51,34" />
-      </g>
-      <!-- light water fill behind -->
-      <g fill="#B8D4F0" opacity=".25">
-        <path d="M 2,22 A 7,7 0 0 1 16,22 L 16,22 Z"/>
-        <path d="M 16,22 A 7,7 0 0 1 30,22 L 30,22 Z"/>
-        <path d="M 30,22 A 7,7 0 0 1 44,22 L 44,22 Z"/>
-      </g>
-    </svg>`
+    svg: `<img src="icon/wave.svg" width="44" height="44" style="object-fit:contain;">`
+  },
+  phoenix: {
+    name_ko: '봉황', name_en: 'Phoenix',
+    svg: `<img src="icon/phoenix.svg" width="44" height="44" style="object-fit:contain;">`
+  },
+  wave: {
+    name_ko: '파도', name_en: 'Wave',
+    svg: `<img src="icon/wave.svg" width="44" height="44" style="object-fit:contain;">`
   },
   bamboo: {
     name_ko: '대나무', name_en: 'Bamboo',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- two stalks (purple as reference) -->
-      <rect x="20" y="6" width="3" height="34" rx="1.5" fill="#6B4B96"/>
-      <rect x="24" y="14" width="3" height="26" rx="1.5" fill="#6B4B96"/>
-      <!-- joints (knots) -->
-      <line x1="20" y1="14" x2="23" y2="14" stroke="#3D2B5A" stroke-width="1.4"/>
-      <line x1="20" y1="22" x2="23" y2="22" stroke="#3D2B5A" stroke-width="1.4"/>
-      <line x1="20" y1="30" x2="23" y2="30" stroke="#3D2B5A" stroke-width="1.4"/>
-      <line x1="24" y1="22" x2="27" y2="22" stroke="#3D2B5A" stroke-width="1.4"/>
-      <line x1="24" y1="30" x2="27" y2="30" stroke="#3D2B5A" stroke-width="1.4"/>
-      <!-- leaves (long pointed) -->
-      <path d="M 20,10 Q 12,8 5,4 Q 12,11 18,12 Z" fill="#6B4B96"/>
-      <path d="M 23,10 Q 31,8 38,4 Q 32,11 25,12 Z" fill="#6B4B96"/>
-      <path d="M 20,18 Q 11,18 4,15 Q 12,21 19,20 Z" fill="#6B4B96"/>
-      <path d="M 27,18 Q 36,18 42,16 Q 34,22 26,20 Z" fill="#6B4B96"/>
-      <path d="M 20,26 Q 13,28 7,32 Q 14,28 19,27 Z" fill="#6B4B96"/>
-      <path d="M 27,26 Q 34,28 40,32 Q 34,28 28,27 Z" fill="#6B4B96"/>
-    </svg>`
+    svg: `<img src="icon/bamboo.svg" width="44" height="44" style="object-fit:contain;">`
   },
   turtle: {
     name_ko: '거북', name_en: 'Turtle',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- shell -->
-      <ellipse cx="20" cy="24" rx="14" ry="11" fill="#2E8478" stroke="#1A5048" stroke-width="1"/>
-      <!-- hexagonal pattern on shell -->
-      <g fill="#3FA090" stroke="#1A5048" stroke-width=".7">
-        <polygon points="20,17 24,19 24,23 20,25 16,23 16,19"/>
-        <polygon points="12,20 16,19 16,23 12,24"/>
-        <polygon points="28,20 24,19 24,23 28,24"/>
-        <polygon points="20,25 24,27 22,31 18,31 16,27"/>
-        <polygon points="13,26 16,25 18,29 14,30"/>
-        <polygon points="27,26 24,25 22,29 26,30"/>
-      </g>
-      <!-- head -->
-      <ellipse cx="35" cy="22" rx="4" ry="3" fill="#2E8478" stroke="#1A5048" stroke-width=".8"/>
-      <!-- coiled antenna/horn -->
-      <path d="M 38,20 q 2,-2 1,-4 q -1,-2 -3,-1" stroke="#1A5048" stroke-width="1" fill="none" stroke-linecap="round"/>
-      <circle cx="36.5" cy="22" r=".7" fill="#1A5048"/>
-      <!-- legs (4 visible) -->
-      <ellipse cx="8" cy="26" rx="3" ry="2" fill="#2E8478" stroke="#1A5048" stroke-width=".7"/>
-      <ellipse cx="14" cy="34" rx="3" ry="2" fill="#2E8478" stroke="#1A5048" stroke-width=".7"/>
-      <ellipse cx="26" cy="34" rx="3" ry="2" fill="#2E8478" stroke="#1A5048" stroke-width=".7"/>
-      <!-- tail -->
-      <path d="M 6,24 Q 3,22 4,20" stroke="#1A5048" stroke-width="1" fill="none" stroke-linecap="round"/>
-    </svg>`
+    svg: `<img src="icon/turtle.svg" width="44" height="44" style="object-fit:contain;">`
   },
   peony: {
     name_ko: '모란', name_en: 'Peony',
-    svg: `<svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-      <!-- back leaves (green) -->
-      <g fill="#5BA08A">
-        <ellipse cx="22" cy="6" rx="3" ry="5"/>
-        <ellipse cx="22" cy="6" rx="3" ry="5" transform="rotate(45,22,22)"/>
-        <ellipse cx="22" cy="6" rx="3" ry="5" transform="rotate(90,22,22)"/>
-        <ellipse cx="22" cy="6" rx="3" ry="5" transform="rotate(135,22,22)"/>
-        <ellipse cx="22" cy="6" rx="3" ry="5" transform="rotate(180,22,22)"/>
-        <ellipse cx="22" cy="6" rx="3" ry="5" transform="rotate(225,22,22)"/>
-        <ellipse cx="22" cy="6" rx="3" ry="5" transform="rotate(270,22,22)"/>
-        <ellipse cx="22" cy="6" rx="3" ry="5" transform="rotate(315,22,22)"/>
-      </g>
-      <!-- pink petals (light layer) -->
-      <g fill="#F09BB0" stroke="#222" stroke-width=".6">
-        <ellipse cx="22" cy="11" rx="4" ry="8" transform="rotate(0,22,22)"/>
-        <ellipse cx="22" cy="11" rx="4" ry="8" transform="rotate(60,22,22)"/>
-        <ellipse cx="22" cy="11" rx="4" ry="8" transform="rotate(120,22,22)"/>
-        <ellipse cx="22" cy="11" rx="4" ry="8" transform="rotate(180,22,22)"/>
-        <ellipse cx="22" cy="11" rx="4" ry="8" transform="rotate(240,22,22)"/>
-        <ellipse cx="22" cy="11" rx="4" ry="8" transform="rotate(300,22,22)"/>
-      </g>
-      <!-- center yellow with black outline -->
-      <circle cx="22" cy="22" r="3.2" fill="#F4D40C" stroke="#222" stroke-width="1"/>
-    </svg>`
+    svg: `<img src="icon/peony.svg" width="44" height="44" style="object-fit:contain;">`
   }
 };
 
