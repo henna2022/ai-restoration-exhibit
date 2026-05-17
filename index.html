@@ -2188,7 +2188,8 @@ function selectTaegeukColor(colorKey) {
   if (colorKey === correct) {
     taegeukStep++;
     // 이미지 단계 업데이트 (1 → 2 → 3 → 4)
-    document.getElementById('taegeuk-img').src = `taegeuk/taegeuk_${taegeukStep + 1}.png`;
+    const imgName = taegeukStep >= 3 ? 'taegeuk_finish' : `taegeuk_${taegeukStep + 1}`;
+    document.getElementById('taegeuk-img').src = `taegeuk/${imgName}.png`;
     fb.className = 'feedback-bubble correct show';
     fb.textContent = LANG==='ko'
       ? `정답! ${TAEGEUK_COLORS[colorKey].name_ko}이에요!`
