@@ -1286,6 +1286,12 @@ html { scroll-behavior:auto; }
     <div class="taegeuk-color-options" id="taegeuk-options"></div>
     <div class="feedback-bubble" id="taegeuk-feedback"></div>
   </div>
+  <div style="text-align:center">
+    <button class="next-btn green-btn" id="taegeuk-finish-btn" style="display:none" onclick="finishTaegeuk()">
+      <span data-ko="완성! 다음으로 이동" data-en="Done! Next">완성! 다음으로 이동</span> &rarr;
+    </button>
+  </div>
+</div>
 <!-- ===== CELEBRATION ===== -->
 <div class="section-card hidden-section" id="celebration-card">
   <div class="celebration-content">
@@ -2167,11 +2173,12 @@ function updateTaegeukLabel() {
 function renderTaegeukOptions() {
   const box = document.getElementById('taegeuk-options');
   box.innerHTML = TAEGEUK_KEYS.map(key => `
-    <div class="taegeuk-color-btn"
-         style="background:${TAEGEUK_COLORS[key].hex}"
-         data-color="${key}"
-         onclick="selectTaegeukColor('${key}')"
-         title="${LANG==='ko'?TAEGEUK_COLORS[key].name_ko:TAEGEUK_COLORS[key].name_en}"></div>
+    <div class="taegeuk-color-btn-wrap" onclick="selectTaegeukColor('${key}')" data-color="${key}" style="cursor:pointer;text-align:center;">
+      <div class="taegeuk-color-btn" style="background:${TAEGEUK_COLORS[key].hex}"></div>
+      <span style="font-size:13px;font-weight:600;color:var(--text-dark);margin-top:4px;display:block;">
+        ${LANG==='ko'?TAEGEUK_COLORS[key].name_ko:TAEGEUK_COLORS[key].name_en}
+      </span>
+    </div>
   `).join('');
 }
 
