@@ -1268,25 +1268,24 @@ html { scroll-behavior:auto; }
   </div>
 </div>
 <!-- ===== LEVEL 3.5 — 삼태극 색깔 맞추기 ===== -->
-<div class="section-card hidden-section" id="taegeuk-card">
+<<div class="section-card hidden-section" id="taegeuk-card">
   <div class="section-title">
     <span class="level-badge">LEVEL 4</span>
     <span data-ko="삼태극 색깔 맞추기" data-en="Sam-Taegeuk Color Quiz">삼태극 색깔 맞추기</span>
   </div>
-  <p class="section-subtitle" style="margin-top:6px" data-ko="삼태극의 일부가 가려져 있어요. 1, 2, 3번 자리에 들어갈 색을 맞춰보세요!" data-en="Parts of the Sam-Taegeuk are hidden. Guess the colors at positions 1, 2, and 3!">
-    삼태극의 일부가 가려져 있어요. 1, 2, 3번 자리에 들어갈 색을 맞춰보세요!
+  <p class="section-subtitle" style="margin-top:6px" data-ko="삼태극의 색깔을 순서대로 맞춰보세요!" data-en="Guess the colors of the Sam-Taegeuk in order!">
+    삼태극의 색깔을 순서대로 맞춰보세요!
   </p>
   <div class="dancheong-container">
     <div class="dancheong-svg-wrapper">
-      <svg id="taegeuk-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"></svg>
+      <img id="taegeuk-img" src="taeguk/taeguk_1.PNG" style="max-width:400px;width:100%;display:block;margin:0 auto;">
     </div>
+    <p class="section-subtitle" id="taegeuk-step-label" style="text-align:center;margin:14px 0 8px;font-weight:600">
+      지금 칠해야 할 색을 골라주세요!
+    </p>
+    <div class="taegeuk-color-options" id="taegeuk-options"></div>
+    <div class="feedback-bubble" id="taegeuk-feedback"></div>
   </div>
-  <div style="text-align:center">
-    <button class="next-btn green-btn" id="taegeuk-finish-btn" style="display:none" onclick="finishTaegeuk()">
-      <span data-ko="완성! 다음으로 이동" data-en="Done! Next">완성! 다음으로 이동</span> &rarr;
-    </button>
-  </div>
-</div>
 <!-- ===== CELEBRATION ===== -->
 <div class="section-card hidden-section" id="celebration-card">
   <div class="celebration-content">
