@@ -1168,7 +1168,7 @@ html { scroll-behavior:auto; }
       <span class="level-badge">LEVEL 1</span>
       <span data-ko="순서 패턴 익히기" data-en="Learning Sequence Patterns">순서 패턴 익히기</span>
     </div>
-    <div class="score-display" id="score-1">0 / 3</div>
+    <div class="score-display" id="score-1">0 / 5</div>
   </div>
   <p class="section-subtitle" data-ko="다음에 올 전통 문양을 맞춰보세요. 문양의 순서를 잘 살펴보세요!" data-en="Guess the next traditional pattern. Look carefully at the order of the patterns!">
     다음에 올 전통 문양을 맞춰보세요. 문양의 순서를 잘 살펴보세요!
@@ -1273,8 +1273,19 @@ html { scroll-behavior:auto; }
     삼태극의 색깔을 순서대로 맞춰보세요!
   </p>
   <div class="dancheong-container">
-    <div class="dancheong-svg-wrapper">
-     <img id="taegeuk-img" src="taegeuk/taegeuk_1.png" style="max-width:400px;width:100%;display:block;margin:0 auto;">
+    <div class="dancheong-svg-wrapper" style="position:relative;max-width:400px;margin:0 auto;">
+     <img id="taegeuk-img" src="taegeuk/taegeuk_1.png" style="width:100%;display:block;">
+     <!-- 번호 배지가 들어갈 자리 (JS가 동적으로 채움) -->
+     <div id="taegeuk-num-badge"
+          style="position:absolute;display:none;width:34px;height:34px;border-radius:8px;
+                 background:#8B1A1A;color:white;font-size:20px;font-weight:900;
+                 display:flex;align-items:center;justify-content:center;
+                 font-family:'Noto Sans KR',sans-serif;
+                 box-shadow:0 2px 8px rgba(0,0,0,0.3);
+                 border:2.5px solid white;
+                 transform:translate(-50%,-50%);
+                 pointer-events:none;
+                 z-index:5;">1</div>
     </div>
     <p class="section-subtitle" id="taegeuk-step-label" style="text-align:center;margin:14px 0 8px;font-weight:600">
       지금 칠해야 할 색을 골라주세요!
@@ -1403,21 +1414,42 @@ function patternName(key) {
 // Q3: bamboo,turtle,bamboo,turtle,bamboo → answer=turtle? No spec says 대나무
 // Q3: turtle,bamboo,turtle,bamboo,turtle → answer=bamboo(대나무) ✓
 
+// blankPos: '?' 칸의 위치 (0=처음, 1~3=중간, 4=끝)
 const L1_QUIZZES = [
+  // 문제 1 (NEW): 맨 처음이 빈칸 - ?, 매화, 구름, 매화, 구름  → 답: 구름
   {
     seq: ['cloud','plum','cloud','plum','cloud'],
+    blankPos: 0,
+    answer: 'cloud',
+    wrongs: ['lotus','crane','wave']
+  },
+  // 문제 2 (기존 1번): 끝이 빈칸 - 구름, 매화, 구름, 매화, ? → 답: 매화
+  {
+    seq: ['cloud','plum','cloud','plum','cloud'],
+    blankPos: 4,
     answer: 'plum',
     wrongs: ['lotus','crane','wave']
   },
+  // 문제 3 (기존 2번): 끝이 빈칸 - 봉황, 매화, 봉황, 매화, ? → 답: 봉황
   {
     seq: ['phoenix','plum','phoenix','plum','phoenix'],
-    answer: 'plum',
+    blankPos: 4,
+    answer: 'phoenix',
     wrongs: ['crane','turtle','cloud']
   },
+  // 문제 4 (기존 3번): 끝이 빈칸 - 거북, 대나무, 거북, 대나무, ? → 답: 거북
   {
     seq: ['turtle','bamboo','turtle','bamboo','turtle'],
-    answer: 'bamboo',
+    blankPos: 4,
+    answer: 'turtle',
     wrongs: ['wave','lotus','peony']
+  },
+  // 문제 5 (NEW): 중간(3번째)이 빈칸 - 연꽃, 파도, ?, 파도, 연꽃 → 답: 연꽃
+  {
+    seq: ['lotus','wave','lotus','wave','lotus'],
+    blankPos: 2,
+    answer: 'lotus',
+    wrongs: ['plum','crane','bamboo']
   }
 ];
 
@@ -1432,17 +1464,21 @@ function renderL1Quiz() {
 
   let seqHTML = '<div class="pattern-sequence">';
   q.seq.forEach((key, i) => {
-    seqHTML += `<div class="pattern-item">
-      <div class="pattern-cell">${patternSVG(key)}</div>
-      <div class="pattern-name">${patternName(key)}</div>
-    </div>`;
+    if (i === q.blankPos) {
+      // ? 칸 그리기
+      seqHTML += `<div class="pattern-item">
+        <div class="pattern-question"><span style="font-size:30px;color:white;font-weight:900;font-family:'Noto Serif KR',serif">?</span></div>
+        <div class="pattern-name" data-ko="여기" data-en="Here">${LANG==='ko'?'여기':'Here'}</div>
+      </div>`;
+    } else {
+      seqHTML += `<div class="pattern-item">
+        <div class="pattern-cell">${patternSVG(key)}</div>
+        <div class="pattern-name">${patternName(key)}</div>
+      </div>`;
+    }
     if (i < q.seq.length - 1) seqHTML += `<div class="pattern-arrow">&rarr;</div>`;
   });
-  seqHTML += `<div class="pattern-arrow">&rarr;</div>
-  <div class="pattern-item">
-    <div class="pattern-question"><span style="font-size:30px;color:white;font-weight:900;font-family:'Noto Serif KR',serif">?</span></div>
-    <div class="pattern-name" data-ko="다음" data-en="Next">${LANG==='ko'?'다음':'Next'}</div>
-  </div></div>`;
+  seqHTML += `</div>`;
 
   let optHTML = '<div class="quiz-options">';
   options.forEach((key, i) => {
@@ -1454,8 +1490,8 @@ function renderL1Quiz() {
   });
   optHTML += '</div>';
 
-  const qLabel_ko = `문제 ${l1Current+1}/3 &mdash; 다음에 올 문양은 무엇일까요?`;
-  const qLabel_en = `Q${l1Current+1}/3 &mdash; What pattern comes next?`;
+  const qLabel_ko = `문제 ${l1Current+1}/5 &mdash; 빈칸(?)에 들어갈 문양은 무엇일까요?`;
+  const qLabel_en = `Q${l1Current+1}/5 &mdash; What pattern fills the blank(?)?`;
 
   document.getElementById('l1-quiz-container').innerHTML = `
     <div class="pattern-display">
@@ -1493,7 +1529,7 @@ function checkL1(btn, chosen, answer) {
       b.classList.add('correct');
     }
   });
-
+}
   const fb = document.getElementById('l1-feedback');
   fb.classList.remove('show','correct','wrong');
   fb.classList.add('show', correct ? 'correct' : 'wrong');
@@ -1504,15 +1540,14 @@ function checkL1(btn, chosen, answer) {
     fb.innerHTML = `<span data-ko="아쉬워요! 정답은 [${aName}]입니다. 패턴을 다시 살펴보세요." data-en="Not quite! The answer is [${aName}]. Look at the pattern again.">${LANG==='ko'?`아쉬워요! 정답은 [${aName}]입니다. 패턴을 다시 살펴보세요.`:`Not quite! The answer is [${aName}]. Look at the pattern again.`}</span>`;
   }
 
-  document.getElementById('score-1').textContent = `${l1Score} / 3`;
+  document.getElementById('score-1').textContent = `${l1Score} / 5`;
 
-  if (l1Current < 2) {
+  if (l1Current < 4) {
     document.getElementById('l1-next-btn').classList.add('show');
   } else {
     document.getElementById('l1-finish-btn').style.display = 'flex';
     document.getElementById('l1-finish-btn').style.margin = '14px auto 0';
   }
-}
 
 function nextL1Quiz() { l1Current++; renderL1Quiz(); }
 
@@ -1578,39 +1613,39 @@ const Q5 = makeSymQuiz(7, [
 // Blanks: indices are into the RIGHT grid (cols×cols)
 // For Q1-Q3: blank idx 0 = top-right corner (mirror of top-left = col 0 of left)
 const L2_QUIZZES = [
-  // Q1: blank = right[0][0] which mirrors left[0][2] (= 'crane')
+  // Q1: 3x3 — 가운데 칸 빈칸 (idx:4)
   {
     cols: 3, left: Q1.left, right: Q1.right,
-    blanks: [{ idx: 0, wrongs: ['lotus','wave','bamboo'] }]
+    blanks: [{ idx: 4, wrongs: ['lotus','wave','bamboo'] }]
   },
-  // Q2: blank = right[0][0] which mirrors left[0][2] (= 'phoenix')
+  // Q2: 3x3 — 우하단 칸 빈칸 (idx:8)
   {
     cols: 3, left: Q2.left, right: Q2.right,
-    blanks: [{ idx: 0, wrongs: ['plum','lotus','bamboo'] }]
+    blanks: [{ idx: 8, wrongs: ['plum','lotus','bamboo'] }]
   },
-  // Q3 HARD: blank = right[0][0] which mirrors left[0][2] (= 'peony'). Wrongs = flower types
+  // Q3 HARD: 3x3 — 좌하단 칸 빈칸 (idx:6)
   {
     cols: 3, left: Q3.left, right: Q3.right,
-    blanks: [{ idx: 0, wrongs: ['lotus','plum','phoenix'] }]
+    blanks: [{ idx: 6, wrongs: ['lotus','plum','phoenix'] }]
   },
-  // Q4: 5x5, 3 blanks in right grid
+  // Q4: 5x5 — 3개 빈칸을 좌상/중앙/우하로 분산
   {
     cols: 5, left: Q4.left, right: Q4.right,
     blanks: [
-      { idx: 0,  wrongs: ['wave','peony','plum'] },      // answer='bamboo' ✓
-      { idx: 11, wrongs: ['turtle','crane','peony'] },   // answer='lotus'  ✓ (was lotus→fixed to turtle)
-      { idx: 24, wrongs: ['crane','peony','bamboo'] }    // answer='wave'   ✓ (was wave→fixed to crane)
+      { idx: 6,  wrongs: ['wave','peony','plum'] },      // 2행 2열
+      { idx: 12, wrongs: ['turtle','crane','peony'] },   // 중앙 (3행 3열)
+      { idx: 18, wrongs: ['crane','peony','bamboo'] }    // 4행 4열
     ]
   },
-  // Q5: 7x7, 5 blanks in right grid
+  // Q5: 7x7 — 5개 빈칸을 그리드 전체에 흩어지게 배치
   {
     cols: 7, left: Q5.left, right: Q5.right,
     blanks: [
-      { idx: 0,  wrongs: ['cloud','bamboo','turtle'] },   // answer='peony'  ✓
-      { idx: 8,  wrongs: ['lotus','peony','crane'] },     // answer='wave'   ✓
-      { idx: 24, wrongs: ['lotus','crane','peony'] },     // answer='bamboo' ✓
-      { idx: 34, wrongs: ['wave','plum','turtle'] },      // answer='cloud'  ✓
-      { idx: 48, wrongs: ['turtle','wave','phoenix'] }    // answer='bamboo' ✓ (was bamboo→fixed to turtle)
+      { idx: 10, wrongs: ['cloud','bamboo','turtle'] },   // 2행 4열
+      { idx: 18, wrongs: ['lotus','peony','crane'] },     // 3행 5열
+      { idx: 24, wrongs: ['lotus','crane','peony'] },     // 4행 4열 (중앙)
+      { idx: 30, wrongs: ['wave','plum','turtle'] },      // 5행 3열
+      { idx: 40, wrongs: ['turtle','wave','phoenix'] }    // 6행 6열
     ]
   }
 ];
@@ -2148,6 +2183,7 @@ function renderTaegeuk() {
   document.getElementById('taegeuk-img').src = 'taegeuk/taegeuk_1.png';
   updateTaegeukLabel();
   renderTaegeukOptions();
+  updateTaegeukNumBadge(); // ← 추가
   const fb = document.getElementById('taegeuk-feedback');
   fb.className = 'feedback-bubble';
   fb.textContent = '';
@@ -2178,6 +2214,38 @@ function renderTaegeukOptions() {
   `).join('');
 }
 
+// ─── 삼태극 번호 배지 위치 (이미지 비율 기준 %) ───
+// 각 단계에서 "다음에 칠해야 할 빈 영역"의 중심 좌표를 % 단위로 지정
+// 실제 이미지를 보고 조정해주세요!
+const TAEGEUK_BADGE_POSITIONS = [
+  { x: 50, y: 25 },  // 1단계: taegeuk_1.png 의 빈 영역 (예: 위쪽)
+  { x: 28, y: 68 },  // 2단계: taegeuk_2.png 의 빈 영역 (예: 좌하단)
+  { x: 72, y: 68 }   // 3단계: taegeuk_3.png 의 빈 영역 (예: 우하단)
+];
+
+function updateTaegeukNumBadge() {
+  const badge = document.getElementById('taegeuk-num-badge');
+  if (!badge) return;
+
+  // 모든 단계 완료 시 배지 숨김
+  if (taegeukStep >= TAEGEUK_ANSWERS.length) {
+    badge.style.display = 'none';
+    return;
+  }
+
+  const pos = TAEGEUK_BADGE_POSITIONS[taegeukStep];
+  if (!pos) {
+    badge.style.display = 'none';
+    return;
+  }
+
+  // 배지 번호 갱신 + 위치 설정 + 표시
+  badge.textContent = taegeukStep + 1;
+  badge.style.left = pos.x + '%';
+  badge.style.top = pos.y + '%';
+  badge.style.display = 'flex';
+}
+
 function selectTaegeukColor(colorKey) {
   const correct = TAEGEUK_ANSWERS[taegeukStep];
   const btn = document.querySelector(`.taegeuk-color-btn[data-color="${colorKey}"]`);
@@ -2188,6 +2256,7 @@ function selectTaegeukColor(colorKey) {
     // 이미지 단계 업데이트 (1 → 2 → 3 → 4)
     const imgName = taegeukStep >= 3 ? 'taegeuk_finish' : `taegeuk_${taegeukStep + 1}`;
     document.getElementById('taegeuk-img').src = `taegeuk/${imgName}.png`;
+    updateTaegeukNumBadge(); // ← 추가
     fb.className = 'feedback-bubble correct show';
     fb.textContent = LANG==='ko'
       ? `정답! ${TAEGEUK_COLORS[colorKey].name_ko}이에요!`
