@@ -2011,11 +2011,11 @@ function nextL2Quiz() {
 }
 
 function finishLevel2() {
-  markStepDone('prog-2');
-  markStepActive('prog-3');
   document.getElementById('level2-card').classList.add('hidden-section');
-  document.getElementById('level3-card').classList.remove('hidden-section');
-  initDancheong();
+  showLevelIntro(3, () => {
+    document.getElementById('level3-card').classList.remove('hidden-section');
+    initDancheong();
+  });
 }
 
 // ============================================================
@@ -2282,10 +2282,11 @@ function updateDanchProgress() {
 }
 
 function finishLevel3() {
-  markStepDone('prog-3');
   document.getElementById('level3-card').classList.add('hidden-section');
-  document.getElementById('taegeuk-card').classList.remove('hidden-section');
-  renderTaegeuk();
+  showLevelIntro(4, () => {
+    document.getElementById('taegeuk-card').classList.remove('hidden-section');
+    renderTaegeuk();
+  });
 }
 
 // ============================================================
