@@ -1300,8 +1300,17 @@ html, body {
   padding: 14px !important;
 }
 .pattern-cell, .pattern-question {
-  width: 70px !important;
-  height: 70px !important;
+  width: 64px !important;
+  height: 64px !important;
+}
+.pattern-cell {
+  padding: 4px !important;
+  box-sizing: border-box;
+}
+.pattern-cell svg, .pattern-cell img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
 }
 .pattern-cell svg, .pattern-cell img {
   width: 100% !important;
@@ -1353,15 +1362,34 @@ html, body {
 #l2-quiz-container > div[style*="grid-template-columns:1fr auto 1fr"] {
   flex: 1;
   min-height: 0;
-  max-height: 480px;
-  padding: 8px !important;
+  max-height: 440px;
+  padding: 6px !important;
   margin-bottom: 6px !important;
+  gap: 8px !important;
 }
 .sym-cell {
   aspect-ratio: 1;
   min-width: 0;
-  padding: 2px !important;
-  max-height: 100px;
+  padding: 1px !important;
+  max-height: 72px;
+  max-width: 72px;
+}
+.sym-cell div {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sym-cell div svg, .sym-cell div img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+}
+/* 격자를 부모 노란 박스 안으로 확실히 가두기 */
+#l2-quiz-container > div[style*="grid-template-columns:1fr auto 1fr"] > div {
+  overflow: hidden;
 }
 .sym-cell div svg, .sym-cell div img {
   max-width: 100% !important;
@@ -1375,7 +1403,12 @@ html, body {
 }
 
 /* ─── LEVEL 3 — 상단 여백 축소 + SVG 키우기 ─── */
-#level3-card .section-subtitle { display: none !important; }
+#level3-card .section-subtitle {
+  display: block !important;
+  font-size: 12px !important;
+  margin-bottom: 4px !important;
+  margin-top: 2px !important;
+}
 #danch-legend { display: none !important; }
 .dancheong-svg-wrapper {
   margin-top: 0 !important;
@@ -1471,23 +1504,27 @@ html, body {
   <!-- 문 뒤에 보이는 콘텐츠 (제목 + 설명 + 진행 단계) -->
   <div class="intro-content">
     <div class="intro-progress">
-      <div class="step-item" id="intro-prog-1">
-        <div class="step-circle">一</div>
-        <div class="step-label" data-ko="순서 패턴" data-en="Sequence">순서 패턴</div>
-      </div>
-      <div class="step-item" id="intro-prog-2">
-        <div class="step-circle">二</div>
-        <div class="step-label" data-ko="대칭 패턴" data-en="Symmetry">대칭 패턴</div>
-      </div>
-      <div class="step-item" id="intro-prog-3">
-        <div class="step-circle">三</div>
-        <div class="step-label" data-ko="단청 색칠" data-en="Dancheong">단청 색칠</div>
-      </div>
-      <div class="step-item" id="intro-prog-4">
-        <div class="step-circle">完</div>
-        <div class="step-label" data-ko="미션 완료" data-en="Mission Complete">미션 완료</div>
-      </div>
-    </div>
+    <div class="step-item" id="intro-prog-1">
+    <div class="step-circle">一</div>
+    <div class="step-label" data-ko="순서 패턴" data-en="Sequence">순서 패턴</div>
+  </div>
+  <div class="step-item" id="intro-prog-2">
+    <div class="step-circle">二</div>
+    <div class="step-label" data-ko="대칭 패턴" data-en="Symmetry">대칭 패턴</div>
+  </div>
+  <div class="step-item" id="intro-prog-3">
+    <div class="step-circle">三</div>
+    <div class="step-label" data-ko="단청 색칠" data-en="Dancheong">단청 색칠</div>
+  </div>
+  <div class="step-item" id="intro-prog-4">
+    <div class="step-circle">四</div>
+    <div class="step-label" data-ko="삼태극 복원" data-en="Sam-Taegeuk">삼태극 복원</div>
+  </div>
+  <div class="step-item" id="intro-prog-5">
+    <div class="step-circle">完</div>
+    <div class="step-label" data-ko="미션 완료" data-en="Mission Complete">미션 완료</div>
+  </div>
+</div>
     <h2 class="intro-title" id="intro-title">LEVEL 1</h2>
     <p class="intro-desc" id="intro-desc">설명</p>
   </div>
@@ -1503,7 +1540,7 @@ html, body {
       <span class="level-badge">LEVEL 1</span>
       <span data-ko="순서 패턴 익히기" data-en="Learning Sequence Patterns">순서 패턴 익히기</span>
     </div>
-    <div class="score-display" id="score-1">0 / 5</div>
+    <div class="score-display" id="score-1">1 / 5</div>
   </div>
   <p class="section-subtitle" data-ko="다음에 올 전통 문양을 맞춰보세요. 문양의 순서를 잘 살펴보세요!" data-en="Guess the next traditional pattern. Look carefully at the order of the patterns!">
     다음에 올 전통 문양을 맞춰보세요. 문양의 순서를 잘 살펴보세요!
@@ -1875,7 +1912,7 @@ function checkL1(btn, chosen, answer) {
     fb.innerHTML = `<span data-ko="아쉬워요! 정답은 [${aName}]입니다. 패턴을 다시 살펴보세요." data-en="Not quite! The answer is [${aName}]. Look at the pattern again.">${LANG==='ko'?`아쉬워요! 정답은 [${aName}]입니다. 패턴을 다시 살펴보세요.`:`Not quite! The answer is [${aName}]. Look at the pattern again.`}</span>`;
   }
 
-  document.getElementById('score-1').textContent = `${l1Score} / 5`;
+  document.getElementById('score-1').textContent = `${l1Current + 1} / 5`;
 
   if (l1Current < 4) {
     document.getElementById('l1-next-btn').classList.add('show');
@@ -1933,15 +1970,14 @@ const Q4 = makeSymQuiz(5, [
   'plum','lotus','cloud','wave','peony',
   'wave','crane','peony','bamboo','cloud'
 ]);
-// Q5: 7x7
-const Q5 = makeSymQuiz(7, [
-  'lotus','cloud','crane','wave','bamboo','plum','peony',
-  'plum','bamboo','peony','phoenix','turtle','wave','lotus',
-  'turtle','wave','lotus','crane','phoenix','peony','bamboo',
-  'phoenix','peony','plum','bamboo','cloud','crane','wave',
-  'cloud','crane','wave','turtle','lotus','bamboo','phoenix',
-  'lotus','peony','phoenix','plum','bamboo','turtle','lotus',
-  'bamboo','turtle','lotus','cloud','wave','crane','peony'
+// Q5: 7x7 -> 6*6으로 수정
+ const Q5 = makeSymQuiz(6, [
+  'lotus','cloud','crane','wave','bamboo','plum',
+  'phoenix','peony','turtle','lotus','crane','wave',
+  'wave','lotus','phoenix','peony','bamboo','turtle',
+  'turtle','bamboo','cloud','crane','peony','phoenix',
+  'crane','wave','lotus','bamboo','turtle','cloud',
+  'peony','phoenix','wave','plum','lotus','crane'
 ]);
 
 // Blanks: indices are into the RIGHT grid (cols×cols)
@@ -1973,13 +2009,13 @@ const L2_QUIZZES = [
   },
   // Q5
   {
-    cols: 7, left: Q5.left, right: Q5.right,
+    cols: 6, left: Q5.left, right: Q5.right,
     blanks: [
-      { idx: 10, wrongs: ['cloud','lotus','turtle'] },     // 정답: phoenix
-      { idx: 18, wrongs: ['peony','crane','bamboo'] },     // 정답: lotus
-      { idx: 24, wrongs: ['wave','crane','peony'] },       // 정답: bamboo
-      { idx: 30, wrongs: ['peony','plum','turtle'] },      // 정답: lotus 
-      { idx: 40, wrongs: ['turtle','wave','phoenix'] }     // 정답: peony
+      { idx: 7,  wrongs: ['phoenix','turtle','cloud'] },   // 정답: crane
+      { idx: 14, wrongs: ['lotus','bamboo','plum'] },      // 정답: peony
+      { idx: 21, wrongs: ['wave','crane','peony'] },       // 정답: cloud
+      { idx: 28, wrongs: ['plum','peony','turtle'] },      // 정답: wave
+      { idx: 35, wrongs: ['crane','phoenix','cloud'] }     // 정답: peony
     ]
   }
 ];
@@ -2458,6 +2494,11 @@ function finishLevel3() {
   });
 }
 
+function finishTaegeuk() {
+  document.getElementById('taegeuk-card').classList.add('hidden-section');
+  document.getElementById('celebration-card').classList.remove('hidden-section');
+}
+
 // ============================================================
 // STEP HELPERS
 // ============================================================
@@ -2759,19 +2800,18 @@ function showLevelIntro(level, onClose) {
     LANG==='ko' ? data.desc_ko : data.desc_en;
 
   // 진행 단계 하이라이트 (현재 level이 active, 이전은 done)
-  for (let i = 1; i <= 4; i++) {
+  const chars = ['一','二','三','四','完'];
+  for (let i = 1; i <= 5; i++) {
     const el = document.getElementById('intro-prog-' + i);
+    if (!el) continue;
     el.classList.remove('active','done');
     if (i < level) {
       el.classList.add('done');
       el.querySelector('.step-circle').textContent = '✓';
     } else if (i === level) {
       el.classList.add('active');
-      // 원래 한자 복원
-      const chars = ['一','二','三','完'];
       el.querySelector('.step-circle').textContent = chars[i-1];
     } else {
-      const chars = ['一','二','三','完'];
       el.querySelector('.step-circle').textContent = chars[i-1];
     }
   }
