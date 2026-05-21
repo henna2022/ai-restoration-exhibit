@@ -1827,24 +1827,24 @@ const L2_QUIZZES = [
     cols: 3, left: Q3.left, right: Q3.right,
     blanks: [{ idx: 6, wrongs: ['lotus','plum','phoenix'] }]
   },
-  // Q4: 5x5 — 3개 빈칸을 좌상/중앙/우하로 분산
+  // Q4
   {
     cols: 5, left: Q4.left, right: Q4.right,
     blanks: [
-      { idx: 6,  wrongs: ['wave','peony','crane'] },      // 2행 2열
-      { idx: 12, wrongs: ['turtle','crane','peony'] },   // 중앙 (3행 3열)
-      { idx: 18, wrongs: ['crane','peony','bamboo'] }    // 4행 4열
+      { idx: 6,  wrongs: ['wave','peony','plum'] },        // 정답: phoenix
+      { idx: 12, wrongs: ['crane','lotus','peony'] },      // 정답: turtle
+      { idx: 18, wrongs: ['crane','peony','bamboo'] }      // 정답: lotus
     ]
   },
-  // Q5: 7x7 — 5개 빈칸을 그리드 전체에 흩어지게 배치
+  // Q5
   {
     cols: 7, left: Q5.left, right: Q5.right,
     blanks: [
-      { idx: 10, wrongs: ['cloud','lotus','turtle'] },    // 정답: phoenix
-      { idx: 18, wrongs: ['lotus','peony','crane'] },     // 정답: bamboo
-      { idx: 24, wrongs: ['wave','crane','peony'] },      // 정답: bamboo 
-      { idx: 30, wrongs: ['wave','plum','turtle'] },      // 정답: crane
-      { idx: 40, wrongs: ['phoenix','wave','bamboo'] }    // 정답: turtle 
+      { idx: 10, wrongs: ['cloud','lotus','turtle'] },     // 정답: phoenix
+      { idx: 18, wrongs: ['peony','crane','bamboo'] },     // 정답: lotus
+      { idx: 24, wrongs: ['wave','crane','peony'] },       // 정답: bamboo
+      { idx: 30, wrongs: ['peony','plum','turtle'] },      // 정답: lotus 
+      { idx: 40, wrongs: ['turtle','wave','phoenix'] }     // 정답: peony
     ]
   }
 ];
