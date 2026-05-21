@@ -2449,6 +2449,7 @@ function checkL2(btn, chosen, answer) {
   const q = L2_QUIZZES[l2Current];
   const blank = q.blanks[l2ActiveBlankIdx];
   const correct = chosen === answer;
+  addScore(correct);  // ← 추가
 
   // disable buttons
   document.querySelectorAll('#l2-options-area .quiz-option').forEach(b => {
@@ -2754,6 +2755,7 @@ function clickDanchPetal(idx) {
   }
   const correctKey = danchPattern[idx % danchPattern.length];
   const correct = selectedDanchColor === correctKey;
+  addScore(correct);  // ← 추가
 
   if (correct) {
     petalFill[idx] = selectedDanchColor;
@@ -2979,6 +2981,8 @@ function selectTaegeukColor(colorKey) {
   const btn = document.querySelector(`.taegeuk-color-btn[data-color="${colorKey}"]`);
   const fb = document.getElementById('taegeuk-feedback');
 
+  addScore(colorKey === correct);
+
   if (colorKey === correct) {
     taegeukStep++;
     // 이미지 단계 업데이트 (1 → 2 → 3 → 4)
@@ -3058,6 +3062,8 @@ function selectBand(key) {
   const q = BAND_QUIZZES[bandIndex];
   const opt = document.querySelector(`.band-option[data-key="${key}"]`);
   const fb = document.getElementById('band-feedback');
+
+  addScore(key === q.answer); 
 
   if (key === q.answer) {
     opt.classList.add('correct');
