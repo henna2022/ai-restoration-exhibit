@@ -1529,7 +1529,7 @@ function checkL1(btn, chosen, answer) {
       b.classList.add('correct');
     }
   });
-}
+
   const fb = document.getElementById('l1-feedback');
   fb.classList.remove('show','correct','wrong');
   fb.classList.add('show', correct ? 'correct' : 'wrong');
@@ -1548,7 +1548,7 @@ function checkL1(btn, chosen, answer) {
     document.getElementById('l1-finish-btn').style.display = 'flex';
     document.getElementById('l1-finish-btn').style.margin = '14px auto 0';
   }
-
+}
 function nextL1Quiz() { l1Current++; renderL1Quiz(); }
 
 function finishLevel1() {
