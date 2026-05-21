@@ -3428,7 +3428,7 @@ function setStartLang(lang) {
     en: {
       badge: 'AI RESTORATION EXPERIENCE',
       title: 'I Am a <span style="color:var(--gold)">Restorer</span>!',
-      desc: 'Through the experience of restoring traditional Korean patterns,<br>begin thy training to become a true restorer.',
+      desc: 'Through the experience of restoring<br>traditional Korean patterns,<br>begin thy training to become a true restorer.',
       btn: 'Begin Training'
     }
   };
@@ -3457,12 +3457,10 @@ function startGame() {
     screen.classList.add('hide');
   }, 1400);
 
-  // 3) 시작 화면 완전히 사라진 후 레벨 1 인트로 → 게임 시작
+  // 3) 시작 화면 완전히 사라진 후 바로 레벨 1 시작 (인트로 스킵!)
   setTimeout(() => {
     screen.style.display = 'none';
-    showLevelIntro(1, () => {
-      renderL1Quiz();
-    });
+    renderL1Quiz();
   }, 2000);
 }
 
