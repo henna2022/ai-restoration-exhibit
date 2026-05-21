@@ -8,9 +8,9 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
 :root {
-  --primary: #8B1A1A;
-  --primary-light: #C94040;
-  --primary-dark: #5C0E0E;
+  --primary: #2B4A8C;
+  --primary-light: #4A6CB0;
+  --primary-dark: #1A3268;
   --gold: #C9A84C;
   --gold-light: #F0D080;
   --gold-dark: #8B6914;
@@ -61,7 +61,7 @@ body {
   letter-spacing:-0.3px;
 }
 .museum-logo-img {
-  height:57px;
+  height:74px;
   width:auto;
   background:white;
   border-radius:8px;
@@ -1111,7 +1111,133 @@ html { scroll-behavior:auto; }
   .band-options { grid-template-columns:repeat(2, 1fr); }
   .band-blank { width:80px; height:60px; font-size:24px; }
   .band-half { height:60px; }
-}</style>
+}
+/* ─── LEVEL INTRO OVERLAY (창호문 연출) ─── */
+.level-intro-overlay {
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  z-index:1000;
+  display:none;
+  background:rgba(45, 30, 16, 0.85);
+  overflow:hidden;
+}
+.level-intro-overlay.show { display:block; }
+
+/* 문짝 공통 */
+.hanok-door {
+  position:absolute;
+  top:0;
+  width:50%;
+  height:100%;
+  z-index:2;
+  transition:transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.hanok-door svg {
+  width:100%;
+  height:100%;
+  display:block;
+}
+.door-left { left:0; transform:translateX(0); }
+.door-right { right:0; transform:translateX(0); }
+
+/* 열린 상태 (양옆으로 슬라이드) */
+.level-intro-overlay.opening .door-left { transform:translateX(-100%); }
+.level-intro-overlay.opening .door-right { transform:translateX(100%); }
+
+/* 문 뒤 콘텐츠 */
+.intro-content {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%, -50%);
+  text-align:center;
+  z-index:1;
+  color:white;
+  width:90%;
+  max-width:700px;
+  opacity:0;
+  transition:opacity 0.6s ease 0.6s;
+}
+.level-intro-overlay.opening .intro-content { opacity:1; }
+
+.intro-progress {
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  margin-bottom:32px;
+}
+.intro-progress .step-item {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  max-width:none;
+  flex:none;
+}
+.intro-progress .step-item::after { display:none !important; }
+.intro-progress .step-circle {
+  width:44px; height:44px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.4);
+  background:rgba(255,255,255,0.1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px;
+  font-weight:700;
+  color:rgba(255,255,255,0.7);
+  font-family:'Noto Serif KR',serif;
+}
+.intro-progress .step-item.active .step-circle {
+  border-color:var(--gold);
+  background:var(--gold);
+  color:var(--primary-dark);
+  box-shadow:0 0 0 6px rgba(201,168,76,.3);
+}
+.intro-progress .step-item.done .step-circle {
+  border-color:var(--gold-light);
+  background:var(--gold-light);
+  color:var(--primary-dark);
+}
+.intro-progress .step-label {
+  font-size:13px;
+  color:rgba(255,255,255,0.8);
+}
+.intro-progress .step-item.active .step-label {
+  color:var(--gold);
+  font-weight:700;
+}
+
+.intro-title {
+  font-family:'Noto Serif KR',serif;
+  font-size:54px;
+  font-weight:900;
+  color:var(--gold);
+  margin-bottom:18px;
+  letter-spacing:2px;
+}
+.intro-desc {
+  font-size:20px;
+  line-height:1.7;
+  color:rgba(255,255,255,0.95);
+  max-width:600px;
+  margin:0 auto;
+}
+
+/* ─── COMPACT MODE (1340×800 한 화면) ─── */
+.site-header {
+  padding:8px 28px;
+}
+.main-content {
+  padding:18px 20px 30px;
+  max-width:1280px;
+}
+.section-card {
+  padding:20px 28px;
+  margin-bottom:14px;
+  border-radius:16px;
+}
+.section-title { font-size:21px; }
+.section-subtitle { font-size:14px; margin-bottom:14px; }
+.level-badge { font-size:12px; padding:3px 9px; }
+.score-display { font-size:14px; padding:4px 12px; }</style>
 </head>
 <body>
 
@@ -1127,34 +1253,74 @@ html { scroll-behavior:auto; }
   </div>
 </header>
 
-<!-- ======= HERO ======= -->
-<section class="hero">
-  <div class="hero-badge" data-ko="AI 복원 체험 프로그램" data-en="AI RESTORE EXPERIENCE">AI 복원 체험 프로그램</div>
-  <h1><span class="gold" data-ko="나도" data-en="I Am a">나도</span> <span data-ko="복원가!" data-en="Restorer!">복원가!</span></h1>
-  <p class="hero-desc" data-ko="한국의 아름다운 전통 문양을 배우고,<br>인공지능이 어떻게 문화재를 복원하는지 직접 체험해 보세요." data-en="Learn about beautiful Korean traditional patterns,<br>and experience firsthand how AI restores cultural heritage.">
-    한국의 아름다운 전통 문양을 배우고,<br>인공지능이 어떻게 문화재를 복원하는지 직접 체험해 보세요.
-  </p>
-</section>
+<!-- ======= LEVEL INTRO OVERLAY (창호문 연출) ======= -->
+<div id="level-intro-overlay" class="level-intro-overlay">
+  <!-- 왼쪽 문짝 -->
+  <div class="hanok-door door-left">
+    <svg viewBox="0 0 200 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 문틀 -->
+      <rect x="0" y="0" width="200" height="600" fill="#6B3410"/>
+      <rect x="8" y="8" width="184" height="584" fill="#F5EDD8" stroke="#6B3410" stroke-width="4"/>
+      <!-- 격자 살 (창호 무늬) -->
+      <g stroke="#6B3410" stroke-width="6" fill="none">
+        <!-- 세로살 -->
+        <line x1="50" y1="8" x2="50" y2="592"/>
+        <line x1="100" y1="8" x2="100" y2="592"/>
+        <line x1="150" y1="8" x2="150" y2="592"/>
+        <!-- 가로살 -->
+        <line x1="8" y1="80" x2="192" y2="80"/>
+        <line x1="8" y1="160" x2="192" y2="160"/>
+        <line x1="8" y1="240" x2="192" y2="240"/>
+        <line x1="8" y1="320" x2="192" y2="320"/>
+        <line x1="8" y1="400" x2="192" y2="400"/>
+        <line x1="8" y1="480" x2="192" y2="480"/>
+      </g>
+      <!-- 손잡이 -->
+      <circle cx="180" cy="300" r="8" fill="#3A2210" stroke="#1A0F08" stroke-width="2"/>
+    </svg>
+  </div>
+  <!-- 오른쪽 문짝 -->
+  <div class="hanok-door door-right">
+    <svg viewBox="0 0 200 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="200" height="600" fill="#6B3410"/>
+      <rect x="8" y="8" width="184" height="584" fill="#F5EDD8" stroke="#6B3410" stroke-width="4"/>
+      <g stroke="#6B3410" stroke-width="6" fill="none">
+        <line x1="50" y1="8" x2="50" y2="592"/>
+        <line x1="100" y1="8" x2="100" y2="592"/>
+        <line x1="150" y1="8" x2="150" y2="592"/>
+        <line x1="8" y1="80" x2="192" y2="80"/>
+        <line x1="8" y1="160" x2="192" y2="160"/>
+        <line x1="8" y1="240" x2="192" y2="240"/>
+        <line x1="8" y1="320" x2="192" y2="320"/>
+        <line x1="8" y1="400" x2="192" y2="400"/>
+        <line x1="8" y1="480" x2="192" y2="480"/>
+      </g>
+      <circle cx="20" cy="300" r="8" fill="#3A2210" stroke="#1A0F08" stroke-width="2"/>
+    </svg>
+  </div>
 
-<!-- ======= PROGRESS ======= -->
-<div class="progress-section">
-  <div class="progress-steps">
-    <div class="step-item active" id="prog-1">
-      <div class="step-circle">一</div>
-      <div class="step-label" data-ko="순서 패턴" data-en="Sequence">순서 패턴</div>
+  <!-- 문 뒤에 보이는 콘텐츠 (제목 + 설명 + 진행 단계) -->
+  <div class="intro-content">
+    <div class="intro-progress">
+      <div class="step-item" id="intro-prog-1">
+        <div class="step-circle">一</div>
+        <div class="step-label" data-ko="순서 패턴" data-en="Sequence">순서 패턴</div>
+      </div>
+      <div class="step-item" id="intro-prog-2">
+        <div class="step-circle">二</div>
+        <div class="step-label" data-ko="대칭 패턴" data-en="Symmetry">대칭 패턴</div>
+      </div>
+      <div class="step-item" id="intro-prog-3">
+        <div class="step-circle">三</div>
+        <div class="step-label" data-ko="단청 색칠" data-en="Dancheong">단청 색칠</div>
+      </div>
+      <div class="step-item" id="intro-prog-4">
+        <div class="step-circle">完</div>
+        <div class="step-label" data-ko="미션 완료" data-en="Mission Complete">미션 완료</div>
+      </div>
     </div>
-    <div class="step-item" id="prog-2">
-      <div class="step-circle">二</div>
-      <div class="step-label" data-ko="대칭 패턴" data-en="Symmetry">대칭 패턴</div>
-    </div>
-    <div class="step-item" id="prog-3">
-      <div class="step-circle">三</div>
-      <div class="step-label" data-ko="단청 색칠" data-en="Dancheong">단청 색칠</div>
-    </div>
-    <div class="step-item" id="prog-4">
-      <div class="step-circle">完</div>
-      <div class="step-label" data-ko="미션 완료" data-en="Mission Complete">미션 완료</div>
-    </div>
+    <h2 class="intro-title" id="intro-title">LEVEL 1</h2>
+    <p class="intro-desc" id="intro-desc">설명</p>
   </div>
 </div>
 
@@ -1552,7 +1718,6 @@ function checkL1(btn, chosen, answer) {
 function nextL1Quiz() { l1Current++; renderL1Quiz(); }
 
 function finishLevel1() {
-  markStepDone('prog-1');
   document.getElementById('level1-card').classList.add('hidden-section');
   startBandQuiz();
 }
@@ -2366,13 +2531,104 @@ function startBandQuiz() {
 
 function finishBand() {
   document.getElementById('band-card').classList.add('hidden-section');
-  document.getElementById('level2-card').classList.remove('hidden-section');
-  renderL2Quiz();
+  showLevelIntro(2, () => {
+    document.getElementById('level2-card').classList.remove('hidden-section');
+    renderL2Quiz();
+  });
 }
+// ============================================================
+// LEVEL INTRO OVERLAY 제어
+// ============================================================
+const LEVEL_INTRO_DATA = {
+  1: {
+    title_ko: 'LEVEL 1',
+    title_en: 'LEVEL 1',
+    subtitle_ko: '순서 패턴 익히기',
+    subtitle_en: 'Sequence Patterns',
+    desc_ko: '전통 문양이 반복되는 순서를 살펴보고,<br>빈칸에 들어갈 문양을 맞춰보세요!',
+    desc_en: 'Observe the repeating order of traditional patterns,<br>and guess what fills the blank!'
+  },
+  2: {
+    title_ko: 'LEVEL 2',
+    title_en: 'LEVEL 2',
+    subtitle_ko: '대칭 패턴 찾기',
+    subtitle_en: 'Symmetry Patterns',
+    desc_ko: '왼쪽과 오른쪽이 대칭을 이루는 격자에서,<br>빈칸에 알맞은 문양을 골라보세요!',
+    desc_en: 'In a grid mirrored left-right,<br>choose the pattern that fits the blank!'
+  },
+  3: {
+    title_ko: 'LEVEL 3',
+    title_en: 'LEVEL 3',
+    subtitle_ko: '단청 색칠하기',
+    subtitle_en: 'Dancheong Coloring',
+    desc_ko: '한국 전통 단청의 색 규칙을 따라,<br>꽃잎에 알맞은 색을 칠해보세요!',
+    desc_en: 'Following the color rules of traditional Dancheong,<br>paint each petal with the right color!'
+  },
+  4: {
+    title_ko: 'LEVEL 4',
+    title_en: 'LEVEL 4',
+    subtitle_ko: '삼태극 색칠하기',
+    subtitle_en: 'Sam-Taegeuk Coloring',
+    desc_ko: '삼태극의 빈 영역을 차례대로<br>알맞은 색으로 채워보세요!',
+    desc_en: 'Fill the empty areas of the Sam-Taegeuk<br>with the right colors in order!'
+  }
+};
+
+function showLevelIntro(level, onClose) {
+  const overlay = document.getElementById('level-intro-overlay');
+  const data = LEVEL_INTRO_DATA[level];
+  if (!data) { if (onClose) onClose(); return; }
+
+  // 제목 + 설명 채우기
+  document.getElementById('intro-title').innerHTML =
+    (LANG==='ko' ? data.title_ko : data.title_en) +
+    ' &mdash; ' +
+    (LANG==='ko' ? data.subtitle_ko : data.subtitle_en);
+  document.getElementById('intro-desc').innerHTML =
+    LANG==='ko' ? data.desc_ko : data.desc_en;
+
+  // 진행 단계 하이라이트 (현재 level이 active, 이전은 done)
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('intro-prog-' + i);
+    el.classList.remove('active','done');
+    if (i < level) {
+      el.classList.add('done');
+      el.querySelector('.step-circle').textContent = '✓';
+    } else if (i === level) {
+      el.classList.add('active');
+      // 원래 한자 복원
+      const chars = ['一','二','三','完'];
+      el.querySelector('.step-circle').textContent = chars[i-1];
+    } else {
+      const chars = ['一','二','三','完'];
+      el.querySelector('.step-circle').textContent = chars[i-1];
+    }
+  }
+
+  // 오버레이 표시 → 잠시 뒤 문 열기 → 2초 뒤 닫기
+  overlay.classList.remove('opening');
+  overlay.classList.add('show');
+
+  // 다음 프레임에 .opening 추가 (트랜지션 발생을 위해)
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      overlay.classList.add('opening');
+    }, 100);
+  });
+
+  // 2초 후 오버레이 제거
+  setTimeout(() => {
+    overlay.classList.remove('show','opening');
+    if (onClose) onClose();
+  }, 2500); // 0.1s 대기 + 1s 문 열림 + 1.4s 보여주기
+}
+
 // ============================================================
 // INIT
 // ============================================================
-renderL1Quiz();
+showLevelIntro(1, () => {
+  renderL1Quiz();
+});
 setLang('ko');
 </script>
 </body>
