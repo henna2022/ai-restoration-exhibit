@@ -1638,6 +1638,87 @@ html, body {
 .intro-progress { gap: 22px !important; margin-bottom: 26px !important; }
 .intro-progress .step-circle { width: 40px !important; height: 40px !important; font-size: 18px !important; }
 .intro-progress .step-label { font-size: 12px !important; }
+
+/* ─── 두루마리 엔딩 ─── */
+#celebration-card {
+  background: #F5EDDC !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.scroll-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 100%;
+  max-height: 720px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hanji-scroll {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 6px 20px rgba(60,40,20,0.25));
+}
+.scroll-text {
+  position: absolute;
+  top: 12%;
+  left: 18%;
+  right: 18%;
+  bottom: 12%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  color: #2A1810;
+  font-family: 'Noto Serif KR', serif;
+}
+.brush-title {
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: 14px;
+  color: #5C0E0E;
+  font-family: 'Noto Serif KR', serif;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.05);
+}
+.brush-divider {
+  font-size: 26px;
+  color: #B8860B;
+}
+.brush-rank {
+  font-size: 30px;
+  font-weight: 800;
+  color: #2B4A8C;
+  letter-spacing: 4px;
+}
+.brush-score {
+  font-size: 18px;
+  font-weight: 700;
+  color: #5C3D1C;
+  padding: 6px 16px;
+  border: 1.5px solid #8B6F47;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.4);
+}
+.brush-message {
+  font-size: 17px;
+  line-height: 1.9;
+  color: #2A1810;
+  font-weight: 500;
+  padding: 0 8px;
+  letter-spacing: 0.5px;
+}
+.brush-footer {
+  font-size: 13px;
+  color: #8B6F47;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
 </style>
 </head>
 <body>
@@ -1741,17 +1822,17 @@ html, body {
     </div>
     <div class="score-display" id="score-1">1 / 5</div>
   </div>
-  <p class="section-subtitle" data-ko="다음에 올 전통 문양을 맞춰보세요. 문양의 순서를 잘 살펴보세요!" data-en="Guess the next traditional pattern. Look carefully at the order of the patterns!">
-    다음에 올 전통 문양을 맞춰보세요. 문양의 순서를 잘 살펴보세요!
+  <p class="section-subtitle" data-ko="다음에 올 전통 문양이 무엇이오? 문양의 순서를 잘 살펴보시오." data-en="Guess the next traditional pattern. Look carefully at the order of the patterns!">
+    다음에 올 전통 문양이 무엇이오? 문양의 순서를 잘 살펴보시오.
   </p>
   <div id="l1-quiz-container"></div>
   <div class="quiz-nav" id="l1-nav"></div>
   <div style="text-align:center">
     <button class="next-btn" id="l1-next-btn" onclick="nextL1Quiz()">
-      <span data-ko="다음 문제" data-en="Next Question">다음 문제</span> &rarr;
+      <span data-ko="다음 문제로 가시오" data-en="Next Question">다음 문제로 가시오</span> &rarr;
     </button>
     <button class="next-btn green-btn" id="l1-finish-btn" style="display:none" onclick="finishLevel1()">
-      <span data-ko="다음 미션으로" data-en="Next Mission">다음 미션으로</span> &rarr;
+      <span data-ko="다음 미션으로 가시오" data-en="Next Mission">다음 미션으로 가시오</span> &rarr;
     </button>
   </div>
 </div>
@@ -1761,8 +1842,8 @@ html, body {
     <span class="level-badge">LEVEL 1.5</span>
     <span data-ko="띠 무늬 빈칸 채우기" data-en="Fill the Band Pattern">띠 무늬 빈칸 채우기</span>
   </div>
-  <p class="section-subtitle" style="margin-top:6px" data-ko="끊어진 띠의 빈칸에 들어갈 무늬를 골라주세요!" data-en="Choose the pattern that fits the missing space in the band!">
-    끊어진 띠의 빈칸에 들어갈 무늬를 골라주세요!
+  <p class="section-subtitle" style="margin-top:6px" data-ko="끊어진 띠의 빈칸에 들 무늬를 고르시오." data-en="Choose the pattern that fits the missing space in the band!">
+    끊어진 띠의 빈칸에 들 무늬를 고르시오.
   </p>
   <div class="band-progress" id="band-progress">문제 1 / 2</div>
   <div class="band-question-area">
@@ -1789,8 +1870,8 @@ html, body {
     </div>
     <div class="score-display" id="score-2">0 / 5</div>
   </div>
-  <p class="section-subtitle" data-ko="왼쪽 패턴을 보고, 오른쪽에 올 문양을 골라보세요. 대칭이 되도록 생각해보세요!" data-en="Look at the left pattern and choose what comes on the right. Think about symmetry!">
-    왼쪽 패턴을 보고, 오른쪽에 올 문양을 골라보세요. 대칭이 되도록 생각해보세요!
+  <p class="section-subtitle" data-ko="왼쪽 문양을 살펴, 오른쪽에 들 문양을 고르시오. 대칭을 이루도록 생각해보시오." data-en="Look at the left pattern and choose what comes on the right. Think about symmetry!">
+    왼쪽 문양을 살펴, 오른쪽에 들 문양을 고르시오. 대칭을 이루도록 생각해보시오.
   </p>
   <div id="l2-quiz-container"></div>
   <div class="quiz-nav" id="l2-nav"></div>
@@ -1810,8 +1891,8 @@ html, body {
     <span class="level-badge">LEVEL 3</span>
     <span data-ko="단청 꽃잎 색칠하기" data-en="Color the Dancheong Petals">단청 꽃잎 색칠하기</span>
   </div>
-  <p class="section-subtitle" style="margin-top:6px" data-ko="단청의 색 패턴을 찾아서 빈 꽃잎에 알맞은 색을 칠해보세요. 별표(★) 꽃잎은 예시입니다." data-en="Find the color pattern and paint the empty petals. Petals marked with ★ are examples.">
-    단청의 색 패턴을 찾아서 빈 꽃잎에 알맞은 색을 칠해보세요. 별표(★) 꽃잎은 예시입니다.
+  <p class="section-subtitle" style="margin-top:6px" data-ko="단청의 색 규칙을 헤아려, 빈 꽃잎에 알맞은 색을 칠하시오. 별표(★) 꽃잎은 예시오." data-en="Find the color pattern and paint the empty petals. Petals marked with ★ are examples.">
+    단청의 색 규칙을 헤아려, 빈 꽃잎에 알맞은 색을 칠하시오. 별표(★) 꽃잎은 예시오.
   </p>
   <div class="dancheong-container" id="dancheong-area">
     <div class="danch-pattern-row" id="danch-legend"></div>
@@ -1821,8 +1902,8 @@ html, body {
     <div class="feedback-bubble" id="danch-feedback-top"></div>
     </p>
     <div class="danch-instruction">
-      <strong data-ko="색을 선택한 후, 빈 꽃잎(1 · 2 · 3)을 눌러 색칠하세요!" data-en="Select a color, then click the empty petals (1 · 2 · 3) to paint!">
-        색을 선택한 후, 빈 꽃잎(1 · 2 · 3)을 눌러 색칠하세요!
+      <strong data-ko="색을 고른 후, 빈 꽃잎(1 · 2 · 3)을 눌러 칠하시오." data-en="Select a color, then click the empty petals (1 · 2 · 3) to paint!">
+        색을 고른 후, 빈 꽃잎(1 · 2 · 3)을 눌러 칠하시오.
       </strong>
     </div>
     <div class="color-palette" id="danch-colors"></div>
@@ -1830,18 +1911,18 @@ html, body {
     <div class="danch-progress" id="danch-progress"></div>
   </div>
   <button class="next-btn green-btn" id="l3-finish-btn" style="display:none" onclick="finishLevel3()">
-   <span data-ko="완성! 다음 미션으로" data-en="Done! Next Mission">완성! 다음 미션으로</span> &rarr;
+   <span data-ko="완성! 다음 미션으로 이동" data-en="Done! Next Mission">완성! 다음 미션으로 이동</span> &rarr;
   </button>
   </div>
 </div>
-<!-- ===== LEVEL 3.5 — 삼태극 색깔 맞추기 ===== -->
+<!-- ===== LEVEL 3.5 — 삼태극 색 맞추기 ===== -->
 <div class="section-card hidden-section" id="taegeuk-card">
   <div class="section-title">
     <span class="level-badge">LEVEL 4</span>
-    <span data-ko="삼태극 색깔 맞추기" data-en="Sam-Taegeuk Color Quiz">삼태극 색깔 맞추기</span>
+    <span data-ko="삼태극 색 맞추기" data-en="Sam-Taegeuk Color Quiz">삼태극 색 맞추기</span>
   </div>
-  <p class="section-subtitle" style="margin-top:6px" data-ko="삼태극의 색깔을 순서대로 맞춰보세요!" data-en="Guess the colors of the Sam-Taegeuk in order!">
-    삼태극의 색깔을 순서대로 맞춰보세요!
+  <p class="section-subtitle" style="margin-top:6px" data-ko="삼태극의 색을 순서대로 맞추시오." data-en="Guess the colors of the Sam-Taegeuk in order!">
+    삼태극의 색을 순서대로 맞추시오.
   </p>
   <div class="dancheong-container">
     <div class="dancheong-svg-wrapper" style="position:relative;max-width:400px;margin:0 auto;">
@@ -1859,7 +1940,7 @@ html, body {
                  z-index:5;">1</div>
     </div>
     <p class="section-subtitle" id="taegeuk-step-label" style="text-align:center;margin:14px 0 8px;font-weight:600">
-      지금 칠해야 할 색을 골라주세요!
+      지금 칠하여야 할 색을 고르시오.
     </p>
     <div class="taegeuk-color-options" id="taegeuk-options"></div>
     <div class="feedback-bubble" id="taegeuk-feedback"></div>
@@ -1872,29 +1953,37 @@ html, body {
 </div>
 <!-- ===== CELEBRATION ===== -->
 <div class="section-card hidden-section" id="celebration-card">
-  <div class="celebration-content">
-    <div class="confetti-area" id="confetti-area"></div>
-    <div class="celebration-title" data-ko="AI 복원 완료!" data-en="AI Restoration Complete!">AI 복원 완료!</div>
-    <p class="celebration-text" data-ko="패턴 탐정이 된 것을 축하합니다! 레벨 1, 2, 3을 모두 통과하였습니다." data-en="Congratulations, Pattern Detective! You passed all 3 levels.">
-      패턴 탐정이 된 것을 축하합니다! 레벨 1, 2, 3을 모두 통과하였습니다.
-    </p>
-    <p class="celebration-text" style="font-size:17px;color:var(--text-light)" data-ko="여러분은 인공지능처럼 패턴을 분석하여 복원해보았습니다." data-en="You analyzed patterns and restored them just like artificial intelligence.">
-      여러분은 인공지능처럼 패턴을 분석하여 복원해보았습니다.
-    </p>
-    <div class="trad-divider">
-      <div class="trad-divider-line"></div>
-      <div class="trad-divider-ornament">&#10022;</div>
-      <div class="trad-divider-line"></div>
+  <div class="scroll-wrapper">
+    <!-- 두루마리 SVG -->
+    <svg class="hanji-scroll" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <!-- 상단 봉(롤) -->
+      <ellipse cx="200" cy="30" rx="180" ry="14" fill="#E8DCC0" stroke="#8B6F47" stroke-width="1.5"/>
+      <rect x="20" y="28" width="360" height="14" fill="#F5EDD8" stroke="#8B6F47" stroke-width="1"/>
+      <ellipse cx="20" cy="35" rx="8" ry="14" fill="#A0826D" stroke="#5C3D1C" stroke-width="1.5"/>
+      <ellipse cx="380" cy="35" rx="8" ry="14" fill="#A0826D" stroke="#5C3D1C" stroke-width="1.5"/>
+
+      <!-- 본문 한지 -->
+      <rect x="40" y="42" width="320" height="516" fill="#FBF6E9" stroke="#C9B591" stroke-width="1"/>
+      <!-- 좌우 띠지 -->
+      <rect x="40" y="42" width="20" height="516" fill="#D4B886" opacity="0.6"/>
+      <rect x="340" y="42" width="20" height="516" fill="#D4B886" opacity="0.6"/>
+
+      <!-- 하단 봉(롤) -->
+      <rect x="20" y="558" width="360" height="14" fill="#F5EDD8" stroke="#8B6F47" stroke-width="1"/>
+      <ellipse cx="200" cy="572" rx="180" ry="14" fill="#E8DCC0" stroke="#8B6F47" stroke-width="1.5"/>
+      <ellipse cx="20" cy="565" rx="8" ry="14" fill="#A0826D" stroke="#5C3D1C" stroke-width="1.5"/>
+      <ellipse cx="380" cy="565" rx="8" ry="14" fill="#A0826D" stroke="#5C3D1C" stroke-width="1.5"/>
+    </svg>
+
+    <!-- 두루마리 위에 얹는 텍스트 -->
+    <div class="scroll-text" id="scroll-text">
+      <div class="brush-title" id="celeb-title">參 復 元 完 了</div>
+      <div class="brush-divider">⁕</div>
+      <div class="brush-rank" id="celeb-rank">복원 명장</div>
+      <div class="brush-score" id="celeb-score">점수: 0 / 0</div>
+      <div class="brush-message" id="celeb-message">메시지</div>
+      <div class="brush-footer">— 서울로봇인공지능과학관 —</div>
     </div>
-    <p style="font-size:20px;font-weight:700;color:var(--primary);margin-bottom:8px" data-ko="순서, 대칭, 색 — 세 가지 패턴을 모두 완성했습니다." data-en="Sequence, symmetry, color — you mastered all three patterns.">
-      순서, 대칭, 색 — 세 가지 패턴을 모두 완성했습니다.
-    </p>
-    <p style="font-size:17px;color:var(--text-medium);line-height:1.85;margin-bottom:4px" data-ko="여러분은 이제 진정한 복원가입니다." data-en="You are now a true Restorer.">
-      여러분은 이제 진정한 복원가입니다.
-    </p>
-    <p style="font-size:16px;color:var(--text-light);margin-top:8px" data-ko="서울로봇인공지능과학관에서 만나요." data-en="See you at the Seoul Robot &amp; AI Science Museum.">
-      서울로봇인공지능과학관에서 만나요.
-    </p>
   </div>
 </div>
 
@@ -1905,6 +1994,28 @@ html, body {
 // LANGUAGE SYSTEM
 // ============================================================
 let LANG = 'ko';
+
+// ============================================================
+// SCORE SYSTEM (사극 점수)
+// ============================================================
+let TOTAL_SCORE = 0;
+let TOTAL_MAX = 0;
+
+function addScore(correct) {
+  TOTAL_MAX += 1;
+  if (correct) {
+    TOTAL_SCORE += 1;
+  } else {
+    TOTAL_SCORE -= 1;
+  }
+}
+
+function getScorePercent() {
+  if (TOTAL_MAX === 0) return 0;
+  // 음수 점수도 0으로 클램프
+  const score = Math.max(0, TOTAL_SCORE);
+  return Math.round((score / TOTAL_MAX) * 100);
+}
 
 function setLang(lang) {
   LANG = lang;
@@ -2061,7 +2172,7 @@ function renderL1Quiz() {
   });
   optHTML += '</div>';
 
-  const qLabel_ko = `문제 ${l1Current+1}/5 &mdash; 빈칸(?)에 들어갈 문양은 무엇일까요?`;
+  const qLabel_ko = `문제 ${l1Current+1}/5 &mdash; 빈칸(?)에 들 문양은 무엇이오?`;
   const qLabel_en = `Q${l1Current+1}/5 &mdash; What pattern fills the blank(?)?`;
 
   document.getElementById('l1-quiz-container').innerHTML = `
@@ -2085,8 +2196,9 @@ function renderL1Quiz() {
 function checkL1(btn, chosen, answer) {
   if (l1Answered) return;
   l1Answered = true;
-  const correct = chosen === answer;
+  const correct = (chosen === answer);
   if (correct) l1Score++;
+  addScore(correct);  // ← 정답 스코어 추가
 
   document.querySelectorAll('#l1-quiz-container .quiz-option').forEach(b => {
     const key = b.onclick.toString().match(/'([^']+)','([^']+)'/);
@@ -2105,10 +2217,10 @@ function checkL1(btn, chosen, answer) {
   fb.classList.remove('show','correct','wrong');
   fb.classList.add('show', correct ? 'correct' : 'wrong');
   if (correct) {
-    fb.innerHTML = `<span data-ko="정답입니다! 패턴을 잘 찾았어요." data-en="Correct! You found the pattern.">${LANG==='ko'?'정답입니다! 패턴을 잘 찾았어요.':'Correct! You found the pattern.'}</span>`;
+    fb.innerHTML = `<span data-ko="옳소! 패턴을 잘 헤아렸소." data-en="Correct! You found the pattern.">${LANG==='ko'?'옳소! 패턴을 잘 헤아렸소.':'Correct! You found the pattern.'}</span>`;
   } else {
     const aName = LANG==='ko'?PATTERNS[answer].name_ko:PATTERNS[answer].name_en;
-    fb.innerHTML = `<span data-ko="아쉬워요! 정답은 [${aName}]입니다. 패턴을 다시 살펴보세요." data-en="Not quite! The answer is [${aName}]. Look at the pattern again.">${LANG==='ko'?`아쉬워요! 정답은 [${aName}]입니다. 패턴을 다시 살펴보세요.`:`Not quite! The answer is [${aName}]. Look at the pattern again.`}</span>`;
+    fb.innerHTML = `<span data-ko="아쉽소! 정답은 [${aName}]이오. 다시 살펴보시오." data-en="Close! The answer is [${aName}]. Look at the pattern again.">${LANG==='ko'?`아쉽소! 정답은 [${aName}]이오. 다시 살펴보시오..`:`Close! The answer is [${aName}]. Look at the pattern again.`}</span>`;
   }
 
   document.getElementById('score-1').textContent = `${l1Current + 1} / 5`;
@@ -2280,7 +2392,7 @@ function renderL2QuizGrid() {
     }
   }
 
-  const qKo = `문제 ${l2Current+1}/5 &mdash; 빈칸(?)에 올 문양은?${q.blanks.length > 1 ? ` (총 ${q.blanks.length}개)` : ''}`;
+  const qKo = `문제 ${l2Current+1}/5 &mdash; 빈칸(?)에 들 문양은 무엇이오?${q.blanks.length > 1 ? ` (총 ${q.blanks.length}개)` : ''}`;
   const qEn = `Q${l2Current+1}/5 &mdash; What fills the blank(s)?${q.blanks.length > 1 ? ` (${q.blanks.length} blanks)` : ''}`;
   const curBlankKo = q.blanks.length > 1 ? `<p style="font-size:15px;color:var(--gold-dark);margin-bottom:10px;text-align:center;font-weight:600">현재 ${l2ActiveBlankIdx+1}번 빈칸을 풀고 있어요</p>` : '';
   const curBlankEn = q.blanks.length > 1 ? `<p style="font-size:15px;color:var(--gold-dark);margin-bottom:10px;text-align:center;font-weight:600">Now solving blank #${l2ActiveBlankIdx+1}</p>` : '';
@@ -2362,7 +2474,7 @@ function checkL2(btn, chosen, answer) {
       l2Score++;
       document.getElementById('score-2').textContent = `${l2Score} / 5`;
       fb.textContent = LANG==='ko'
-        ? (q.blanks.length > 1 ? `훌륭해요! 모든 빈칸을 다 맞췄어요!` : '정답입니다! 대칭 패턴을 잘 찾았어요.')
+        ? (q.blanks.length > 1 ? `훌륭해요! 모든 빈칸을 다 맞췄어요!` : '옳소! 대칭 패턴을 잘 헤아렸소.')
         : (q.blanks.length > 1 ? `Excellent! You filled all the blanks!` : 'Correct! You found the symmetry pattern.');
 
       if (l2Current < L2_QUIZZES.length - 1) {
@@ -2374,7 +2486,7 @@ function checkL2(btn, chosen, answer) {
     } else {
       // More blanks remaining — advance to next blank
       fb.textContent = LANG==='ko'
-        ? `잘했어요! ${l2ActiveBlankIdx+1}번 빈칸 정답! 다음 빈칸을 풀어보세요.`
+        ? `잘했소! ${l2ActiveBlankIdx+1}번 빈칸 정답이오! 다음 빈칸을 풀어보시오.`
         : `Good! Blank #${l2ActiveBlankIdx+1} correct. Now solve the next one.`;
       setTimeout(() => {
         l2ActiveBlankIdx++;
@@ -2695,6 +2807,47 @@ function finishLevel3() {
 
 function finishTaegeuk() {
   document.getElementById('taegeuk-card').classList.add('hidden-section');
+  showFinalCelebration();
+}
+
+function showFinalCelebration() {
+  const pct = getScorePercent();
+  let rank, message;
+
+  if (pct >= 70) {
+    rank = '시대를 초월한 복원 명장';
+    message = '참으로 잘 하였소!<br>그대는 시대를 초월하는 복원가요.<br>그 솜씨, 후세에 길이 전해질 것이오.';
+  } else if (pct >= 50) {
+    rank = '훌륭한 복원가';
+    message = '잘 하였소.<br>허나 조금 더 정진한다면<br>참으로 멋진 복원가가 될 것이오.';
+  } else {
+    rank = '복원의 길을 걷는 자';
+    message = '열심히 힘쓴 그대에게 박수를 보내오.<br>훗날 멋진 복원가가 되기 위하여<br>더욱 공부에 매진하여 주시오.';
+  }
+
+  // 텍스트 채우기
+  document.getElementById('celeb-rank').textContent = rank;
+  document.getElementById('celeb-score').innerHTML =
+    `점수: ${Math.max(0, TOTAL_SCORE)} / ${TOTAL_MAX} &nbsp;(${pct}%)`;
+  document.getElementById('celeb-message').innerHTML = message;
+
+  // 영어 모드 대응
+  if (LANG === 'en') {
+    const ranks_en = {
+      '시대를 초월한 복원 명장': 'Timeless Master Restorer',
+      '훌륭한 복원가': 'Skilled Restorer',
+      '복원의 길을 걷는 자': 'Aspiring Restorer'
+    };
+    const messages_en = pct >= 70
+      ? 'Well done indeed!<br>Thou art a restorer beyond time.<br>Thy craft shall be remembered for ages.'
+      : pct >= 50
+      ? 'Thou hast done well.<br>With more devotion, thou shalt<br>become a true restorer.'
+      : 'I salute thy diligent effort.<br>Study further with all thy heart,<br>and one day thou shalt master this art.';
+    document.getElementById('celeb-rank').textContent = ranks_en[rank];
+    document.getElementById('celeb-message').innerHTML = messages_en;
+  }
+
+  // 카드 표시
   document.getElementById('celebration-card').classList.remove('hidden-section');
 }
 
@@ -2739,7 +2892,7 @@ function spawnConfetti() {
 }
 
 // ============================================================
-// LEVEL 4 — 삼태극 색깔 맞추기
+// LEVEL 4 — 삼태극 색 맞추기
 // ============================================================
 const TAEGEUK_COLORS = {
   red:    { hex:'#D32F2F', name_ko:'빨강', name_en:'Red' },
@@ -2951,35 +3104,35 @@ function finishBand() {
 // ============================================================
 const LEVEL_INTRO_DATA = {
   1: {
-    title_ko: 'LEVEL 1',
+    title_ko: '一段',
     title_en: 'LEVEL 1',
     subtitle_ko: '순서 패턴 익히기',
     subtitle_en: 'Sequence Patterns',
-    desc_ko: '전통 문양이 반복되는 순서를 살펴보고,<br>빈칸에 들어갈 문양을 맞춰보세요!',
+    desc_ko: '전통 문양이 반복되는 순서를 살피시오.<br>빈칸에 들 문양을 맞추어보시오.',
     desc_en: 'Observe the repeating order of traditional patterns,<br>and guess what fills the blank!'
   },
   2: {
-    title_ko: 'LEVEL 2',
+    title_ko: '二段',
     title_en: 'LEVEL 2',
     subtitle_ko: '대칭 패턴 찾기',
     subtitle_en: 'Symmetry Patterns',
-    desc_ko: '왼쪽과 오른쪽이 대칭을 이루는 격자에서,<br>빈칸에 알맞은 문양을 골라보세요!',
+    desc_ko: '좌우가 대칭을 이루는 격자에서<br>빈칸에 알맞은 문양을 고르시오.',
     desc_en: 'In a grid mirrored left-right,<br>choose the pattern that fits the blank!'
   },
   3: {
-    title_ko: 'LEVEL 3',
+    title_ko: '三段',
     title_en: 'LEVEL 3',
     subtitle_ko: '단청 색칠하기',
     subtitle_en: 'Dancheong Coloring',
-    desc_ko: '한국 전통 단청의 색 규칙을 따라,<br>꽃잎에 알맞은 색을 칠해보세요!',
+    desc_ko: '한국 전통 단청의 색 규칙을 따라<br>꽃잎에 알맞은 색을 칠하시오.',
     desc_en: 'Following the color rules of traditional Dancheong,<br>paint each petal with the right color!'
   },
   4: {
-    title_ko: 'LEVEL 4',
+    title_ko: '四段',
     title_en: 'LEVEL 4',
     subtitle_ko: '삼태극 색칠하기',
     subtitle_en: 'Sam-Taegeuk Coloring',
-    desc_ko: '삼태극의 빈 영역을 차례대로<br>알맞은 색으로 채워보세요!',
+    desc_ko: '삼태극의 빈 영역을 차례대로<br>알맞은 색으로 채우시오.',
     desc_en: 'Fill the empty areas of the Sam-Taegeuk<br>with the right colors in order!'
   }
 };
