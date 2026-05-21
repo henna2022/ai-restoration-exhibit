@@ -215,7 +215,7 @@ body {
   height:4px;
   background:linear-gradient(90deg, var(--primary), var(--gold), var(--teal));
 }
-.hidden-section { display:none; }
+.hidden-section { display:none !important; }
 
 .section-title-row {
   display:flex;
@@ -1265,8 +1265,10 @@ html, body {
   margin-bottom: 0 !important;
   height: 100%;
   overflow: hidden;
-  display: flex;
   flex-direction: column;
+}
+.section-card:not(.hidden-section) {
+  display: flex;
 }
 .section-title-row { margin-bottom: 2px !important; }
 .section-title { font-size: 19px !important; }
