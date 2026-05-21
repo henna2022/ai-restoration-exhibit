@@ -1806,11 +1806,11 @@ const L2_QUIZZES = [
   {
     cols: 7, left: Q5.left, right: Q5.right,
     blanks: [
-      { idx: 10, wrongs: ['cloud','bamboo','turtle'] },   // 2행 4열
-      { idx: 18, wrongs: ['lotus','peony','crane'] },     // 3행 5열
-      { idx: 24, wrongs: ['lotus','crane','peony'] },     // 4행 4열 (중앙)
-      { idx: 30, wrongs: ['wave','plum','turtle'] },      // 5행 3열
-      { idx: 40, wrongs: ['turtle','wave','phoenix'] }    // 6행 6열
+      { idx: 10, wrongs: ['cloud','lotus','turtle'] },    // 정답: phoenix
+      { idx: 18, wrongs: ['lotus','peony','crane'] },     // 정답: bamboo
+      { idx: 24, wrongs: ['wave','crane','peony'] },      // 정답: bamboo 
+      { idx: 30, wrongs: ['wave','plum','turtle'] },      // 정답: crane
+      { idx: 40, wrongs: ['phoenix','wave','bamboo'] }    // 정답: turtle 
     ]
   }
 ];
@@ -2583,8 +2583,9 @@ function showLevelIntro(level, onClose) {
   // 제목 + 설명 채우기
   document.getElementById('intro-title').innerHTML =
     (LANG==='ko' ? data.title_ko : data.title_en) +
-    ' &mdash; ' +
-    (LANG==='ko' ? data.subtitle_ko : data.subtitle_en);
+    '<br><span style="font-size:28px;font-weight:600;letter-spacing:1px;">' +
+    (LANG==='ko' ? data.subtitle_ko : data.subtitle_en) +
+    '</span>';
   document.getElementById('intro-desc').innerHTML =
     LANG==='ko' ? data.desc_ko : data.desc_en;
 
@@ -2621,9 +2622,8 @@ function showLevelIntro(level, onClose) {
   setTimeout(() => {
     overlay.classList.remove('show','opening');
     if (onClose) onClose();
-  }, 2500); // 0.1s 대기 + 1s 문 열림 + 1.4s 보여주기
+  }, 4000);
 }
-
 // ============================================================
 // INIT
 // ============================================================
