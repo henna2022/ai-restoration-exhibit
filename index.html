@@ -1631,7 +1631,7 @@ const L2_QUIZZES = [
   {
     cols: 5, left: Q4.left, right: Q4.right,
     blanks: [
-      { idx: 6,  wrongs: ['wave','peony','plum'] },      // 2행 2열
+      { idx: 6,  wrongs: ['wave','peony','crane'] },      // 2행 2열
       { idx: 12, wrongs: ['turtle','crane','peony'] },   // 중앙 (3행 3열)
       { idx: 18, wrongs: ['crane','peony','bamboo'] }    // 4행 4열
     ]
@@ -2217,9 +2217,9 @@ function renderTaegeukOptions() {
 // 각 단계에서 "다음에 칠해야 할 빈 영역"의 중심 좌표를 % 단위로 지정
 // 실제 이미지를 보고 조정해주세요!
 const TAEGEUK_BADGE_POSITIONS = [
-  { x: 50, y: 25 },  // 1단계: taegeuk_1.png 의 빈 영역 (예: 위쪽)
-  { x: 28, y: 68 },  // 2단계: taegeuk_2.png 의 빈 영역 (예: 좌하단)
-  { x: 72, y: 68 }   // 3단계: taegeuk_3.png 의 빈 영역 (예: 우하단)
+  { x: 56, y: 42 },  // 1단계: taegeuk_1.png 의 빈 영역 (예: 위쪽)
+  { x: 62, y: 28 },  // 2단계: taegeuk_2.png 의 빈 영역 (예: 좌하단)
+  { x: 65, y: 18 }   // 3단계: taegeuk_3.png 의 빈 영역 (예: 우하단)
 ];
 
 function updateTaegeukNumBadge() {
@@ -2291,7 +2291,7 @@ const BAND_PATTERNS = [
 
 const BAND_QUIZZES = [
   { full:'band/band_full_1.png', answer:'cloud' },
-  { full:'band/band_full_2.png', answer:'vine' }
+  { full:'band/band_full_2.png', answer:'lotus' }
 ];
 
 let bandIndex = 0;
