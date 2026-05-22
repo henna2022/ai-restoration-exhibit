@@ -3479,6 +3479,94 @@ function showLevelIntro(level, onClose) {
 }
 
 // ============================================================
+// GAME START SCREEN — 언어 토글 + 수련 시작 버튼
+// ============================================================
+function setStartLang(lang) {
+  LANG = lang;
+  const texts = {
+    ko: {
+      badge: 'AI 復元 體驗',
+      title: '나도 <span style="color:var(--gold)">복원가</span>!',
+      desc: '한국 전통 문양을 복원하는 체험을 통하여,<br>참된 복원가로 거듭나는 수련을 시작하시오.',
+      btn: '수련 시작'
+    },
+    en: {
+      badge: 'AI RESTORATION EXPERIENCE',
+      title: 'I Am a <span style="color:var(--gold)">Restorer</span>!',
+      desc: 'Through the experience of restoring<br>traditional Korean patterns,<br>begin thy training to become a true restorer.',
+      btn: 'Begin Training'
+    }
+  };
+  const t = texts[lang];
+  document.getElementById('start-badge').textContent = t.badge;
+  document.getElementById('start-title-text').innerHTML = t.title;
+  document.getElementById('start-desc').innerHTML = t.desc;
+  document.getElementById('start-btn-text').textContent = t.btn;
+
+  // 언어 버튼 active 토글
+  document.getElementById('start-lang-ko').classList.toggle('active', lang === 'ko');
+  document.getElementById('start-lang-en').classList.toggle('active', lang === 'en');
+
+  // 전체 페이지 언어 동기화
+  setLang(lang);
+}
+
+function startGame() {
+  const screen = document.getElementById('game-start-screen');
+  const video  = document.getElementById('start-video');
+
+  const startBlock = document.getElementById('start-mode-block');
+  const introBlock = document.getElementById('intro-mode-block');
+  const data = LEVEL_INTRO_DATA[1];
+
+  // 1) 갈색 상자 안 내용을 레벨 1 인트로로 즉시 교체
+  startBlock.style.display = 'none';
+  introBlock.style.display = 'block';
+
+  document.getElementById('intro-badge').textContent =
+    LANG==='ko' ? '第 一 段' : 'LEVEL 1';
+  document.getElementById('intro-title-text').innerHTML =
+    (LANG==='ko' ? data.title_ko : data.title_en) +
+    '<br><span style="font-size:28px;font-weight:600;letter-spacing:1px;">' +
+    (LANG==='ko' ? data.subtitle_ko : data.subtitle_en) +
+    '</span>';
+  document.getElementById('intro-desc-text').innerHTML =
+    LANG==='ko' ? data.desc_ko : data.desc_en;
+
+  // 2) 2초 후 영상 재생 (갈색 상자 페이드 아웃)
+  setTimeout(() => {
+    screen.classList.add('opening');
+
+    let done = false;
+    const goNext = () => {
+      if (done) return;
+      done = true;
+      screen.classList.add('hide');
+      setTimeout(() => {
+        screen.style.display = 'none';
+        introBlock.style.display = 'none';
+        startBlock.style.display = 'block';
+        renderL1Quiz();
+      }, 600);
+    };
+
+    if (video) {
+      video.addEventListener('ended', goNext, { once: true });
+      const safetyTimer = setTimeout(goNext, 8000);
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          clearTimeout(safetyTimer);
+          goNext();
+        });
+      }
+    } else {
+      setTimeout(goNext, 1400);
+    }
+  }, 2000);
+}
+
+// ============================================================
 // INIT
 // ============================================================
 setLang('ko');
