@@ -3293,7 +3293,7 @@ function selectBand(key) {
       if (b.dataset.key !== key) b.style.pointerEvents = 'none';
     });
     fb.className = 'feedback-bubble correct show';
-    fb.textContent = LANG==='ko' ? '정답이에요! 👏' : 'Correct! 👏';
+    fb.textContent = LANG==='ko' ? '정답이오!' : 'Correct! 👏';
 
     setTimeout(() => {
       if (bandIndex < BAND_QUIZZES.length - 1) {
@@ -3301,7 +3301,7 @@ function selectBand(key) {
         renderBandQuiz();
       } else {
         // 모든 문제 완료
-        fb.textContent = LANG==='ko' ? '🎉 모든 띠 무늬를 복원했어요!' : '🎉 All bands restored!';
+        fb.textContent = LANG==='ko' ? '🎉 모든 띠 무늬를 복원했소!' : '🎉 All bands restored!';
         document.getElementById('band-finish-btn').style.display = 'inline-flex';
       }
     }, 1200);
@@ -3309,7 +3309,7 @@ function selectBand(key) {
     opt.classList.add('wrong');
     setTimeout(() => opt.classList.remove('wrong'), 600);
     fb.className = 'feedback-bubble wrong show';
-    fb.textContent = LANG==='ko' ? '다시 한 번 살펴보세요!' : 'Look carefully and try again!';
+    fb.textContent = LANG==='ko' ? '다시 한 번 살펴보시오...' : 'Look carefully and try again!';
   }
 }
 
