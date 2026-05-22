@@ -284,7 +284,7 @@ body {
   gap:6px;
 }
 .pattern-cell {
-  width:64px; height:64px;
+  width:90px; height:90px;
   border-radius:12px;
   background:white;
   border:1.5px solid var(--border-warm);
@@ -293,7 +293,7 @@ body {
   justify-content:center;
   box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
-.pattern-cell svg { width:44px; height:44px; }
+.pattern-cell svg { width:68px; height:68px; }
 .pattern-name {
   font-size:14px;
   color:var(--text-light);
@@ -307,7 +307,7 @@ body {
   margin-top:-6px;
 }
 .pattern-question {
-  width:64px; height:64px;
+  width:90px; height:90px;
   border-radius:12px;
   background:var(--primary);
   border:2.5px dashed var(--gold);
@@ -590,7 +590,7 @@ html { scroll-behavior:auto; }
   margin-bottom:18px;
 }
 .dancheong-svg-wrapper svg {
-  max-width:420px;
+  max-width:300px;
   width:100%;
 }
 .color-palette {
@@ -974,10 +974,10 @@ html { scroll-behavior:auto; }
   .section-title { font-size:20px; }
   .quiz-options { grid-template-columns:1fr 1fr; gap:10px; }
   .quiz-option { font-size:15px; padding:12px 14px; }
-  .pattern-cell { width:56px; height:56px; }
-  .pattern-cell svg { width:38px; height:38px; }
+  .pattern-cell { width:76px; height:76px; }
+  .pattern-cell svg { width:56px; height:56px; }
   .color-btn { width:52px; height:52px; }
-  .dancheong-svg-wrapper svg { max-width:360px; }
+  .dancheong-svg-wrapper svg { max-width:260px; }
   .symmetry-container { grid-template-columns:1fr 50px 1fr; gap:10px; }
   .site-header { padding:10px 20px; }
   .site-header .logo { font-size:16px; gap:10px; }
@@ -1526,7 +1526,7 @@ html, body {
   width: 100% !important;
 }
 #taegeuk-card .dancheong-svg-wrapper {
-  max-width: 380px !important;
+  max-width: 280px !important;
 }
 
 /* ─── 인트로 오버레이 (세로 모드 대응) ─── */
@@ -2487,14 +2487,13 @@ const Q4 = makeSymQuiz(5, [
   'plum','lotus','cloud','wave','peony',
   'wave','crane','peony','bamboo','cloud'
 ]);
-// Q5: 7x7 -> 6*6으로 수정
- const Q5 = makeSymQuiz(6, [
-  'lotus','cloud','crane','wave','bamboo','plum',
-  'phoenix','peony','turtle','lotus','crane','wave',
-  'wave','lotus','phoenix','peony','bamboo','turtle',
-  'turtle','bamboo','cloud','crane','peony','phoenix',
-  'crane','wave','lotus','bamboo','turtle','cloud',
-  'peony','phoenix','wave','plum','lotus','crane'
+// Q5: 5x5
+const Q5 = makeSymQuiz(5, [
+  'crane','peony','bamboo','lotus','wave',
+  'turtle','cloud','phoenix','plum','crane',
+  'lotus','wave','turtle','bamboo','peony',
+  'plum','crane','cloud','phoenix','turtle',
+  'bamboo','lotus','peony','wave','cloud'
 ]);
 
 // Blanks: indices are into the RIGHT grid (cols×cols)
@@ -2524,15 +2523,14 @@ const L2_QUIZZES = [
       { idx: 18, wrongs: ['crane','peony','bamboo'] }      // 정답: lotus
     ]
   },
-  // Q5
+  // Q5: 5x5
   {
-    cols: 6, left: Q5.left, right: Q5.right,
+    cols: 5, left: Q5.left, right: Q5.right,
     blanks: [
-      { idx: 7,  wrongs: ['phoenix','turtle','cloud'] },   // 정답: crane
-      { idx: 14, wrongs: ['lotus','bamboo','plum'] },      // 정답: peony
-      { idx: 21, wrongs: ['wave','crane','peony'] },       // 정답: cloud
-      { idx: 28, wrongs: ['plum','peony','turtle'] },      // 정답: wave
-      { idx: 35, wrongs: ['crane','phoenix','cloud'] }     // 정답: peony
+      { idx: 7,  wrongs: ['turtle','lotus','peony'] },    // 정답: phoenix
+      { idx: 13, wrongs: ['cloud','crane','plum'] },      // 정답: wave
+      { idx: 19, wrongs: ['bamboo','phoenix','crane'] },  // 정답: plum
+      { idx: 22, wrongs: ['turtle','bamboo','lotus'] }    // 정답: peony
     ]
   }
 ];
@@ -2562,9 +2560,9 @@ function renderL2QuizGrid() {
   const activeBlankIdx = q.blanks[l2ActiveBlankIdx] ? q.blanks[l2ActiveBlankIdx].idx : -1;
 
   // Cell size decreases with larger grids
-  const cellSize = cols >= 7 ? '11%' : cols === 5 ? '17%' : '30%';
-  const gap = cols >= 7 ? '3px' : cols === 5 ? '4px' : '5px';
-  const svgScale = cols >= 7 ? '70%' : cols === 5 ? '75%' : '80%';
+  const cellSize = cols === 5 ? '17%' : '30%';
+  const gap = cols === 5 ? '4px' : '5px';
+  const svgScale = cols === 5 ? '75%' : '80%';
 
   // Build LEFT cells (all shown, never blank)
   let leftCells = '';
