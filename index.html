@@ -328,6 +328,8 @@ body {
   grid-template-columns:1fr 1fr;
   gap:10px;
   margin-bottom:0;
+  position: relative;
+  z-index: 10;
 }
 .quiz-option {
   background:var(--bg-paper);
@@ -335,6 +337,8 @@ body {
   border-radius:14px;
   padding:14px 16px;
   cursor:pointer;
+  position: relative;
+  z-index: 10;
   transition:all .18s;
   display:flex;
   align-items:center;
@@ -393,7 +397,6 @@ html { scroll-behavior:auto; }
   font-weight:500;
   margin-top:10px;
   line-height:1.65;
-  pointer-events:none !important
 }
 .feedback-bubble.show { display:block; }
 .feedback-bubble.correct {
@@ -614,16 +617,7 @@ html { scroll-behavior:auto; }
   gap:3px;
   flex-shrink:0;
   position:relative;
-  z-index:15 !important;
-  pointer-events:auto !important;
 }
-.color-btn,
-#dancheong-svg g[onclick] {
-    touch-action:manipulation;
-    user-select:none;
-    -webkit-user-select:none;
-} 
-
 .color-btn:hover { transform:scale(1.1); border-color:var(--gold) !important; }
 .color-btn.selected {
   border-color:var(--gold) !important;
@@ -631,7 +625,7 @@ html { scroll-behavior:auto; }
   box-shadow:0 0 0 3px rgba(201,168,76,.35);
 }
 .color-btn-label {
-  font-size:12px; 
+  font-size:13px;
   font-weight:700;
   color:white;
   text-shadow:0 1px 3px rgba(0,0,0,.5);
@@ -995,27 +989,6 @@ html { scroll-behavior:auto; }
   .lang-btn { padding:5px 13px; font-size:14px; }
   .proceed-btn { font-size:16px; padding:12px 30px; }
   .next-btn { font-size:15px; padding:10px 24px; }
-  .color-palette {
-    gap:12px !important;
-    margin-top:14px !important;
-  }
-  
-  .color-btn {
-    width:54px !important;
-    height:54px !important;
-  }
-  
-  .color-btn-label {
-    font-size:11px !important;
-  }
-  
-  .dancheong-container {
-    padding:20px !important;
-  }
-  
-  #dancheong-svg {
-    max-width:280px !important;
-  }
 }
 
 /* ─── 반응형 (모바일: ~767px) ─── */
@@ -1528,6 +1501,15 @@ html, body {
   position: relative;
   z-index: 10;
 }
+#danch-legend { display: none !important; }
+.dancheong-svg-wrapper {
+  margin-top: 0 !important;
+  width: 100% !important;
+  max-width: 480px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+}
 #dancheong-svg {
   width: 100% !important;
   height: auto !important;
@@ -1536,11 +1518,6 @@ html, body {
   display: block !important;
   margin: 0 auto !important;
 }
-
-#dancheong-svg g {
-  pointer-events:auto !important;
-}
-
 #level3-card #dancheong-area {
   flex: 0 0 auto !important;
   display: flex !important;
@@ -1575,37 +1552,12 @@ html, body {
   display: none;
   margin: 6px auto !important;
 }
-.dancheong-container {
-  position: relative;
-  z-index: 5;
-}
-
-.color-palette {
-  position: relative;
-  z-index: 15;
-}
-
-#dancheong-svg {
-  pointer-events: auto !important;
-}
-
-/* 터치 디바이스용 */
-@media (hover: none) and (pointer: coarse) {
-  .color-btn {
-    padding: 8px !important;
-  }
-  
-  .color-btn:active {
-    transform: scale(1.08) !important;
-  }
-}
 
 /* ─── LEVEL 4: 삼태극 ─── */
 .dancheong-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index:15 !important;
 }
 #taegeuk-img {
   max-width: 380px !important;
@@ -2912,18 +2864,8 @@ function renderDanchColorBtns() {
 
 function selectDanchColor(key) {
   selectedDanchColor = key;
-  document.querySelectorAll('.color-btn').forEach(b => {
-    b.classList.remove('selected');
-    b.style.pointerEvents = 'auto';
-  });
-  
-  const btn = document.getElementById(`dcb-${key}`);
-  if (btn) {
-    btn.classList.add('selected');
-    btn.style.pointerEvents = 'auto';
-    // 터치 피드백
-    btn.style.transform = 'scale(1.12)';
-  }
+  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById(`dcb-${key}`).classList.add('selected');
 }
 
 // SVG: dancheong-style lotus faithfully recreating the attached reference image
@@ -3055,23 +2997,6 @@ function renderDancheong() {
   s += `<circle cx="${cx}" cy="${cy}" r="8" fill="#F8DC60"/>`;
 
   svg.innerHTML = s;
-
-  setTimeout(() => {
-    svg.querySelectorAll('g[onclick]').forEach(g => {
-      g.style.cursor = 'pointer';
-      g.style.pointerEvents = 'auto';
-      
-      // 터치 이벤트 추가
-      g.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const onclickAttr = this.getAttribute('onclick');
-        if (onclickAttr) {
-          eval(onclickAttr);
-        }
-      }, { passive: false });
-    });
-  }, 100);
 }
 
 function clickDanchPetal(idx) {
