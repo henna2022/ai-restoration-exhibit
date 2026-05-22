@@ -593,6 +593,13 @@ html { scroll-behavior:auto; }
   justify-content:center;
   margin-bottom:18px;
 }
+#dancheong-svg g {
+  pointer-events: none;
+}
+#dancheong-svg g[onclick] {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
 .dancheong-svg-wrapper svg {
   max-width:300px;
   width:100%;
@@ -1517,6 +1524,7 @@ html, body {
   max-height: 400px !important;
   display: block !important;
   margin: 0 auto !important;
+  pointer-events: auto !important;
 }
 #level3-card #dancheong-area {
   flex: 0 0 auto !important;
@@ -2934,6 +2942,7 @@ function renderDancheong() {
     </g>`;
   }
 
+
   // ── 5. 8 LARGE PINK LOTUS PETALS (THE INTERACTIVE LAYER) ──
   // Each petal is a pointed pink leaf with red inner leaf + small dark leaf
   // Indices 0-2: example (★)
@@ -2997,7 +3006,34 @@ function renderDancheong() {
   s += `<circle cx="${cx}" cy="${cy}" r="8" fill="#F8DC60"/>`;
 
   svg.innerHTML = s;
+
+   setTimeout(() => {
+  // 1단계: 모든 g 요소의 pointer-events를 끄기 (장식 레이어가 클릭을 가로채지 못하게)
+  svg.querySelectorAll('g').forEach(g => {
+    if (!g.hasAttribute('onclick')) {
+      g.style.pointerEvents = 'none';
+    }
+  });
+  
+  // 2단계: onclick이 있는 꽃잎만 클릭 가능하게
+  svg.querySelectorAll('g[onclick]').forEach(g => {
+    g.style.cursor = 'pointer';
+    g.style.pointerEvents = 'auto';
+    
+    // 터치 이벤트
+     g.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const onclickAttr = this.getAttribute('onclick');
+      if (onclickAttr) {
+        eval(onclickAttr);
+      }
+    }, { passive: false });
+  });
+  }, 100);
 }
+
+
 
 function clickDanchPetal(idx) {
   if (!selectedDanchColor) {
