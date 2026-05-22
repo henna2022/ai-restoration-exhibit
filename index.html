@@ -2111,30 +2111,31 @@ html, body {
 <div class="section-card hidden-section" id="level3-card">
   <div class="section-title">
     <span class="level-badge">LEVEL 3</span>
-    <span data-ko="단청 꽃잎 색칠하기" data-en="Color the Dancheong Petals">단청 꽃잎 색칠하기</span>
+    <span data-ko="단청 꽃잎 색 맞히기" data-en="Guess the Dancheong Petal Colors">단청 꽃잎 색 맞히기</span>
   </div>
-  <p class="section-subtitle" style="margin-top:6px" data-ko="단청의 색 규칙을 헤아려, 빈 꽃잎에 알맞은 색을 칠하시오. 별표(★) 꽃잎은 예시오." data-en="Find the color pattern and paint the empty petals. Petals marked with ★ are examples.">
-    단청의 색 규칙을 헤아려, 빈 꽃잎에 알맞은 색을 칠하시오. 별표(★) 꽃잎은 예시오.
+  <p class="section-subtitle" style="margin-top:6px" data-ko="단청의 색 규칙을 헤아려, 빈 꽃잎에 들어갈 색을 고르시오. 별표(★) 꽃잎은 예시오." data-en="Find the color pattern and choose the right color for each empty petal. Petals marked with ★ are examples.">
+    단청의 색 규칙을 헤아려, 빈 꽃잎에 들어갈 색을 고르시오. 별표(★) 꽃잎은 예시오.
   </p>
   <div class="dancheong-container" id="dancheong-area">
     <div class="danch-pattern-row" id="danch-legend"></div>
     <div class="dancheong-svg-wrapper">
       <svg id="dancheong-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
-    <div class="feedback-bubble" id="danch-feedback-top"></div>
+
+    <!-- 객관식 질문 영역 -->
+    <p class="section-subtitle" id="danch-question-label" style="text-align:center;margin:14px 0 8px;font-weight:700;font-size:16px;">
+      <span data-ko="1번 꽃잎에 들어갈 색은 무엇이오?" data-en="What color goes in petal 1?">1번 꽃잎에 들어갈 색은 무엇이오?</span>
     </p>
-    <div class="danch-instruction">
-      <strong data-ko="색을 고른 후, 빈 꽃잎(1 · 2 · 3)을 눌러 칠하시오." data-en="Select a color, then click the empty petals (1 · 2 · 3) to paint!">
-        색을 고른 후, 빈 꽃잎(1 · 2 · 3)을 눌러 칠하시오.
-      </strong>
-    </div>
-    <div class="color-palette" id="danch-colors"></div>
-    <div class="feedback-bubble" id="danch-feedback"></div>
-    <div class="danch-progress" id="danch-progress"></div>
+
+    <!-- 객관식 선택지 (삼태극과 동일한 스타일) -->
+    <div class="taegeuk-color-options" id="danch-options"></div>
+
+    <div class="feedback-bubble" id="danch-feedback" style="margin:10px 14px 0;"></div>
   </div>
-  <button class="next-btn green-btn" id="l3-finish-btn" style="display:none" onclick="finishLevel3()">
-   <span data-ko="완성! 다음 미션으로 이동" data-en="Done! Next Mission">완성! 다음 미션으로 이동</span> &rarr;
-  </button>
+  <div style="text-align:center">
+    <button class="next-btn green-btn" id="l3-finish-btn" style="display:none" onclick="finishLevel3()">
+     <span data-ko="완성! 다음 미션으로 이동" data-en="Done! Next Mission">완성! 다음 미션으로 이동</span> &rarr;
+    </button>
   </div>
 </div>
 <!-- ===== LEVEL 3.5 — 삼태극 색 맞추기 ===== -->
