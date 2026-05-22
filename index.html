@@ -2965,7 +2965,7 @@ function renderDancheong() {
     s += `<g transform="translate(${cx},${cy}) rotate(${rot})" ${clickable} ${onclick}>
       <!-- main pink/colored petal -->
       <path d="M 0,-110 Q -28,-90 -28,-60 Q -28,-30 -16,-22 L 0,-18 L 16,-22 Q 28,-30 28,-60 Q 28,-90 0,-110 Z"
-        fill="${fillColor}" stroke="${strokeColor}" stroke-width="3" ${dashAttr}/>`;
+        fill="${fillColor}" stroke="${strokeColor}" stroke-width="3" ${dashAttr} pointer-events="all"/>`;
 
     // Inner red/colored leaf (only show if petal has color, OR show faded for pink default)
     if (colorKey || (!isInteractive && !isAutoFill)) {
