@@ -1680,23 +1680,24 @@ html, body {
   pointer-events: none;
 }
 
-/* 닫힌 문 (양쪽) */
-.start-door {
+/* 오프닝 배경 영상 */
+.start-video {
   position: absolute;
-  top: 0;
-  width: 50%;
+  top: 0; left: 0;
+  width: 100%;
   height: 100%;
+  object-fit: cover;        /* 화면 비율 무관하게 꽉 채움 (잘릴 수 있음) */
   z-index: 1;
-  transition: transform 1.4s cubic-bezier(0.65, 0, 0.35, 1);
+  background: #2A1810;       /* 영상 로딩 전 보이는 배경색 */
+  transition: opacity 0.6s ease;
 }
-.start-door svg { width: 100%; height: 100%; display: block; }
-.start-door-left { left: 0; }
-.start-door-right { right: 0; }
-
-/* 열리는 상태 */
-.game-start-screen.opening .start-door-left { transform: translateX(-100%); }
-.game-start-screen.opening .start-door-right { transform: translateX(100%); }
-
+/* 영상이 끝나거나 화면이 닫힐 때 페이드 아웃 */
+.game-start-screen.opening .start-video {
+  opacity: 0.4;
+}
+.game-start-screen.video-ended .start-video {
+  opacity: 0;
+}
 /* 처마 장식 */
 .start-header {
   position: absolute;
@@ -1865,43 +1866,13 @@ html, body {
 
 <!-- ====== GAME START SCREEN ====== -->
 <div id="game-start-screen" class="game-start-screen">
-  <!-- 닫힌 문 (양쪽 다 표시) -->
-  <div class="start-door start-door-left">
-    <svg viewBox="0 0 200 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="0" y="0" width="200" height="600" fill="#6B3410"/>
-      <rect x="8" y="8" width="184" height="584" fill="#F5EDD8" stroke="#6B3410" stroke-width="4"/>
-      <g stroke="#6B3410" stroke-width="6" fill="none">
-        <line x1="50" y1="8" x2="50" y2="592"/>
-        <line x1="100" y1="8" x2="100" y2="592"/>
-        <line x1="150" y1="8" x2="150" y2="592"/>
-        <line x1="8" y1="80" x2="192" y2="80"/>
-        <line x1="8" y1="160" x2="192" y2="160"/>
-        <line x1="8" y1="240" x2="192" y2="240"/>
-        <line x1="8" y1="320" x2="192" y2="320"/>
-        <line x1="8" y1="400" x2="192" y2="400"/>
-        <line x1="8" y1="480" x2="192" y2="480"/>
-      </g>
-      <circle cx="180" cy="300" r="8" fill="#3A2210" stroke="#1A0F08" stroke-width="2"/>
-    </svg>
-  </div>
-  <div class="start-door start-door-right">
-    <svg viewBox="0 0 200 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="0" y="0" width="200" height="600" fill="#6B3410"/>
-      <rect x="8" y="8" width="184" height="584" fill="#F5EDD8" stroke="#6B3410" stroke-width="4"/>
-      <g stroke="#6B3410" stroke-width="6" fill="none">
-        <line x1="50" y1="8" x2="50" y2="592"/>
-        <line x1="100" y1="8" x2="100" y2="592"/>
-        <line x1="150" y1="8" x2="150" y2="592"/>
-        <line x1="8" y1="80" x2="192" y2="80"/>
-        <line x1="8" y1="160" x2="192" y2="160"/>
-        <line x1="8" y1="240" x2="192" y2="240"/>
-        <line x1="8" y1="320" x2="192" y2="320"/>
-        <line x1="8" y1="400" x2="192" y2="400"/>
-        <line x1="8" y1="480" x2="192" y2="480"/>
-      </g>
-      <circle cx="20" cy="300" r="8" fill="#3A2210" stroke="#1A0F08" stroke-width="2"/>
-    </svg>
-  </div>
+  <!-- 오프닝 영상 (배경) -->
+  <video class="start-video" id="start-video" playsinline muted preload="auto">
+    <source src="opening.mp4" type="video/mp4">
+    <source src="opening.mov" type='video/quicktime'>
+    <!-- 영상 재생이 불가능한 환경의 대체 화면 -->
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#2A1810,#3D2818);"></div>
+  </video>
 
   <!-- 상단 처마 장식 (선택) -->
   <div class="start-header">
@@ -3510,20 +3481,44 @@ function setStartLang(lang) {
 
 function startGame() {
   const screen = document.getElementById('game-start-screen');
+  const video = document.getElementById('start-video');
 
-  // 1) 문 열기 시작
+  // 1) 시작 콘텐츠(버튼, 설명) 숨기기 (.opening 클래스 적용)
   screen.classList.add('opening');
 
-  // 2) 문 열리는 동안(1.4초) 기다린 후 시작 화면 숨김
-  setTimeout(() => {
-    screen.classList.add('hide');
-  }, 1400);
+  // 2) 영상 재생 시작
+  let videoEnded = false;
+  const goToQuiz = () => {
+    if (videoEnded) return;        // 중복 호출 방지
+    videoEnded = true;
+    screen.classList.add('hide');  // 페이드 아웃
+    setTimeout(() => {
+      screen.style.display = 'none';
+      renderL1Quiz();
+    }, 600); // 페이드 아웃 시간만큼 대기
+  };
 
-  // 3) 시작 화면 완전히 사라진 후 바로 레벨 1 시작 (인트로 스킵!)
-  setTimeout(() => {
-    screen.style.display = 'none';
-    renderL1Quiz();
-  }, 2000);
+  if (video) {
+    // 영상이 끝나면 퀴즈로 전환
+    video.addEventListener('ended', goToQuiz, { once: true });
+
+    // 안전장치: 영상이 8초 이상 길거나 재생 실패하면 강제 진행
+    // (영상 길이에 맞게 숫자 조정하세요. 예: 영상이 5초면 5000 → 6000 정도)
+    const safetyTimer = setTimeout(goToQuiz, 8000);
+
+    // 재생 시도 (자동재생 정책으로 실패할 수 있음)
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(err => {
+        console.warn('비디오 자동재생 실패:', err);
+        clearTimeout(safetyTimer);
+        goToQuiz();  // 재생 실패 시 즉시 다음으로
+      });
+    }
+  } else {
+    // 비디오 요소가 없으면(파일 누락 등) 1.4초 후 그냥 진행
+    setTimeout(goToQuiz, 1400);
+  }
 }
 
 // ============================================================
