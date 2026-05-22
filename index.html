@@ -327,7 +327,7 @@ body {
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
-  margin-bottom:14px;
+  margin-bottom:0;
 }
 .quiz-option {
   background:var(--bg-paper);
@@ -412,7 +412,7 @@ html { scroll-behavior:auto; }
   align-items:center;
   justify-content:center;
   gap:10px;
-  margin-top:18px;
+  margin-top:10px;
 }
 .quiz-dot {
   width:9px; height:9px;
@@ -1556,6 +1556,61 @@ html, body {
   display: block;
   filter: drop-shadow(0 6px 20px rgba(60,40,20,0.25));
 }
+/* ─── 두루마리 펼치기 애니메이션 ─── */
+.scroll-wrapper {
+  perspective: 1200px;
+}
+.hanji-scroll {
+  transform-origin: center center;
+}
+/* 처음엔 위/아래에서 말려있는 상태 → 펼쳐짐 */
+.hanji-scroll.unrolling {
+  animation: scrollUnroll 1.8s cubic-bezier(.22,.9,.3,1.1) forwards;
+}
+@keyframes scrollUnroll {
+  0%   { clip-path: inset(48% 0 48% 0); transform: scaleY(0.05); }
+  30%  { clip-path: inset(40% 0 40% 0); transform: scaleY(0.2); }
+  100% { clip-path: inset(0 0 0 0);     transform: scaleY(1); }
+}
+/* 텍스트는 두루마리가 거의 다 펼쳐진 후에 페이드 인 */
+.scroll-text {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.scroll-text.show {
+  opacity: 1;
+}
+
+/* ─── 축하 파티클 펑! 터지는 애니메이션 ─── */
+.confetti-area {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+.confetti-piece {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+.confetti-piece.burst {
+  animation: confettiBurst 1.6s cubic-bezier(.18,.7,.3,1) forwards;
+}
+@keyframes confettiBurst {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(0deg); }
+  15%  { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform:
+      translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      scale(1) rotate(var(--rot));
+  }
+}
 .scroll-text {
   position: absolute;
   top: 9%;
@@ -2115,6 +2170,8 @@ html, body {
 <!-- ===== CELEBRATION ===== -->
 <div class="section-card hidden-section" id="celebration-card">
   <div class="scroll-wrapper">
+    <!-- 축하 파티클 영역 -->
+    <div class="confetti-area" id="confetti-area"></div>
     <!-- 두루마리 SVG -->
     <svg class="hanji-scroll" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
       <!-- 상단 봉(롤) -->
@@ -3030,7 +3087,29 @@ function showFinalCelebration() {
   }
 
   // 카드 표시
-  document.getElementById('celebration-card').classList.remove('hidden-section');
+  const card = document.getElementById('celebration-card');
+  const scroll = card.querySelector('.hanji-scroll');
+  const scrollText = card.querySelector('.scroll-text');
+
+  card.classList.remove('hidden-section');
+
+  // 1) 초기 상태 리셋 (다시 봤을 때도 동작하도록)
+  scroll.classList.remove('unrolling');
+  scrollText.classList.remove('show');
+  void scroll.offsetWidth; // reflow 강제 → 애니메이션 재시작
+
+  // 2) 두루마리 펼치기 시작
+  scroll.classList.add('unrolling');
+
+  // 3) 두루마리 거의 다 펼쳐진 시점(약 1.4초)에 텍스트 페이드 인
+  setTimeout(() => {
+    scrollText.classList.add('show');
+  }, 1400);
+
+  // 4) 텍스트 나타난 직후 파티클 팡! 터지기
+  setTimeout(() => {
+    spawnConfetti();
+  }, 1900);
 }
 
 // ============================================================
@@ -3051,25 +3130,36 @@ function markStepActive(id) {
 // ============================================================
 function spawnConfetti() {
   const area = document.getElementById('confetti-area');
-  const colors = ['#C9A84C','#8B1A1A','#1A5C6B','#2A6B3A','#C94040','#F0D080'];
-  for (let i = 0; i < 36; i++) {
+  if (!area) return;
+  area.innerHTML = ''; // 이전 파티클 제거
+  const colors = ['#C9A84C','#8B1A1A','#1A5C6B','#2A6B3A','#C94040','#F0D080','#E8B4B8','#D4AF37'];
+  const count = 60;
+
+  for (let i = 0; i < count; i++) {
     const el = document.createElement('div');
-    const size = 5 + Math.random() * 9;
-    el.style.cssText = `
-      position:absolute;width:${size}px;height:${size}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      border-radius:${Math.random()>.5?'50%':'2px'};
-      left:${Math.random()*100}%;top:-12px;
-      animation:confFall ${1.2+Math.random()*1.8}s ease-in ${Math.random()*.9}s forwards;
-      opacity:.85;
-    `;
+    el.className = 'confetti-piece burst';
+
+    // 방사형으로 흩뿌리기 - 각도와 거리 무작위
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+    const distance = 120 + Math.random() * 220;
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance + Math.random() * 80; // 살짝 아래로 떨어지는 느낌
+    const rot = (Math.random() * 720 - 360) + 'deg';
+    const size = 6 + Math.random() * 10;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const shape = Math.random();
+    const delay = Math.random() * 0.25;
+
+    el.style.setProperty('--dx', dx + 'px');
+    el.style.setProperty('--dy', dy + 'px');
+    el.style.setProperty('--rot', rot);
+    el.style.width = size + 'px';
+    el.style.height = (shape > 0.6 ? size * 0.5 : size) + 'px';
+    el.style.background = color;
+    el.style.borderRadius = shape > 0.5 ? '50%' : '2px';
+    el.style.animationDelay = delay + 's';
+
     area.appendChild(el);
-  }
-  if (!document.getElementById('confFallStyle')) {
-    const st = document.createElement('style');
-    st.id = 'confFallStyle';
-    st.textContent = '@keyframes confFall{to{transform:translateY(220px) rotate(360deg);opacity:0}}';
-    document.head.appendChild(st);
   }
 }
 
