@@ -1681,8 +1681,8 @@ html, body {
   transition: opacity 0.6s ease;
 }
 .game-start-screen.hide {
-  opacity: 0;
-  pointer-events: none;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* 오프닝 배경 영상 */
@@ -1886,23 +1886,38 @@ html, body {
 
   <!-- 가운데 콘텐츠 -->
   <div class="start-content">
-    <div class="start-badge" id="start-badge">AI 復元 體驗</div>
-    <h1 class="start-title">
-      <span id="start-title-text">나도 <span style="color:var(--gold)">복원가</span>!</span>
-    </h1>
-    <p class="start-desc" id="start-desc">
-      한국 전통 문양을 복원하는 체험을 통하여,<br>
-      참된 복원가로 거듭나는 수련을 시작하시오.
-    </p>
+    <!-- ─── 첫 진입 모드: "수련 시작" 화면 ─── -->
+    <div class="start-mode-block" id="start-mode-block">
+      <div class="start-badge" id="start-badge">AI 復元 體驗</div>
+      <h1 class="start-title">
+        <span id="start-title-text">나도 <span style="color:var(--gold)">복원가</span>!</span>
+      </h1>
+      <p class="start-desc" id="start-desc">
+        한국 전통 문양을 복원하는 체험을 통하여,<br>
+        참된 복원가로 거듭나는 수련을 시작하시오.
+      </p>
 
-    <button class="start-btn" id="start-btn" onclick="startGame()">
-      <span id="start-btn-text">수련 시작</span>
-      <span class="start-btn-arrow">&rarr;</span>
-    </button>
+      <button class="start-btn" id="start-btn" onclick="startGame()">
+        <span id="start-btn-text">수련 시작</span>
+        <span class="start-btn-arrow">&rarr;</span>
+      </button>
 
-    <div class="start-lang">
-      <button class="start-lang-btn active" id="start-lang-ko" onclick="setStartLang('ko')">한국어</button>
-      <button class="start-lang-btn" id="start-lang-en" onclick="setStartLang('en')">English</button>
+      <div class="start-lang">
+        <button class="start-lang-btn active" id="start-lang-ko" onclick="setStartLang('ko')">한국어</button>
+        <button class="start-lang-btn" id="start-lang-en" onclick="setStartLang('en')">English</button>
+      </div>
+    </div>
+
+    <!-- ─── 레벨 인트로 모드: "LEVEL X 설명" 화면 ─── -->
+    <div class="intro-mode-block" id="intro-mode-block" style="display:none;">
+      <div class="start-badge" id="intro-badge">LEVEL 1</div>
+      <h1 class="start-title" id="intro-title-text">一段<br>
+        <span style="font-size:28px;font-weight:600;letter-spacing:1px;">순서 패턴 익히기</span>
+      </h1>
+      <p class="start-desc" id="intro-desc-text">
+        전통 문양이 반복되는 순서를 살피시오.<br>
+        빈칸에 들어갈 문양을 맞추어보시오.
+      </p>
     </div>
   </div>
 </div>
@@ -3390,130 +3405,77 @@ const LEVEL_INTRO_DATA = {
   }
 };
 
+f// ============================================================
+// LEVEL INTRO (시작 화면 갈색 상자 재사용)
+// 흐름: 갈색 상자에 레벨 설명 표시 (2초) → 갈색 상자 페이드 아웃 + 영상 재생 → 퀴즈
+// ============================================================
 function showLevelIntro(level, onClose) {
-  const overlay = document.getElementById('level-intro-overlay');
-  const video   = document.getElementById('intro-video');
-  const data    = LEVEL_INTRO_DATA[level];
+  const screen = document.getElementById('game-start-screen');
+  const video  = document.getElementById('start-video');
+  const data   = LEVEL_INTRO_DATA[level];
   if (!data) { if (onClose) onClose(); return; }
 
-  // ── 제목 + 설명 채우기 ──
-  document.getElementById('intro-title').innerHTML =
+  const startBlock = document.getElementById('start-mode-block');
+  const introBlock = document.getElementById('intro-mode-block');
+
+  // 1) 갈색 상자 안 내용을 레벨 인트로로 전환
+  startBlock.style.display = 'none';
+  introBlock.style.display = 'block';
+
+  document.getElementById('intro-badge').textContent =
+    LANG==='ko' ? `第 ${['一','二','三','四'][level-1]} 段` : `LEVEL ${level}`;
+  document.getElementById('intro-title-text').innerHTML =
     (LANG==='ko' ? data.title_ko : data.title_en) +
     '<br><span style="font-size:28px;font-weight:600;letter-spacing:1px;">' +
     (LANG==='ko' ? data.subtitle_ko : data.subtitle_en) +
     '</span>';
-  document.getElementById('intro-desc').innerHTML =
+  document.getElementById('intro-desc-text').innerHTML =
     LANG==='ko' ? data.desc_ko : data.desc_en;
 
-  // ── 진행 단계 하이라이트 (현재 level이 active, 이전은 done) ──
-  const chars = ['一','二','三','四','完'];
-  for (let i = 1; i <= 5; i++) {
-    const el = document.getElementById('intro-prog-' + i);
-    if (!el) continue;
-    el.classList.remove('active','done');
-    if (i < level) {
-      el.classList.add('done');
-      el.querySelector('.step-circle').textContent = '✓';
-    } else if (i === level) {
-      el.classList.add('active');
-      el.querySelector('.step-circle').textContent = chars[i-1];
-    } else {
-      el.querySelector('.step-circle').textContent = chars[i-1];
-    }
+  // 2) 시작 화면 다시 표시 (영상은 첫 프레임에서 멈춤)
+  screen.style.display = 'block';
+  if (video) {
+    try { video.pause(); video.currentTime = 0; } catch(e) {}
   }
+  screen.classList.remove('hide','opening');
+  screen.classList.add('reshow');
 
-  // ── 상태 초기화 ──
-  overlay.classList.remove('show-content','video-playing');
-  overlay.classList.add('show');
-
-  // ── 1단계: 갈색 상자 페이드 인 ──
-  requestAnimationFrame(() => {
-    setTimeout(() => overlay.classList.add('show-content'), 50);
-  });
-
-  // ── 2단계: 3초 후 영상 재생 시작 (갈색 상자 페이드 아웃 + 영상 페이드 인) ──
-  const CONTENT_DURATION = 3000; // 갈색 상자가 보이는 시간 (ms)
-
+  // 3) 2초 동안 설명 보여준 뒤 → 갈색 상자 페이드 아웃 + 영상 재생
+  const DESC_DURATION = 2000;
   setTimeout(() => {
-    overlay.classList.add('video-playing');
+    // 갈색 상자 페이드 아웃 (.opening 클래스가 start-content를 페이드 아웃시킴)
+    screen.classList.add('opening');
 
-    // 영상 처음부터 재생
-    let videoEnded = false;
-    const closeIntro = () => {
-      if (videoEnded) return;
-      videoEnded = true;
-      overlay.classList.remove('show','show-content','video-playing');
-      if (onClose) onClose();
+    // 영상 재생 + 끝나면 퀴즈로
+    let done = false;
+    const goNext = () => {
+      if (done) return;
+      done = true;
+      screen.classList.remove('reshow');
+      screen.classList.add('hide');
+      setTimeout(() => {
+        screen.style.display = 'none';
+        // 다음 레벨을 위해 인트로 모드 → 시작 모드로 복원 (마지막엔 안 보이지만 안전하게)
+        introBlock.style.display = 'none';
+        startBlock.style.display = 'block';
+        if (onClose) onClose();
+      }, 600);
     };
 
     if (video) {
-      try { video.currentTime = 0; } catch(e) {}
-
-      video.addEventListener('ended', closeIntro, { once: true });
-
-      // 안전장치: 영상 길이 + 2초
-      const safetyTimer = setTimeout(closeIntro, 8000);
-
+      video.addEventListener('ended', goNext, { once: true });
+      const safetyTimer = setTimeout(goNext, 8000);
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
           clearTimeout(safetyTimer);
-          closeIntro();
+          goNext();
         });
       }
     } else {
-      // 영상 없을 시 1.4초 후 진행
-      setTimeout(closeIntro, 1400);
+      setTimeout(goNext, 1400);
     }
-  }, CONTENT_DURATION);
-}
-// ============================================================
-// GAME START SCREEN
-// ============================================================
-function setStartLang(lang) {
-  LANG = lang;
-  // 시작 화면 텍스트 교체
-  const texts = {
-    ko: {
-      badge: 'AI 復元 體驗',
-      title: '나도 <span style="color:var(--gold)">복원가</span>!',
-      desc: '한국 전통 문양을 복원하는 체험을 통하여,<br>참된 복원가로 거듭나는 수련을 시작하시오.',
-      btn: '수련 시작'
-    },
-    en: {
-      badge: 'AI RESTORATION EXPERIENCE',
-      title: 'I Am a <span style="color:var(--gold)">Restorer</span>!',
-      desc: 'Through the experience of restoring<br>traditional Korean patterns,<br>begin thy training to become a true restorer.',
-      btn: 'Begin Training'
-    }
-  };
-  const t = texts[lang];
-  document.getElementById('start-badge').textContent = t.badge;
-  document.getElementById('start-title-text').innerHTML = t.title;
-  document.getElementById('start-desc').innerHTML = t.desc;
-  document.getElementById('start-btn-text').textContent = t.btn;
-
-  // 언어 버튼 active 토글
-  document.getElementById('start-lang-ko').classList.toggle('active', lang === 'ko');
-  document.getElementById('start-lang-en').classList.toggle('active', lang === 'en');
-
-  // 전체 페이지 언어도 갱신
-  setLang(lang);
-}
-
-function startGame() {
-  const screen = document.getElementById('game-start-screen');
-
-  // 1) 시작 화면 페이드 아웃
-  screen.classList.add('hide');
-
-  // 2) 페이드 아웃 완료 후 → 레벨 1 인트로 (설명 → 영상 → 퀴즈)
-  setTimeout(() => {
-    screen.style.display = 'none';
-    showLevelIntro(1, () => {
-      renderL1Quiz();
-    });
-  }, 600);
+  }, DESC_DURATION);
 }
 
 // ============================================================
