@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>한국 전통 문양 복원 체험 | 서울로봇인공지능과학관</title>
+<title>나도 복원가 | 서울로봇인공지능과학관</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
@@ -1920,6 +1920,11 @@ html, body {
 
 <!-- ======= LEVEL INTRO OVERLAY (창호문 연출) ======= -->
 <div id="level-intro-overlay" class="level-intro-overlay">
+  <!-- 레벨 전환 시 opening 영상 -->
+  <video id="level-video" style="position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; background:#2D1E10;" playsinline muted preload="auto">
+   <source src="opening.mp4" type="video/mp4">
+   <source src="opening.mov" type='video/quicktime'>
+  </video>
   <!-- 왼쪽 문짝 -->
   <div class="hanok-door door-left">
     <svg viewBox="0 0 200 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -3400,6 +3405,12 @@ const LEVEL_INTRO_DATA = {
 function showLevelIntro(level, onClose) {
   const overlay = document.getElementById('level-intro-overlay');
   const data = LEVEL_INTRO_DATA[level];
+  const levelVideo = document.getElementById('level-video');
+  if (levelVideo) {
+    levelVideo.currentTime = 0;
+    levelVideo.play().catch(err => console.log('비디오 재생 불가:', err));
+  }
+
   if (!data) { if (onClose) onClose(); return; }
 
   // 제목 + 설명 채우기
