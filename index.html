@@ -2962,7 +2962,7 @@ function renderDancheong() {
     const rot = i * 45;
 
     // Pointed lotus petal shape — wider base, pointed tip
-    s += `<g transform="translate(${cx},${cy}) rotate(${rot})" ${clickable} ${onclick}>
+    s += `<g transform="translate(${cx},${cy}) rotate(${rot})" ${clickable} ${onclick} ${isInteractive && !colorKey ? 'pointer-events="bounding-box"' : ''}>
       <!-- main pink/colored petal -->
       <path d="M 0,-110 Q -28,-90 -28,-60 Q -28,-30 -16,-22 L 0,-18 L 16,-22 Q 28,-30 28,-60 Q 28,-90 0,-110 Z"
         fill="${fillColor}" stroke="${strokeColor}" stroke-width="3" ${dashAttr} pointer-events="all"/>`;
