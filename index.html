@@ -328,8 +328,6 @@ body {
   grid-template-columns:1fr 1fr;
   gap:10px;
   margin-bottom:0;
-  position: relative;
-  z-index: 10;
 }
 .quiz-option {
   background:var(--bg-paper);
@@ -337,8 +335,6 @@ body {
   border-radius:14px;
   padding:14px 16px;
   cursor:pointer;
-  position: relative;
-  z-index: 10;
   transition:all .18s;
   display:flex;
   align-items:center;
@@ -397,6 +393,7 @@ html { scroll-behavior:auto; }
   font-weight:500;
   margin-top:10px;
   line-height:1.65;
+  pointer-events:none !important
 }
 .feedback-bubble.show { display:block; }
 .feedback-bubble.correct {
@@ -617,7 +614,16 @@ html { scroll-behavior:auto; }
   gap:3px;
   flex-shrink:0;
   position:relative;
+  z-index:15 !important;
+  pointer-events:auto !important;
 }
+.color-btn,
+#dancheong-svg g[onclick] {
+    touch-action:manipulation;
+    user-select:none;
+    -webkit-user-select:none;
+} 
+
 .color-btn:hover { transform:scale(1.1); border-color:var(--gold) !important; }
 .color-btn.selected {
   border-color:var(--gold) !important;
@@ -625,7 +631,7 @@ html { scroll-behavior:auto; }
   box-shadow:0 0 0 3px rgba(201,168,76,.35);
 }
 .color-btn-label {
-  font-size:13px;
+  font-size:12px; 
   font-weight:700;
   color:white;
   text-shadow:0 1px 3px rgba(0,0,0,.5);
@@ -989,6 +995,27 @@ html { scroll-behavior:auto; }
   .lang-btn { padding:5px 13px; font-size:14px; }
   .proceed-btn { font-size:16px; padding:12px 30px; }
   .next-btn { font-size:15px; padding:10px 24px; }
+  .color-palette {
+    gap:12px !important;
+    margin-top:14px !important;
+  }
+  
+  .color-btn {
+    width:54px !important;
+    height:54px !important;
+  }
+  
+  .color-btn-label {
+    font-size:11px !important;
+  }
+  
+  .dancheong-container {
+    padding:20px !important;
+  }
+  
+  #dancheong-svg {
+    max-width:280px !important;
+  }
 }
 
 /* ─── 반응형 (모바일: ~767px) ─── */
@@ -1501,15 +1528,6 @@ html, body {
   position: relative;
   z-index: 10;
 }
-#danch-legend { display: none !important; }
-.dancheong-svg-wrapper {
-  margin-top: 0 !important;
-  width: 100% !important;
-  max-width: 480px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  display: block !important;
-}
 #dancheong-svg {
   width: 100% !important;
   height: auto !important;
@@ -1518,6 +1536,11 @@ html, body {
   display: block !important;
   margin: 0 auto !important;
 }
+
+#dancheong-svg g {
+  pointer-events:auto !important;
+}
+
 #level3-card #dancheong-area {
   flex: 0 0 auto !important;
   display: flex !important;
@@ -1552,12 +1575,37 @@ html, body {
   display: none;
   margin: 6px auto !important;
 }
+.dancheong-container {
+  position: relative;
+  z-index: 5;
+}
+
+.color-palette {
+  position: relative;
+  z-index: 15;
+}
+
+#dancheong-svg {
+  pointer-events: auto !important;
+}
+
+/* 터치 디바이스용 */
+@media (hover: none) and (pointer: coarse) {
+  .color-btn {
+    padding: 8px !important;
+  }
+  
+  .color-btn:active {
+    transform: scale(1.08) !important;
+  }
+}
 
 /* ─── LEVEL 4: 삼태극 ─── */
 .dancheong-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index:15 !important;
 }
 #taegeuk-img {
   max-width: 380px !important;
@@ -2864,8 +2912,18 @@ function renderDanchColorBtns() {
 
 function selectDanchColor(key) {
   selectedDanchColor = key;
-  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById(`dcb-${key}`).classList.add('selected');
+  document.querySelectorAll('.color-btn').forEach(b => {
+    b.classList.remove('selected');
+    b.style.pointerEvents = 'auto';
+  });
+  
+  const btn = document.getElementById(`dcb-${key}`);
+  if (btn) {
+    btn.classList.add('selected');
+    btn.style.pointerEvents = 'auto';
+    // 터치 피드백
+    btn.style.transform = 'scale(1.12)';
+  }
 }
 
 // SVG: dancheong-style lotus faithfully recreating the attached reference image
@@ -2884,7 +2942,7 @@ function renderDancheong() {
   let s = '';
 
   // ── 1. Dark background circle ──
-  s += `<circle cx="${cx}" cy="${cy}" r="195" fill="#1A2E22" stroke="#0A1610" stroke-width="1.5" pointer-events="none"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="195" fill="#1A2E22" stroke="#0A1610" stroke-width="1.5"/>`;
 
   // ── 2. Outer teal scallop ring (10 scallops, decorative) ──
   // Each scallop = larger light-teal "cloud" with a darker teal blob and a dark green inner blob
@@ -2894,7 +2952,7 @@ function renderDancheong() {
     const sy = cy + Math.sin(a) * 158;
     // outer light teal cloud (3-bump scallop)
     const rot = (i * 36);
-    s += `<g transform="translate(${sx},${sy}) rotate(${rot+90})" pointer-events="none">
+    s += `<g transform="translate(${sx},${sy}) rotate(${rot+90})">
       <path d="M -30,8 Q -30,-12 -18,-12 Q -12,-22 0,-22 Q 12,-22 18,-12 Q 30,-12 30,8 Q 20,16 0,14 Q -20,16 -30,8 Z"
         fill="#7BB8A0" stroke="#2C3E2E" stroke-width="2.5"/>
       <path d="M -22,6 Q -22,-8 -12,-8 Q -8,-15 0,-15 Q 8,-15 12,-8 Q 22,-8 22,6 Q 14,12 0,10 Q -14,12 -22,6 Z"
@@ -2910,7 +2968,7 @@ function renderDancheong() {
     const oy = cy + Math.sin(a) * 122;
     const rot = (i * 45);
     // Orange round leaf (semicircle pointing outward)
-    s += `<g transform="translate(${ox},${oy}) rotate(${rot+90})" pointer-events="none">
+    s += `<g transform="translate(${ox},${oy}) rotate(${rot+90})">
       <path d="M -22,4 Q -22,-18 0,-18 Q 22,-18 22,4 Q 22,10 0,10 Q -22,10 -22,4 Z"
         fill="#D87538" stroke="#2C3E2E" stroke-width="2.5"/>
       <path d="M -14,2 Q -14,-12 0,-12 Q 14,-12 14,2 Q 14,6 0,6 Q -14,6 -14,2 Z"
@@ -2924,7 +2982,7 @@ function renderDancheong() {
     const bx = cx + Math.cos(a) * 80;
     const by = cy + Math.sin(a) * 80;
     const rot = i * 45 + 22.5;
-    s += `<g transform="translate(${bx},${by}) rotate(${rot})" pointer-events="none">
+    s += `<g transform="translate(${bx},${by}) rotate(${rot})">
       <path d="M 0,-30 L 16,0 L 0,30 L -16,0 Z"
         fill="#7BB5E0" stroke="#2C3E2E" stroke-width="2"/>
       <path d="M 0,-22 L 10,0 L 0,22 L -10,0 Z"
@@ -2965,7 +3023,7 @@ function renderDancheong() {
     s += `<g transform="translate(${cx},${cy}) rotate(${rot})" ${clickable} ${onclick}>
       <!-- main pink/colored petal -->
       <path d="M 0,-110 Q -28,-90 -28,-60 Q -28,-30 -16,-22 L 0,-18 L 16,-22 Q 28,-30 28,-60 Q 28,-90 0,-110 Z"
-        fill="${fillColor}" stroke="${strokeColor}" stroke-width="3" ${dashAttr} pointer-events="all"/>`;
+        fill="${fillColor}" stroke="${strokeColor}" stroke-width="3" ${dashAttr}/>`;
 
     // Inner red/colored leaf (only show if petal has color, OR show faded for pink default)
     if (colorKey || (!isInteractive && !isAutoFill)) {
@@ -2978,11 +3036,6 @@ function renderDancheong() {
     }
     // For empty interactive petals, show only outline (no inner) so user knows to fill
 
-    // 🔥 빈 꽃잎 클릭 영역 — 꽃잎 위에 투명 사각형 (마지막에 그려서 위로 오게)
-    if (isInteractive && !colorKey) {
-      s += `<rect x="-35" y="-115" width="70" height="100" fill="transparent" pointer-events="all" style="cursor:pointer"/>`;
-    }
-
     // Label (★ or number)
     if (isExample) {
       s += `<text x="0" y="-60" text-anchor="middle" font-size="18" font-weight="700" fill="white" font-family="serif" opacity=".95" style="pointer-events:none">&#9733;</text>`;
@@ -2994,7 +3047,33 @@ function renderDancheong() {
     // Auto-fill petals (6,7) — no label, just colored
     s += `</g>`;
   }
+
+  // ── 6. Center: teal disc with yellow dot ──
+  s += `<circle cx="${cx}" cy="${cy}" r="28" fill="#7BB8A0" stroke="#2C3E2E" stroke-width="2.5"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="22" fill="#5AA888" stroke="#2C3E2E" stroke-width="1.5"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="12" fill="#F0D050" stroke="#C9A030" stroke-width="1.5"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="8" fill="#F8DC60"/>`;
+
+  svg.innerHTML = s;
+
+  setTimeout(() => {
+    svg.querySelectorAll('g[onclick]').forEach(g => {
+      g.style.cursor = 'pointer';
+      g.style.pointerEvents = 'auto';
+      
+      // 터치 이벤트 추가
+      g.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const onclickAttr = this.getAttribute('onclick');
+        if (onclickAttr) {
+          eval(onclickAttr);
+        }
+      }, { passive: false });
+    });
+  }, 100);
 }
+
 function clickDanchPetal(idx) {
   if (!selectedDanchColor) {
     showDanchFeedback(false,
