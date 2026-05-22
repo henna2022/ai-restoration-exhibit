@@ -3281,7 +3281,8 @@ const BAND_PATTERNS = [
 
 const BAND_QUIZZES = [
   { full:'band/band_full_1.png', answer:'cloud' },
-  { full:'band/band_full_2.png', answer:'lotus' }
+  { full:'band/band_full_2.png', answer:'lotus' },
+  { full:'band/band_full_3.png', answer:'zigzag' }
 ];
 
 let bandIndex = 0;
@@ -3503,7 +3504,9 @@ function startGame() {
     screen.classList.add('hide');  // 페이드 아웃
     setTimeout(() => {
       screen.style.display = 'none';
-      renderL1Quiz();
+      showLevelIntro(1, () => {
+        renderL1Quiz();
+      });
     }, 600); // 페이드 아웃 시간만큼 대기
   };
 
