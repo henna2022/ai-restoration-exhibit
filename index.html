@@ -1514,7 +1514,7 @@ html, body {
 .dancheong-svg-wrapper {
   margin-top: 0 !important;
   width: 100% !important;
-  max-width: 480px !important;
+  max-width: 380px !important;
   margin-left: auto !important;
   margin-right: auto !important;
   display: block !important;
@@ -1522,8 +1522,8 @@ html, body {
 #dancheong-svg {
   width: 100% !important;
   height: auto !important;
-  max-width: 400px !important;
-  max-height: 400px !important;
+  max-width: 320px !important;
+  max-height: 320px !important;
   display: block !important;
   margin: 0 auto !important;
   pointer-events: auto !important;
@@ -1551,6 +1551,8 @@ html, body {
   display: none !important;
 }
 #level3-card {
+  display: flex;         
+  flex-direction: column; 
   justify-content: flex-start !important;
   overflow-y: auto !important;
   height: 100% !important;
@@ -1563,6 +1565,9 @@ html, body {
   flex-shrink: 0 !important;
   display: none;
   margin: 6px auto !important;
+  position: sticky;  
+  bottom: 16px;      
+  z-index: 50;       
 }
 
 /* ─── LEVEL 4: 삼태극 ─── */
@@ -2052,7 +2057,7 @@ html, body {
   <div id="l1-quiz-container"></div>
   <div class="quiz-nav" id="l1-nav"></div>
   <div class="feedback-bubble" id="l1-feedback"></div>
-  <div style="text-align:center">
+  <div style="text-align:center; margin-top:auto; position:sticky; bottom:0; background:white; z-index:50; padding:8px 0;">
     <button class="next-btn" id="l1-next-btn" onclick="nextL1Quiz()">
       <span data-ko="다음 문제로 가시오" data-en="Next Question">다음 문제로 가시오</span> &rarr;
     </button>
@@ -2914,7 +2919,7 @@ function answerDanch(colorKey) {
     // 3개 다 맞히면 완료 버튼 표시
     if (danchStep >= 3) {
       document.getElementById('l3-finish-btn').style.display = 'flex';
-      document.getElementById('l3-finish-btn').style.margin = '14px auto 0';
+      /* document.getElementById('l3-finish-btn').style.margin = '14px auto 0'; 확인하기 */ 
     }
   } else {
     const aname = LANG==='ko' ? DANCH_COLORS[correct].name_ko : DANCH_COLORS[correct].name_en;
