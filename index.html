@@ -1966,7 +1966,7 @@ html, body {
     <div class="intro-mode-block" id="intro-mode-block" style="display:none;">
       <div class="start-badge" id="intro-badge">LEVEL 1</div>
       <h1 class="start-title" id="intro-title-text">一段<br>
-        <span style="font-size:28px;font-weight:600;letter-spacing:1px;">순서 패턴 익히기</span>
+        <span style="font-size:28px;font-weight:600;letter-spacing:1px;">패턴 찾기</span>
       </h1>
       <p class="start-desc" id="intro-desc-text">
         전통 문양이 반복되는 순서를 살피시오.<br>
@@ -3675,11 +3675,18 @@ function startLevel5() {
 
 /* 진단용 — alert로 어느 단계까지 가는지 확인 */
 function finishLevel5() {
-  alert('1. finishLevel5 시작');
-  document.getElementById('level5-card').classList.add('hidden-section');
-  alert('2. level5-card 숨김 성공');
-  showFinalCelebration();
-  alert('3. showFinalCelebration 호출 완료');
+  try {
+    alert('1. finishLevel5 시작');
+    const card = document.getElementById('level5-card');
+    alert('2. card 가져오기: ' + (card ? 'OK' : 'NULL'));
+    card.classList.add('hidden-section');
+    alert('3. level5-card 숨김 성공');
+    alert('4. showFinalCelebration 호출 직전');
+    showFinalCelebration();
+    alert('5. showFinalCelebration 정상 완료');
+  } catch (e) {
+    alert('🚨 에러 발생: ' + e.message + '\n위치: ' + e.stack);
+  }
 }
 
 // ============================================================
