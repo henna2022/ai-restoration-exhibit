@@ -3124,14 +3124,14 @@ function showDanchFeedback(correct, msg) {
 }
 
 function updateDanchProgress() {
-  // Count only interactive petals (3,4,5)
   const filled = [petalFill[3], petalFill[4], petalFill[5]].filter(Boolean).length;
   const prog = document.getElementById('danch-progress');
-  prog.textContent = '';  // 진행률 텍스트 제거 - 피드백 자리로 사용
+  prog.textContent = '';
 
   if (filled === 3) {
-    document.getElementById('l3-finish-btn').style.display = 'flex';
-    document.getElementById('l3-finish-btn').style.margin = '14px auto 0';
+    const btn = document.getElementById('l3-finish-btn');
+    btn.style.display = 'flex';
+    btn.style.margin = '14px auto 0';
   }
 }
 
