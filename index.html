@@ -1966,7 +1966,7 @@ html, body {
     <div class="intro-mode-block" id="intro-mode-block" style="display:none;">
       <div class="start-badge" id="intro-badge">LEVEL 1</div>
       <h1 class="start-title" id="intro-title-text">一段<br>
-        <span style="font-size:28px;font-weight:600;letter-spacing:1px;">패턴 찾기</span>
+        <span style="font-size:28px;font-weight:600;letter-spacing:1px;">순서 패턴 익히기</span>
       </h1>
       <p class="start-desc" id="intro-desc-text">
         전통 문양이 반복되는 순서를 살피시오.<br>
@@ -3208,9 +3208,7 @@ function finishTaegeuk() {
 }
 
 function showFinalCelebration() {
-  alert('4. showFinalCelebration 진입');
   const pct = getScorePercent();
-  alert('5. pct = ' + pct);
   let rank, message;
 
   if (pct >= 70) {
@@ -3223,14 +3221,6 @@ function showFinalCelebration() {
     rank = '복원의 길을<br>걷는 자';
     message = '열심히 힘쓴 그대에게 박수를 보내오.<br>훗날 멋진 복원가가 되기 위하여<br>더욱 공부에 매진하여 주시오.';
   }
-
-  alert('6. 텍스트 채우기 직전');
-  document.getElementById('celeb-rank').innerHTML = rank;
-  alert('7. celeb-rank 채움');
-  document.getElementById('celeb-score').innerHTML = `점수: ${Math.max(0, TOTAL_SCORE)} / ${TOTAL_MAX} &nbsp;(${pct}%)`;
-  alert('8. celeb-score 채움');
-  document.getElementById('celeb-message').innerHTML = message;
-  alert('9. celeb-message 채움');
 
   // 텍스트 채우기
   document.getElementById('celeb-rank').innerHTML = rank;
@@ -3253,10 +3243,9 @@ function showFinalCelebration() {
     document.getElementById('celeb-rank').innerHTML = ranks_en[rank];
     document.getElementById('celeb-message').innerHTML = messages_en;
   }
-  // 확인하기
-  alert('10. 카드 표시 시작');
+
+  // 카드 표시
   const card = document.getElementById('celebration-card');
-  alert('11. card = ' + card);
   const scroll = card.querySelector('.hanji-scroll');
   const scrollText = card.querySelector('.scroll-text');
 
@@ -3673,20 +3662,23 @@ function startLevel5() {
   renderL5Quiz();
 }
 
-/* 진단용 — alert로 어느 단계까지 가는지 확인 */
 function finishLevel5() {
-  try {
-    alert('1. finishLevel5 시작');
-    const card = document.getElementById('level5-card');
-    alert('2. card 가져오기: ' + (card ? 'OK' : 'NULL'));
-    card.classList.add('hidden-section');
-    alert('3. level5-card 숨김 성공');
-    alert('4. showFinalCelebration 호출 직전');
-    showFinalCelebration();
-    alert('5. showFinalCelebration 정상 완료');
-  } catch (e) {
-    alert('🚨 에러 발생: ' + e.message + '\n위치: ' + e.stack);
+  document.getElementById('level5-card').classList.add('hidden-section');
+  showFinalCelebration();
+
+  // 두루마리가 보이도록 위치/스크롤 강제 조정
+  const card = document.getElementById('celebration-card');
+  if (card) {
+    card.style.zIndex = '9999';
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  // 페이지 자체 스크롤도 위로
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // .main-content 안 스크롤도 위로
+  const main = document.querySelector('.main-content');
+  if (main) main.scrollTop = 0;
 }
 
 // ============================================================
@@ -3696,7 +3688,7 @@ const LEVEL_INTRO_DATA = {
   1: {
     title_ko: '一段',
     title_en: 'LEVEL 1',
-    subtitle_ko: '패턴 찾기',
+    subtitle_ko: '순서 패턴 익히기',
     subtitle_en: 'Sequence Patterns',
     desc_ko: '전통 문양이 반복되는 순서를 살피시오.<br>빈칸에 들어갈 문양을 맞추어보시오.',
     desc_en: 'Observe the repeating order of traditional patterns,<br>and guess what fills the blank!'
@@ -3704,7 +3696,7 @@ const LEVEL_INTRO_DATA = {
   2: {
     title_ko: '二段',
     title_en: 'LEVEL 2',
-    subtitle_ko: '대칭 활용',
+    subtitle_ko: '대칭 패턴 찾기',
     subtitle_en: 'Symmetry Patterns',
     desc_ko: '좌우가 대칭을 이루는 격자에서<br>빈칸에 알맞은 문양을 고르시오.',
     desc_en: 'In a grid mirrored left-right,<br>choose the pattern that fits the blank!'
@@ -3712,10 +3704,10 @@ const LEVEL_INTRO_DATA = {
   3: {
     title_ko: '三段',
     title_en: 'LEVEL 3',
-    subtitle_ko: '색깔 추론',
-    subtitle_en: 'Color Logic',
-    desc_ko: '한국 전통의 색 규칙을 따라<br>알맞은 색을 칠하시오.',
-    desc_en: 'Following the color rules of traditional Patterns ,<br>paint each with the right color!'
+    subtitle_ko: '단청 색칠하기',
+    subtitle_en: 'Dancheong Coloring',
+    desc_ko: '한국 전통 단청의 색 규칙을 따라<br>꽃잎에 알맞은 색을 칠하시오.',
+    desc_en: 'Following the color rules of traditional Dancheong,<br>paint each petal with the right color!'
   },
   4: {
     title_ko: '四段',
