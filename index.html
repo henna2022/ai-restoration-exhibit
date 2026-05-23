@@ -3453,8 +3453,8 @@ function selectTaegeukColor(colorKey) {
     const correctName = LANG==='ko' ? TAEGEUK_COLORS[correct].name_ko : TAEGEUK_COLORS[correct].name_en;
     const stepNum = taegeukStep + 1;
     fb.innerHTML = LANG==='ko'
-      ? `아쉽소! 그것은 <b>${chosenName}</b>이오. ${stepNum}번 영역에 칠하여야 할 색은 <b>${correctName}</b>이오. 다시 골라보시오.`
-      : `Not quite! That was <b>${chosenName}</b>. Area #${stepNum} should be <b>${correctName}</b>. Try again!`;
+      ? `아쉽소! 그것은 <b>${chosenName}</b>이오. 다시 골라보시오.`
+      : `Not quite! That was <b>${chosenName}</b>. Try again!`;
   }
 }
 // ============================================================
@@ -3704,10 +3704,10 @@ const LEVEL_INTRO_DATA = {
   3: {
     title_ko: '三段',
     title_en: 'LEVEL 3',
-    subtitle_ko: '단청 색칠하기',
-    subtitle_en: 'Dancheong Coloring',
-    desc_ko: '한국 전통 단청의 색 규칙을 따라<br>꽃잎에 알맞은 색을 칠하시오.',
-    desc_en: 'Following the color rules of traditional Dancheong,<br>paint each petal with the right color!'
+    subtitle_ko: '색깔 추론',
+    subtitle_en: 'Color Reasoning',
+    desc_ko: '한국 전통 색 규칙을 따라<br>알맞은 색을 칠하시오.',
+    desc_en: 'Following the color rules,<br>paint with the right color!'
   },
   4: {
     title_ko: '四段',
