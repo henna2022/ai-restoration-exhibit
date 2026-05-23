@@ -3666,19 +3666,31 @@ function finishLevel5() {
   document.getElementById('level5-card').classList.add('hidden-section');
   showFinalCelebration();
 
-  // 두루마리가 보이도록 위치/스크롤 강제 조정
   const card = document.getElementById('celebration-card');
   if (card) {
     card.style.zIndex = '9999';
     card.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-
-  // 페이지 자체 스크롤도 위로
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // .main-content 안 스크롤도 위로
   const main = document.querySelector('.main-content');
   if (main) main.scrollTop = 0;
+
+  // 진단용 — 카드 위치/크기 확인
+  setTimeout(() => {
+    const c = document.getElementById('celebration-card');
+    const rect = c.getBoundingClientRect();
+    const style = window.getComputedStyle(c);
+    alert(
+      '카드 위치/크기:\n' +
+      'top=' + Math.round(rect.top) + 
+      '\nleft=' + Math.round(rect.left) + 
+      '\nwidth=' + Math.round(rect.width) + 
+      '\nheight=' + Math.round(rect.height) +
+      '\ndisplay=' + style.display +
+      '\nvisibility=' + style.visibility +
+      '\nopacity=' + style.opacity
+    );
+  }, 500);
 }
 
 // ============================================================
