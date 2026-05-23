@@ -3208,7 +3208,9 @@ function finishTaegeuk() {
 }
 
 function showFinalCelebration() {
+  alert('4. showFinalCelebration 진입');
   const pct = getScorePercent();
+  alert('5. pct = ' + pct);
   let rank, message;
 
   if (pct >= 70) {
@@ -3221,6 +3223,14 @@ function showFinalCelebration() {
     rank = '복원의 길을<br>걷는 자';
     message = '열심히 힘쓴 그대에게 박수를 보내오.<br>훗날 멋진 복원가가 되기 위하여<br>더욱 공부에 매진하여 주시오.';
   }
+
+  alert('6. 텍스트 채우기 직전');
+  document.getElementById('celeb-rank').innerHTML = rank;
+  alert('7. celeb-rank 채움');
+  document.getElementById('celeb-score').innerHTML = `점수: ${Math.max(0, TOTAL_SCORE)} / ${TOTAL_MAX} &nbsp;(${pct}%)`;
+  alert('8. celeb-score 채움');
+  document.getElementById('celeb-message').innerHTML = message;
+  alert('9. celeb-message 채움');
 
   // 텍스트 채우기
   document.getElementById('celeb-rank').innerHTML = rank;
@@ -3243,9 +3253,10 @@ function showFinalCelebration() {
     document.getElementById('celeb-rank').innerHTML = ranks_en[rank];
     document.getElementById('celeb-message').innerHTML = messages_en;
   }
-
-  // 카드 표시
+  // 확인하기
+  alert('10. 카드 표시 시작');
   const card = document.getElementById('celebration-card');
+  alert('11. card = ' + card);
   const scroll = card.querySelector('.hanji-scroll');
   const scrollText = card.querySelector('.scroll-text');
 
@@ -3662,9 +3673,13 @@ function startLevel5() {
   renderL5Quiz();
 }
 
+/* 진단용 — alert로 어느 단계까지 가는지 확인 */
 function finishLevel5() {
+  alert('1. finishLevel5 시작');
   document.getElementById('level5-card').classList.add('hidden-section');
+  alert('2. level5-card 숨김 성공');
   showFinalCelebration();
+  alert('3. showFinalCelebration 호출 완료');
 }
 
 // ============================================================
@@ -3674,7 +3689,7 @@ const LEVEL_INTRO_DATA = {
   1: {
     title_ko: '一段',
     title_en: 'LEVEL 1',
-    subtitle_ko: '순서 패턴 익히기',
+    subtitle_ko: '패턴 찾기',
     subtitle_en: 'Sequence Patterns',
     desc_ko: '전통 문양이 반복되는 순서를 살피시오.<br>빈칸에 들어갈 문양을 맞추어보시오.',
     desc_en: 'Observe the repeating order of traditional patterns,<br>and guess what fills the blank!'
@@ -3682,7 +3697,7 @@ const LEVEL_INTRO_DATA = {
   2: {
     title_ko: '二段',
     title_en: 'LEVEL 2',
-    subtitle_ko: '대칭 패턴 찾기',
+    subtitle_ko: '대칭 활용',
     subtitle_en: 'Symmetry Patterns',
     desc_ko: '좌우가 대칭을 이루는 격자에서<br>빈칸에 알맞은 문양을 고르시오.',
     desc_en: 'In a grid mirrored left-right,<br>choose the pattern that fits the blank!'
@@ -3690,10 +3705,10 @@ const LEVEL_INTRO_DATA = {
   3: {
     title_ko: '三段',
     title_en: 'LEVEL 3',
-    subtitle_ko: '단청 색칠하기',
-    subtitle_en: 'Dancheong Coloring',
-    desc_ko: '한국 전통 단청의 색 규칙을 따라<br>꽃잎에 알맞은 색을 칠하시오.',
-    desc_en: 'Following the color rules of traditional Dancheong,<br>paint each petal with the right color!'
+    subtitle_ko: '색깔 추론',
+    subtitle_en: 'Color Logic',
+    desc_ko: '한국 전통의 색 규칙을 따라<br>알맞은 색을 칠하시오.',
+    desc_en: 'Following the color rules of traditional Patterns ,<br>paint each with the right color!'
   },
   4: {
     title_ko: '四段',
