@@ -1310,7 +1310,10 @@ html, body {
 .score-display { font-size: 14px !important; padding: 4px 12px !important; }
 
 /* ─── LEVEL 1: 순서 패턴 ─── */
-#level1-card { justify-content: flex-start !important; }
+#level1-card {
+  justify-content: flex-start !important;
+  overflow-y: auto !important;
+}
 .pattern-sequence-wrapper, #l1-quiz-area {
   flex-shrink: 0;
 }
@@ -2077,9 +2080,9 @@ html, body {
     다음에 올 전통 문양이 무엇이오? 문양의 순서를 잘 살펴보시오.
   </p>
   <div id="l1-quiz-container"></div>
-  <div class="quiz-nav" id="l1-nav"></div>
+  <div class="quiz-nav" id="l1-nav" style="display:none;"></div>
   <div class="feedback-bubble" id="l1-feedback"></div>
-  <div style="text-align:center; margin-top:auto; position:sticky; bottom:0; background:white; z-index:50; padding:8px 0;">
+  <div style="text-align:center; position:sticky; bottom:0; background:white; z-index:50; padding:8px 0;">
     <button class="next-btn" id="l1-next-btn" onclick="nextL1Quiz()">
       <span data-ko="다음 문제로 가시오" data-en="Next Question">다음 문제로 가시오</span> &rarr;
     </button>
@@ -2107,7 +2110,7 @@ html, body {
   </div>
   <div class="band-options" id="band-options"></div>
   <div class="feedback-bubble" id="band-feedback"></div>
-  <div style="text-align:center">
+  <div style="text-align:center; position:sticky; bottom:0; background:white; z-index:50; padding:6px 0;">
     <button class="next-btn green-btn" id="band-finish-btn" style="display:none" onclick="finishBand()">
       <span data-ko="다음 미션으로" data-en="Next Mission">다음 미션으로</span> &rarr;
     </button>
@@ -2228,7 +2231,7 @@ html, body {
 
   <div class="feedback-bubble" id="l5-feedback" style="margin:10px 14px 0;"></div>
 
-  <div style="text-align:center; margin-top:auto; position:sticky; bottom:0; background:white; z-index:50; padding:6px 0;">
+  <div style="text-align:center; position:sticky; bottom:0; background:white; z-index:50; padding:6px 0;">
     <button class="next-btn green-btn" id="l5-finish-btn" style="display:none" onclick="finishLevel5()">
       <span data-ko="완성! 결과 확인하기" data-en="Done! See Result">완성! 결과 확인하기</span> &rarr;
     </button>
