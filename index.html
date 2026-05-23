@@ -1584,6 +1584,20 @@ html, body {
   max-width: 280px !important;
 }
 
+/* ─── LEVEL 5: 민화 벽지 패턴 찾기 ─── */
+#level5-card {
+  justify-content: flex-start !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+#l5-finish-btn {
+  flex-shrink: 0 !important;
+  display: none;
+  margin: 6px auto !important;
+}
+
 /* ─── 인트로 오버레이 (세로 모드 대응) ─── */
 .intro-title { font-size: 46px !important; }
 .intro-desc { font-size: 18px !important; }
@@ -2214,7 +2228,7 @@ html, body {
 
   <div class="feedback-bubble" id="l5-feedback" style="margin:10px 14px 0;"></div>
 
-  <div style="text-align:center; margin-top:auto; position:sticky; bottom:0; background:white; z-index:50; padding:8px 0;">
+  <div style="text-align:center; margin-top:auto; position:sticky; bottom:0; background:white; z-index:50; padding:6px 0;">
     <button class="next-btn green-btn" id="l5-finish-btn" style="display:none" onclick="finishLevel5()">
       <span data-ko="완성! 결과 확인하기" data-en="Done! See Result">완성! 결과 확인하기</span> &rarr;
     </button>
