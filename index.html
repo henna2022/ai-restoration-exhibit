@@ -3208,7 +3208,7 @@ function showFinalCelebration() {
   }
 
   // 텍스트 채우기
-  document.getElementById('celeb-rank').textContent = rank;
+  document.getElementById('celeb-rank').innerHTML = rank;
   document.getElementById('celeb-score').innerHTML =
     `점수: ${Math.max(0, TOTAL_SCORE)} / ${TOTAL_MAX} &nbsp;(${pct}%)`;
   document.getElementById('celeb-message').innerHTML = message;
@@ -3216,16 +3216,16 @@ function showFinalCelebration() {
   // 영어 모드 대응
   if (LANG === 'en') {
     const ranks_en = {
-      '시대를 초월한 복원 명장': 'Timeless Master Restorer',
+      '시대를 초월한<br> 복원 명장': 'Timeless Master Restorer',
       '훌륭한 복원가': 'Skilled Restorer',
-      '복원의 길을 걷는 자': 'Aspiring Restorer'
+      '복원의 길을<br> 걷는 자': 'Aspiring Restorer'
     };
     const messages_en = pct >= 70
       ? 'Well done indeed!<br>Thou art a restorer beyond time.<br>Thy craft shall be remembered for ages.'
       : pct >= 50
       ? 'Thou hast done well.<br>With more devotion, thou shalt<br>become a true restorer.'
       : 'I salute thy diligent effort.<br>Study further with all thy heart,<br>and one day thou shalt master this art.';
-    document.getElementById('celeb-rank').textContent = ranks_en[rank];
+    document.getElementById('celeb-rank').innerHTML = ranks_en[rank];
     document.getElementById('celeb-message').innerHTML = messages_en;
   }
 
