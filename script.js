@@ -940,8 +940,8 @@ function showFinalCelebration() {
 
   // 텍스트 채우기
   document.getElementById('celeb-rank').innerHTML = rank;
-  document.getElementById('celeb-score').innerHTML =
-    `점수: ${Math.max(0, TOTAL_SCORE)} / ${TOTAL_MAX} &nbsp;(${pct}%)`;
+  document.getElementById('celeb-score').innerHTML = 
+    `점수: ${pct}점 / 100점`;
   document.getElementById('celeb-message').innerHTML = message;
 
   // 영어 모드 대응
@@ -958,6 +958,7 @@ function showFinalCelebration() {
       : 'I salute thy diligent effort.<br>Study further with all thy heart,<br>and one day thou shalt master this art.';
     document.getElementById('celeb-rank').innerHTML = ranks_en[rank];
     document.getElementById('celeb-message').innerHTML = messages_en;
+    document.getElementById('celeb-score').innerHTML = `Score: ${pct} / 100`;
   }
 
   // 카드 표시
