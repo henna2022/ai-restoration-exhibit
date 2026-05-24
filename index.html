@@ -1627,8 +1627,8 @@ html, body {
   display: flex;
 }
 .score-loading-image {
-  width: 180px;
-  height: 180px;
+  width: 270px;
+  height: 270px;
   object-fit: contain;
   filter: drop-shadow(0 4px 20px rgba(212, 175, 55, 0.4));
 }
@@ -3697,7 +3697,7 @@ function finishLevel5() {
   const blinkInterval = setInterval(() => {
     toggle = !toggle;
     img.src = toggle ? 'loading/loading_2.png' : 'loading/loading_1.png';
-  }, 200);
+  }, 250);
 
   // 3초 후 → 로딩 종료 → 두루마리 표시
   setTimeout(() => {
@@ -3707,7 +3707,7 @@ function finishLevel5() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     const main = document.querySelector('.main-content');
     if (main) main.scrollTop = 0;
-  }, 3000);
+  }, 4500);
 }
 
 // ============================================================
