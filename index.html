@@ -2093,8 +2093,8 @@ html, body {
   </div>
   <div class="score-display" id="score-band">1 / 2</div>
 </div>
-  <p class="section-subtitle" style="margin-top:6px" data-ko="끊어진 띠의 빈칸에 들 무늬를 고르시오." data-en="Choose the pattern that fits the missing space in the band!">
-    끊어진 띠의 빈칸에 들 무늬를 고르시오.
+  <p class="section-subtitle" style="margin-top:6px" data-ko="끊어진 띠의 빈칸에 들어갈 무늬를 고르시오." data-en="Choose the pattern that fits the missing space in the band!">
+    끊어진 띠의 빈칸에 들어갈 무늬를 고르시오.
   </p>
   <div class="band-progress" id="band-progress">문제 1 / 2</div>
   <div class="band-question-area">
@@ -2121,8 +2121,8 @@ html, body {
     </div>
     <div class="score-display" id="score-2">0 / 5</div>
   </div>
-  <p class="section-subtitle" data-ko="왼쪽 문양을 살펴, 오른쪽에 들 문양을 고르시오. 대칭을 이루도록 생각해보시오." data-en="Look at the left pattern and choose what comes on the right. Think about symmetry!">
-    왼쪽 문양을 살펴, 오른쪽에 들 문양을 고르시오. 대칭을 이루도록 생각해보시오.
+  <p class="section-subtitle" data-ko="왼쪽 문양을 살펴, 오른쪽에 들어갈 문양을 고르시오. 대칭을 이루도록 생각해보시오." data-en="Look at the left pattern and choose what comes on the right. Think about symmetry!">
+    왼쪽 문양을 살펴, 오른쪽에 들어갈 문양을 고르시오. 대칭을 이루도록 생각해보시오.
   </p>
   <div id="l2-quiz-container"></div>
   <div class="quiz-nav" id="l2-nav" style="display:none;"></div>
@@ -2225,7 +2225,7 @@ html, body {
   <p class="section-subtitle" id="l5-progress" style="text-align:center;font-weight:700;margin-bottom:8px;"></p>
 
   <div style="position:relative; max-width:560px; margin:0 auto;">
-    <img id="l5-wallpaper" src="minhwa/wallpaper.png" style="width:100%;display:block;border-radius:12px;">
+    <img id="l5-wallpaper" src="minhwa/wallpaper.png" style="width:100%;display:block;border-radius:12px;transition:opacity 0.3s ease;">
     <!-- 번호 배지가 JS로 들어감 -->
     <div id="l5-num-badges" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
   </div>
@@ -2270,7 +2270,7 @@ html, body {
 
     <!-- 두루마리 위에 얹는 텍스트 -->
     <div class="scroll-text" id="scroll-text">
-      <div class="brush-title" id="celeb-title">參 復 元 完 了</div>
+      <div class="brush-title" id="celeb-title">復 元 完 了</div>
       <div class="brush-divider">⁕</div>
       <div class="brush-rank" id="celeb-rank">복원 명장</div>
       <div class="brush-score" id="celeb-score">점수: 0 / 0</div>
@@ -2494,8 +2494,8 @@ function renderL1Quiz() {
   });
   optHTML += '</div>';
 
-  const qLabel_ko = `문제 ${l1Current+1}/5 &mdash; 빈칸(?)에 들 문양은 무엇이오?`;
-  const qLabel_en = `Q${l1Current+1}/5 &mdash; What pattern fills the blank(?)?`;
+  const qLabel_ko = `문제 ${l1Current+1}/5 &mdash; 빈칸에 들 문양은 무엇이오?`;
+  const qLabel_en = `Q${l1Current+1}/5 &mdash; What pattern fills the blank?`;
 
   document.getElementById('l1-quiz-container').innerHTML = `
     <div class="pattern-display">
@@ -2717,7 +2717,7 @@ function renderL2QuizGrid() {
     }
   }
 
-  const qKo = `문제 ${l2Current+1}/5 &mdash; 빈칸(?)에 들 문양은 무엇이오?${q.blanks.length > 1 ? ` (총 ${q.blanks.length}개)` : ''}`;
+  const qKo = `문제 ${l2Current+1}/5 &mdash; 빈칸에 들어갈 문양은 무엇이오?${q.blanks.length > 1 ? ` (총 ${q.blanks.length}개)` : ''}`;
   const qEn = `Q${l2Current+1}/5 &mdash; What fills the blank(s)?${q.blanks.length > 1 ? ` (${q.blanks.length} blanks)` : ''}`;
   const curBlankKo = q.blanks.length > 1 ? `<p style="font-size:15px;color:var(--gold-dark);margin-bottom:10px;text-align:center;font-weight:600">현재 ${l2ActiveBlankIdx+1}번 빈칸을 풀고 있소.</p>` : '';
   const curBlankEn = q.blanks.length > 1 ? `<p style="font-size:15px;color:var(--gold-dark);margin-bottom:10px;text-align:center;font-weight:600">Now solving blank #${l2ActiveBlankIdx+1}</p>` : '';
@@ -3633,9 +3633,12 @@ function selectL5(key) {
     opt.style.borderColor = 'var(--success)';
     opt.style.background = 'rgba(46,107,48,0.1)';
     l5Done = true;
+    // 정답 맞출 때마다 wallpaper 이미지 업데이트 (1번 → wallpaper_1, 2번 → wallpaper_2, 3번 → wallpaper_3)
+    document.getElementById('l5-wallpaper').src = `minhwa/wallpaper_${l5Index + 1}.png`;
     document.querySelectorAll('.l5-option').forEach(b => {
-      if (b.dataset.key !== key) b.style.pointerEvents = 'none';
+     if (b.dataset.key !== key) b.style.pointerEvents = 'none';
     });
+
     fb.className = 'feedback-bubble correct show';
     fb.textContent = LANG==='ko' ? '정답이오! 👏' : 'Correct! 👏';
 
