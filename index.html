@@ -2061,37 +2061,6 @@ html, body {
     <p class="intro-desc" id="intro-desc">설명</p>
   </div>
 </div>
-  <div class="intro-content">
-    <div class="intro-progress">
-    <div class="step-item" id="intro-prog-1">
-    <div class="step-circle">一</div>
-    <div class="step-label" data-ko="순서 패턴" data-en="Sequence">순서 패턴</div>
-  </div>
-  <div class="step-item" id="intro-prog-2">
-    <div class="step-circle">二</div>
-    <div class="step-label" data-ko="대칭 패턴" data-en="Symmetry">대칭 패턴</div>
-  </div>
-  <div class="step-item" id="intro-prog-3">
-    <div class="step-circle">三</div>
-    <div class="step-label" data-ko="단청 색칠" data-en="Dancheong">단청 색칠</div>
-  </div>
-  <div class="step-item" id="intro-prog-4">
-    <div class="step-circle">四</div>
-    <div class="step-label" data-ko="삼태극 복원" data-en="Sam-Taegeuk">삼태극 복원</div>
-  </div>
-  <div class="step-item" id="intro-prog-5">
-    <div class="step-circle">五</div>
-    <div class="step-label" data-ko="민화 벽지" data-en="Minhwa">민화 벽지</div>
-  </div>
-  <div class="step-item" id="intro-prog-6">
-    <div class="step-circle">完</div>
-    <div class="step-label" data-ko="미션 완료" data-en="Mission Complete">미션 완료</div>
- </div>
-</div>
-    <h2 class="intro-title" id="intro-title">LEVEL 1</h2>
-    <p class="intro-desc" id="intro-desc">설명</p>
-  </div>
-</div>
 
 <!-- ======= MAIN ======= -->
 <main class="main-content">
@@ -3415,10 +3384,10 @@ function updateTaegeukLabel() {
   if (taegeukStep < TAEGEUK_ANSWERS.length) {
     const stepNum = taegeukStep + 1;
     label.textContent = LANG==='ko'
-      ? `${stepNum}번째 색을 골라주세요!`
+      ? `${stepNum}번째 색을 골라주시오!`
       : `Choose color #${stepNum}!`;
   } else {
-    label.textContent = LANG==='ko' ? '삼태극 완성!' : 'Sam-Taegeuk completed!';
+    label.textContent = LANG==='ko' ? '삼태극 완성이오!' : 'Sam-Taegeuk completed!';
   }
 }
 
