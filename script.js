@@ -590,25 +590,25 @@ const DANCH_COLORS = {
 };
 
 // Fixed pattern per spec: red -> green -> yellow (can be shuffled from base)
-let danchPattern = []; // 3-color keys for cycling
-let petalFill = [null, null, null, null, null, null, null, null]; // 8 petals: 0-2 example, 3-5 interactive, 6-7 auto-fill
+let danchPattern = []; // 4-color keys for cycling
+let petalFill = [null, null, null, null, null, null, null, null]; // 8 petals: 0-3 example, 4-7 interactive, 8-9 auto-fill
 let selectedDanchColor = null;
 
-// 8 petals total: 3 example (★) + 3 interactive (numbered 1,2,3) + 2 auto-filled (continuing pattern)
+// 8 petals total: 4 example (★) + 4 interactive (numbered 1,2,3,4) + 0 auto-filled (continuing pattern)
 // petalFill[0..7] for 8 petals
 // Indices 0,1,2 = examples (pre-filled, show ★)
 // Indices 3,4,5 = interactive (user clicks, numbered 1,2,3)
 // Indices 6,7 = auto-filled after user completes 3,4,5 (continuing pattern, invisible to interaction)
 
 // 객관식 진행 상태
-let danchStep = 0; // 0 → 1번 꽃잎, 1 → 2번, 2 → 3번
-const DANCH_ANSWERS = ['red', 'green', 'yellow']; // 1,2,3번 꽃잎 정답
+let danchStep = 0; // 0 → 1번 꽃잎, 1 → 2번, 2 → 3번, 3 → 4번
+const DANCH_ANSWERS = ['blue','red', 'green', 'yellow']; // 1,2,3,4번 꽃잎 정답
 
 function initDancheong() {
   petalFill = [null, null, null, null, null, null, null, null];
-  danchPattern = ['red','green','yellow'];
-  // 예시 꽃잎(0,1,2) 미리 채우기
-  for (let i = 0; i < 3; i++) petalFill[i] = danchPattern[i % danchPattern.length];
+  danchPattern = ['blue','red','green','yellow'];
+  // 예시 꽃잎(0,1,2,3) 미리 채우기 — 파/빨/초/노
+  for (let i = 0; i < 4; i++) petalFill[i] = danchPattern[i];
 
   danchStep = 0;
   selectedDanchColor = null;
@@ -653,8 +653,8 @@ function updateDanchQuestion() {
   if (!label) return;
   // score-display 업데이트 (최대값 3으로 고정)
   const scoreEl = document.getElementById('score-danch');
-  if (scoreEl) scoreEl.textContent = `${Math.min(danchStep + 1, 3)} / 3`;
-  if (danchStep >= 3) {
+  if (scoreEl) scoreEl.textContent = `${Math.min(danchStep + 1, 4)} / 4`;
+  if (danchStep >= 4) {
     label.innerHTML = `<span data-ko="모두 맞히셨소!" data-en="All correct!">모두 맞히셨소!</span>`;
     return;
   }
@@ -664,7 +664,7 @@ function updateDanchQuestion() {
 
 // 객관식 답 처리
 function answerDanch(colorKey) {
-  if (danchStep >= 3) return;
+  if (danchStep >= 4) return;
   const correct = DANCH_ANSWERS[danchStep];
   addScore(colorKey === correct);
 
@@ -672,15 +672,9 @@ function answerDanch(colorKey) {
 
   if (colorKey === correct) {
     // 해당 꽃잎 색칠
-    const petalIdx = danchStep + 3; // step 0 → 꽃잎 3, step 1 → 4, step 2 → 5
+    const petalIdx = danchStep + 4; // step 0 → 꽃잎 4, step 1 → 5, step 2 → 6, step 3 → 7
     petalFill[petalIdx] = colorKey;
     danchStep++;
-
-    // 마지막 정답 시 6,7번 자동 채우기
-    if (danchStep === 3) {
-      petalFill[6] = danchPattern[6 % danchPattern.length];
-      petalFill[7] = danchPattern[7 % danchPattern.length];
-    }
 
     renderDancheong();
     showDanchFeedback(true,
@@ -689,7 +683,7 @@ function answerDanch(colorKey) {
     updateDanchQuestion();
 
     // 3개 다 맞히면 완료 버튼 표시
-    if (danchStep >= 3) {
+    if (danchStep >= 4) {
       document.getElementById('l3-finish-btn').style.display = 'flex';
       /* document.getElementById('l3-finish-btn').style.margin = '14px auto 0'; 확인하기 */ 
     }
@@ -884,7 +878,7 @@ function clickDanchPetal(idx) {
     renderDancheong();
     updateDanchProgress();
     const cname = LANG==='ko' ? DANCH_COLORS[selectedDanchColor].name_ko : DANCH_COLORS[selectedDanchColor].name_en;
-    const num = idx - 2; // 3→1, 4→2, 5→3
+    const num = idx - 3; // 4→1, 5→2, 6→3
     showDanchFeedback(true,
       LANG==='ko' ? `정답이오! ${num}번 꽃잎에 ${cname}색을 잘 칠했소.` : `Correct! Petal ${num} painted ${cname}.`);
   } else {
@@ -901,11 +895,11 @@ function showDanchFeedback(correct, msg) {
 }
 
 function updateDanchProgress() {
-  const filled = [petalFill[3], petalFill[4], petalFill[5]].filter(Boolean).length;
+  const filled = [petalFill[4], petalFill[5], petalFill[6], petalFill[7]].filter(Boolean).length;
   const prog = document.getElementById('danch-progress');
   prog.textContent = '';
 
-  if (filled === 3) {
+  if (filled === 4) {
     const btn = document.getElementById('l3-finish-btn');
     btn.style.display = 'flex';
     btn.style.margin = '14px auto 0';
