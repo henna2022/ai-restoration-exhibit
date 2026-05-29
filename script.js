@@ -90,11 +90,7 @@ const PATTERNS = {
   },
   wave: {
     name_ko: '파도', name_en: 'Wave',
-    svg: `<img src="icon/wave.svg" width="35" height="35" style="width:85%;height:85%;object-fit:contain;display:block;">`
-  },
-  phoenix: {
-    name_ko: '봉황', name_en: 'Phoenix',
-    svg: `<img src="icon/phoenix.svg" width="40" height="40" style="width:85%;height:85%;object-fit:contain;display:block;">`
+    svg: `<img src="icon/wave.svg" width="40" height="40" style="width:85%;height:85%;object-fit:contain;display:block;">`
   },
   bamboo: {
     name_ko: '대나무', name_en: 'Bamboo',
@@ -592,7 +588,7 @@ const DANCH_COLORS = {
 // Fixed pattern per spec: red -> green -> yellow (can be shuffled from base)
 let danchPattern = []; // 4-color keys for cycling
 let petalFill = [null, null, null, null, null, null, null, null]; // 8 petals: 0-3 example, 4-7 interactive, 8-9 auto-fill
-let selectedDanchColor = null;
+let selectedDanchColor = null; // 현재 미사용 (SVG 클릭 방식 대신 객관식 사용)
 
 // 8 petals total: 4 example (★) + 4 interactive (numbered 1,2,3,4) + 0 auto-filled (continuing pattern)
 // petalFill[0..7] for 8 petals
@@ -764,14 +760,12 @@ function renderDancheong() {
 
   // ── 5. 8 LARGE PINK LOTUS PETALS (THE INTERACTIVE LAYER) ──
   // Each petal is a pointed pink leaf with red inner leaf + small dark leaf
-  // Indices 0-2: example (★)
-  // Indices 3-5: interactive (numbered 1, 2, 3) — user clicks these
-  // Indices 6-7: auto-fill once 3-5 are done (continuing pattern visually)
+  // Indices 0-3: example (★) — pre-filled in initDancheong
+  // Indices 4-7: interactive (numbered 1,2,3,4) — filled via answerDanch (step+4)
   for (let i = 0; i < 8; i++) {
     const a = (i * 45 - 90) * Math.PI / 180;
-    const isExample = i < 3;
-    const isInteractive = i >= 3 && i <= 5;
-    const isAutoFill = i >= 6;
+    const isExample     = i < 4;        // petals 0,1,2,3 → ★
+    const isInteractive = i >= 4;       // petals 4,5,6,7 → 번호 1,2,3,4
 
     const colorKey = petalFill[i];
     // Default pink color
@@ -779,113 +773,44 @@ function renderDancheong() {
     const pinkStroke = '#2C3E2E';
 
     // If colored by user/example, use the assigned color
-    const fillColor = colorKey ? DANCH_COLORS[colorKey].hex : pinkFill;
-    const innerColor = colorKey ? DANCH_COLORS[colorKey].light : '#B8484A'; // pink default → red inner
+    const fillColor  = colorKey ? DANCH_COLORS[colorKey].hex   : pinkFill;
+    const innerColor = colorKey ? DANCH_COLORS[colorKey].light  : '#B8484A';
     const strokeColor = pinkStroke;
     const dashAttr = (isInteractive && !colorKey) ? 'stroke-dasharray="6,4"' : '';
 
-    const clickable = isInteractive && !colorKey ? `style="cursor:pointer"` : '';
-    const onclick = isInteractive && !colorKey ? `onclick="clickDanchPetal(${i})"` : '';
-
     const rot = i * 45;
 
-    // Pointed lotus petal shape — wider base, pointed tip
-    s += `<g transform="translate(${cx},${cy}) rotate(${rot})" ${clickable} ${onclick}>
+    s += `<g transform="translate(${cx},${cy}) rotate(${rot})">
       <!-- main pink/colored petal -->
       <path d="M 0,-110 Q -28,-90 -28,-60 Q -28,-30 -16,-22 L 0,-18 L 16,-22 Q 28,-30 28,-60 Q 28,-90 0,-110 Z"
         fill="${fillColor}" stroke="${strokeColor}" stroke-width="3" ${dashAttr}/>`;
 
-    // Inner red/colored leaf (only show if petal has color, OR show faded for pink default)
-    if (colorKey || (!isInteractive && !isAutoFill)) {
-      // Example/colored petals show full inner detail
+    // Inner detail: show for example petals always, and for interactive petals once colored
+    if (colorKey || isExample) {
       s += `<path d="M 0,-95 Q -16,-78 -16,-58 Q -16,-40 -8,-36 L 0,-34 L 8,-36 Q 16,-40 16,-58 Q 16,-78 0,-95 Z"
         fill="${innerColor}" stroke="${strokeColor}" stroke-width="1.5"/>`;
-      // Small dark leaf at base of inner
       s += `<path d="M 0,-60 Q -7,-50 -7,-42 Q -7,-36 0,-34 Q 7,-36 7,-42 Q 7,-50 0,-60 Z"
         fill="#1A2E22" stroke="none"/>`;
     }
-    // For empty interactive petals, show only outline (no inner) so user knows to fill
 
-    // Label (★ or number)
+    // Label: ★ for examples, number for interactive
     if (isExample) {
       s += `<text x="0" y="-60" text-anchor="middle" font-size="18" font-weight="700" fill="white" font-family="serif" opacity=".95" style="pointer-events:none">&#9733;</text>`;
     } else if (isInteractive) {
-      const num = i - 2; // petals 3,4,5 → 1,2,3
+      const num = i - 3; // petals 4,5,6,7 → 1,2,3,4
       const textFill = colorKey ? 'white' : '#8B6343';
       s += `<text x="0" y="-58" text-anchor="middle" font-size="18" font-weight="900" fill="${textFill}" font-family="Noto Sans KR,sans-serif" style="pointer-events:none">${num}</text>`;
     }
-    // Auto-fill petals (6,7) — no label, just colored
     s += `</g>`;
   }
 
   // ── 6. Center: teal disc with yellow dot ──
-  s += `<circle cx="${cx}" cy="${cy}" r="28" fill="#7BB8A0" stroke="#2C3E2E" stroke-width="2.5"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r=\"28\" fill=\"#7BB8A0\" stroke=\"#2C3E2E\" stroke-width=\"2.5\"/>`;
   s += `<circle cx="${cx}" cy="${cy}" r="22" fill="#5AA888" stroke="#2C3E2E" stroke-width="1.5"/>`;
   s += `<circle cx="${cx}" cy="${cy}" r="12" fill="#F0D050" stroke="#C9A030" stroke-width="1.5"/>`;
   s += `<circle cx="${cx}" cy="${cy}" r="8" fill="#F8DC60"/>`;
 
   svg.innerHTML = s;
-
-   setTimeout(() => {
-  // 1단계: 모든 g 요소의 pointer-events를 끄기 (장식 레이어가 클릭을 가로채지 못하게)
-  svg.querySelectorAll('g').forEach(g => {
-    if (!g.hasAttribute('onclick')) {
-      g.style.pointerEvents = 'none';
-    }
-  });
-  
-  // 2단계: onclick이 있는 꽃잎만 클릭 가능하게
-  svg.querySelectorAll('g[onclick]').forEach(g => {
-    g.style.cursor = 'pointer';
-    g.style.pointerEvents = 'auto';
-    
-    // 터치 이벤트
-     g.addEventListener('touchstart', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      const onclickAttr = this.getAttribute('onclick');
-      if (onclickAttr) {
-        eval(onclickAttr);
-      }
-    }, { passive: false });
-  });
-  }, 100);
-}
-
-
-
-function clickDanchPetal(idx) {
-  if (!selectedDanchColor) {
-    showDanchFeedback(false,
-      LANG==='ko' ? '색을 먼저 선택해 주세요.' : 'Please select a color first.');
-    return;
-  }
-  const correctKey = danchPattern[idx % danchPattern.length];
-  const correct = selectedDanchColor === correctKey;
-  addScore(correct);  // ← 추가
-
-  if (correct) {
-    petalFill[idx] = selectedDanchColor;
-
-    // Check if all 3 interactive petals (3,4,5) are done — if so, auto-fill 6,7
-    const interactiveDone = petalFill[3] && petalFill[4] && petalFill[5];
-    if (interactiveDone && (!petalFill[6] || !petalFill[7])) {
-      // Auto-fill remaining petals continuing the pattern
-      petalFill[6] = danchPattern[6 % danchPattern.length];
-      petalFill[7] = danchPattern[7 % danchPattern.length];
-    }
-
-    renderDancheong();
-    updateDanchProgress();
-    const cname = LANG==='ko' ? DANCH_COLORS[selectedDanchColor].name_ko : DANCH_COLORS[selectedDanchColor].name_en;
-    const num = idx - 3; // 4→1, 5→2, 6→3
-    showDanchFeedback(true,
-      LANG==='ko' ? `정답이오! ${num}번 꽃잎에 ${cname}색을 잘 칠했소.` : `Correct! Petal ${num} painted ${cname}.`);
-  } else {
-    const aname = LANG==='ko' ? DANCH_COLORS[correctKey].name_ko : DANCH_COLORS[correctKey].name_en;
-    showDanchFeedback(false,
-      LANG==='ko' ? `패턴을 다시 확인해보시오. 이 꽃잎의 정답은 [${aname}]이오.` : `Check the pattern again. This petal should be [${aname}].`);
-  }
 }
 
 function showDanchFeedback(correct, msg) {
@@ -1217,7 +1142,6 @@ function renderBandQuiz() {
 }
 
 function selectBand(key) {
-  console.log('[Band] selectBand called with:', key, '| bandDone:', bandDone);
   if (bandDone) return;
   const q = BAND_QUIZZES[bandIndex];
   const opt = document.querySelector(`.band-option[data-key="${key}"]`);
