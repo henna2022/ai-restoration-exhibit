@@ -54,10 +54,6 @@ body {
 .museum-logo-img {
   height:74px;
   width:auto;
-  background:white;
-  border-radius:8px;
-  padding:4px 10px;
-  border:1.5px solid var(--gold);
   flex-shrink:0;
   display:block;
   object-fit:contain;
