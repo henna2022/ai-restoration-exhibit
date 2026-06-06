@@ -37,30 +37,38 @@ function getScorePercent() {
 
 function setLang(lang) {
   LANG = lang;
+
+  // ── 1. 현재 보이는 카드의 동적 콘텐츠를 다시 렌더링 ──
+  // 렌더 시점에 언어가 박히는 콘텐츠(문제·선택지·라벨)는 data-ko 일괄 교체로
+  // 잡히지 않으므로, 보이는 모든 카드를 상태 보존 렌더 함수로 다시 그린다.
+  // (진행 상태는 전역변수에 있으므로 초기화하지 않는 하위 렌더만 호출)
+  // ※ data-ko 교체(2단계)보다 먼저 실행해야, 여기서 새로 생성된 data-ko
+  //   스팬까지 2단계에서 함께 번역된다.
+  const LANG_RERENDERERS = {
+    'level1-card':  () => renderL1Quiz(),
+    'band-card':    () => renderBandQuiz(),
+    'level2-card':  () => renderL2Quiz(),
+    'level3-card':  () => { renderDanchLegend(); renderDancheong(); renderDanchOptions(); updateDanchQuestion(); },
+    'taegeuk-card': () => { updateTaegeukLabel(); renderTaegeukOptions(); updateTaegeukNumBadge(); },
+    'level5-card':  () => { renderL5Badges(); renderL5Quiz(); },
+  };
+  for (const [cardId, rerender] of Object.entries(LANG_RERENDERERS)) {
+    const card = document.getElementById(cardId);
+    if (card && !card.classList.contains('hidden-section')) {
+      try { rerender(); }
+      catch(e) { console.warn('lang re-render error [' + cardId + ']:', e); }
+    }
+  }
+
+  // ── 2. data-ko/data-en 속성을 가진 모든 요소를 현재 언어로 교체 ──
   document.querySelectorAll('[data-ko]').forEach(el => {
     el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-ko');
   });
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
 
-  // ── 현재 보이는 퀴즈를 다시 렌더링해서 패턴 이름 갱신 ──
-  try {
-    // 레벨 1
-    const l1card = document.getElementById('level1-card');
-    if (l1card && !l1card.classList.contains('hidden-section')) {
-      renderL1Quiz();
-    }
-    // 레벨 1.5 (Band)
-    const bandCard = document.getElementById('band-card');
-    if (bandCard && !bandCard.classList.contains('hidden-section')) {
-      renderBandQuiz();
-    }
-    // 레벨 2
-    const l2card = document.getElementById('level2-card');
-    if (l2card && !l2card.classList.contains('hidden-section')) {
-      renderL2Quiz();
-    }
-  } catch(e) { console.warn('lang re-render error:', e); }
+  // ── 3. 언어 버튼 active 상태 갱신 ──
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`);
+  if (activeBtn) activeBtn.classList.add('active');
 }
 
 // ============================================================
