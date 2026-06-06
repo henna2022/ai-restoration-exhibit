@@ -35,15 +35,45 @@ function getScorePercent() {
   return Math.round((score / TOTAL_MAX) * 100);
 }
 
+// 화면에 떠 있는 피드백 버블 id 목록 — 언어 전환 시 보존/번역 대상
+const FEEDBACK_IDS = ['l1-feedback', 'l2-feedback', 'band-feedback', 'danch-feedback', 'taegeuk-feedback', 'l5-feedback'];
+
+// 피드백 텍스트를 ko/en 양쪽으로 저장 → setLang의 data-ko 일괄 교체가 즉시 번역.
+// `<b>` 등 마크업을 지원하기 위해 innerHTML 사용(저장 문자열과 동일하게 렌더).
+function setFeedback(el, ko, en) {
+  if (!el) return;
+  el.dataset.ko = ko;
+  el.dataset.en = en;
+  el.innerHTML = LANG === 'ko' ? ko : en;
+}
+
+// 피드백을 비울 때는 data 속성도 제거해야 이후 setLang에서 옛 메시지가 되살아나지 않는다.
+function clearFeedback(el) {
+  if (!el) return;
+  delete el.dataset.ko;
+  delete el.dataset.en;
+  el.innerHTML = '';
+}
+
 function setLang(lang) {
   LANG = lang;
 
-  // ── 1. 현재 보이는 카드의 동적 콘텐츠를 다시 렌더링 ──
+  // ── 1. 화면에 떠 있는 피드백을 스냅샷 ──
+  // 일부 카드의 재렌더(renderL1Quiz 등)는 피드백을 지우므로, 언어만 바뀌고
+  // 메시지는 유지되도록 재렌더 전에 보관했다가 뒤에서 복원한다.
+  const fbSnapshot = {};
+  FEEDBACK_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && (el.dataset.ko || el.dataset.en)) {
+      fbSnapshot[id] = { ko: el.dataset.ko, en: el.dataset.en, className: el.className };
+    }
+  });
+
+  // ── 2. 현재 보이는 카드의 동적 콘텐츠를 다시 렌더링 ──
   // 렌더 시점에 언어가 박히는 콘텐츠(문제·선택지·라벨)는 data-ko 일괄 교체로
-  // 잡히지 않으므로, 보이는 모든 카드를 상태 보존 렌더 함수로 다시 그린다.
-  // (진행 상태는 전역변수에 있으므로 초기화하지 않는 하위 렌더만 호출)
-  // ※ data-ko 교체(2단계)보다 먼저 실행해야, 여기서 새로 생성된 data-ko
-  //   스팬까지 2단계에서 함께 번역된다.
+  // 잡히지 않으므로, 보이는 모든 카드를 렌더 함수로 다시 그린다.
+  // ※ data-ko 교체(4단계)보다 먼저 실행해야, 여기서 새로 생성된 data-ko
+  //   스팬까지 4단계에서 함께 번역된다.
   const LANG_RERENDERERS = {
     'level1-card':  () => renderL1Quiz(),
     'band-card':    () => renderBandQuiz(),
@@ -60,12 +90,22 @@ function setLang(lang) {
     }
   }
 
-  // ── 2. data-ko/data-en 속성을 가진 모든 요소를 현재 언어로 교체 ──
+  // ── 3. 재렌더로 지워졌을 수 있는 피드백 복원 ──
+  Object.entries(fbSnapshot).forEach(([id, s]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.dataset.ko = s.ko;
+    el.dataset.en = s.en;
+    el.className = s.className;
+  });
+
+  // ── 4. data-ko/data-en 속성을 가진 모든 요소를 현재 언어로 교체 ──
+  // (위에서 복원한 피드백 포함)
   document.querySelectorAll('[data-ko]').forEach(el => {
     el.innerHTML = el.getAttribute('data-' + lang) || el.getAttribute('data-ko');
   });
 
-  // ── 3. 언어 버튼 active 상태 갱신 ──
+  // ── 5. 언어 버튼 active 상태 갱신 ──
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   const activeBtn = document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`);
   if (activeBtn) activeBtn.classList.add('active');
@@ -227,7 +267,7 @@ function renderL1Quiz() {
   // 이전 문제의 피드백 초기화
   const prevFb = document.getElementById('l1-feedback');
   prevFb.classList.remove('show','correct','wrong');
-  prevFb.innerHTML = '';
+  clearFeedback(prevFb);
 
   // dots
   document.getElementById('l1-nav').innerHTML = L1_QUIZZES.map((_,i) =>
@@ -262,10 +302,11 @@ function checkL1(btn, chosen, answer) {
   fb.classList.remove('show','correct','wrong');
   fb.classList.add('show', correct ? 'correct' : 'wrong');
   if (correct) {
-    fb.innerHTML = `<span data-ko="옳소! 패턴을 잘 헤아렸소." data-en="Correct! You found the pattern.">${LANG==='ko'?'옳소! 패턴을 잘 헤아렸소.':'Correct! You found the pattern.'}</span>`;
+    setFeedback(fb, '옳소! 패턴을 잘 헤아렸소.', 'Correct! You found the pattern.');
   } else {
-    const aName = LANG==='ko'?PATTERNS[answer].name_ko:PATTERNS[answer].name_en;
-    fb.innerHTML = `<span data-ko="아쉽소! 정답은 [${aName}]이오. 다시 살펴보시오." data-en="Close! The answer is [${aName}]. Look at the pattern again.">${LANG==='ko'?`아쉽소! 정답은 [${aName}]이오. 다시 살펴보시오..`:`Close! The answer is [${aName}]. Look at the pattern again.`}</span>`;
+    setFeedback(fb,
+      `아쉽소! 정답은 [${PATTERNS[answer].name_ko}]이오. 다시 살펴보시오.`,
+      `Close! The answer is [${PATTERNS[answer].name_en}]. Look at the pattern again.`);
   }
 
   document.getElementById('score-1').textContent = `${l1Current + 1} / 5`;
@@ -460,7 +501,7 @@ function renderL2QuizGrid() {
   const prevFb = document.getElementById('l2-feedback');
   if (prevFb) {
     prevFb.classList.remove('show','correct','wrong');
-    prevFb.textContent = '';
+    clearFeedback(prevFb);
   }
 }
 
@@ -509,7 +550,6 @@ function checkL2(btn, chosen, answer) {
   fb.classList.remove('show','correct','wrong');
   void fb.offsetWidth;
   fb.classList.add('show', correct ? 'correct' : 'wrong');
-  const aName = LANG==='ko'?PATTERNS[answer].name_ko:PATTERNS[answer].name_en;
 
   if (correct) {
     l2Filled.add(blank.idx);
@@ -518,9 +558,9 @@ function checkL2(btn, chosen, answer) {
       // Quiz fully solved
       l2QuizSolved = true;
       l2Score++;
-      fb.textContent = LANG==='ko'
-        ? (q.blanks.length > 1 ? `훌륭하오! 모든 빈칸을 다 맞췄소!` : '옳소! 대칭 패턴을 잘 헤아렸소.')
-        : (q.blanks.length > 1 ? `Excellent! You filled all the blanks!` : 'Correct! You found the symmetry pattern.');
+      setFeedback(fb,
+        (q.blanks.length > 1 ? `훌륭하오! 모든 빈칸을 다 맞췄소!` : '옳소! 대칭 패턴을 잘 헤아렸소.'),
+        (q.blanks.length > 1 ? `Excellent! You filled all the blanks!` : 'Correct! You found the symmetry pattern.'));
 
       if (l2Current < L2_QUIZZES.length - 1) {
         document.getElementById('l2-next-btn').classList.add('show');
@@ -530,9 +570,9 @@ function checkL2(btn, chosen, answer) {
       }
     } else {
       // More blanks remaining — advance to next blank
-      fb.textContent = LANG==='ko'
-        ? `잘했소! ${l2ActiveBlankIdx+1}번 빈칸 정답이오! 다음 빈칸을 풀어보시오.`
-        : `Good! Blank #${l2ActiveBlankIdx+1} correct. Now solve the next one.`;
+      setFeedback(fb,
+        `잘했소! ${l2ActiveBlankIdx+1}번 빈칸 정답이오! 다음 빈칸을 풀어보시오.`,
+        `Good! Blank #${l2ActiveBlankIdx+1} correct. Now solve the next one.`);
       setTimeout(() => {
         l2ActiveBlankIdx++;
         renderL2QuizGrid();
@@ -541,9 +581,9 @@ function checkL2(btn, chosen, answer) {
       }, 1100);
     }
   } else {
-    fb.textContent = LANG==='ko'
-      ? `아쉽소! 왼쪽과 반대로 생각해보시오. 정답은 [${aName}]이오.`
-      : `Not quite! Mirror the left side. The answer is [${aName}].`;
+    setFeedback(fb,
+      `아쉽소! 왼쪽과 반대로 생각해보시오. 정답은 [${PATTERNS[answer].name_ko}]이오.`,
+      `Not quite! Mirror the left side. The answer is [${PATTERNS[answer].name_en}].`);
     // Auto-fill this blank with correct answer + advance
     l2Filled.add(blank.idx);
     if (l2ActiveBlankIdx >= q.blanks.length - 1) {
@@ -672,8 +712,6 @@ function answerDanch(colorKey) {
   const correct = DANCH_ANSWERS[danchStep];
   addScore(colorKey === correct);
 
-  const cname = LANG==='ko' ? DANCH_COLORS[colorKey].name_ko : DANCH_COLORS[colorKey].name_en;
-
   if (colorKey === correct) {
     // 해당 꽃잎 색칠
     const petalIdx = danchStep + 4; // step 0 → 꽃잎 4, step 1 → 5, step 2 → 6, step 3 → 7
@@ -682,7 +720,8 @@ function answerDanch(colorKey) {
 
     renderDancheong();
     showDanchFeedback(true,
-      LANG==='ko' ? `정답이오! ${danchStep}번 꽃잎에 ${cname}색이 칠해졌소.` : `Correct! Petal ${danchStep} is now ${cname}.`);
+      `정답이오! ${danchStep}번 꽃잎에 ${DANCH_COLORS[colorKey].name_ko}색이 칠해졌소.`,
+      `Correct! Petal ${danchStep} is now ${DANCH_COLORS[colorKey].name_en}.`);
 
     updateDanchQuestion();
 
@@ -692,9 +731,9 @@ function answerDanch(colorKey) {
       /* document.getElementById('l3-finish-btn').style.margin = '14px auto 0'; 확인하기 */ 
     }
   } else {
-    const aname = LANG==='ko' ? DANCH_COLORS[correct].name_ko : DANCH_COLORS[correct].name_en;
     showDanchFeedback(false,
-      LANG==='ko' ? `다시 생각해보시오. 패턴을 살펴보면 답이 보일 것이오.` : `Try again. Look at the pattern carefully.`);
+      `다시 생각해보시오. 패턴을 살펴보면 답이 보일 것이오.`,
+      `Try again. Look at the pattern carefully.`);
   }
 }
 
@@ -821,10 +860,10 @@ function renderDancheong() {
   svg.innerHTML = s;
 }
 
-function showDanchFeedback(correct, msg) {
+function showDanchFeedback(correct, ko, en) {
   const fb = document.getElementById('danch-feedback');
   fb.className = 'feedback-bubble show ' + (correct ? 'correct' : 'wrong');
-  fb.textContent = msg;
+  setFeedback(fb, ko, en);
 }
 
 function updateDanchProgress() {
@@ -998,7 +1037,7 @@ function renderTaegeuk() {
   updateTaegeukNumBadge(); // ← 추가
   const fb = document.getElementById('taegeuk-feedback');
   fb.className = 'feedback-bubble';
-  fb.textContent = '';
+  clearFeedback(fb);
   document.getElementById('taegeuk-finish-btn').style.display = 'none';
 }
 
@@ -1075,15 +1114,15 @@ function selectTaegeukColor(colorKey) {
     document.getElementById('taegeuk-img').src = `taegeuk/${imgName}.png`;
     updateTaegeukNumBadge(); // ← 추가
     fb.className = 'feedback-bubble correct show';
-    fb.textContent = LANG==='ko'
-      ? `정답! ${TAEGEUK_COLORS[colorKey].name_ko}이오!`
-      : `Correct! It's ${TAEGEUK_COLORS[colorKey].name_en}!`;
+    setFeedback(fb,
+      `정답! ${TAEGEUK_COLORS[colorKey].name_ko}이오!`,
+      `Correct! It's ${TAEGEUK_COLORS[colorKey].name_en}!`);
 
     if (taegeukStep >= TAEGEUK_ANSWERS.length) {
       // 모두 완료
       setTimeout(() => {
         updateTaegeukLabel();
-        fb.textContent = LANG==='ko' ? '🎉 삼태극을 모두 복원했소!' : '🎉 You restored the Sam-Taegeuk!';
+        setFeedback(fb, '🎉 삼태극을 모두 복원했소!', '🎉 You restored the Sam-Taegeuk!');
         document.getElementById('taegeuk-finish-btn').style.display = 'inline-flex';
       }, 600);
     } else {
@@ -1093,12 +1132,9 @@ function selectTaegeukColor(colorKey) {
     btn.classList.add('wrong');
     setTimeout(() => btn.classList.remove('wrong'), 600);
     fb.className = 'feedback-bubble wrong show';
-    const chosenName = LANG==='ko' ? TAEGEUK_COLORS[colorKey].name_ko : TAEGEUK_COLORS[colorKey].name_en;
-    const correctName = LANG==='ko' ? TAEGEUK_COLORS[correct].name_ko : TAEGEUK_COLORS[correct].name_en;
-    const stepNum = taegeukStep + 1;
-    fb.innerHTML = LANG==='ko'
-      ? `아쉽소! 그것은 <b>${chosenName}</b>이오. 다시 골라보시오.`
-      : `Not quite! That was <b>${chosenName}</b>. Try again!`;
+    setFeedback(fb,
+      `아쉽소! 그것은 <b>${TAEGEUK_COLORS[colorKey].name_ko}</b>이오. 다시 골라보시오.`,
+      `Not quite! That was <b>${TAEGEUK_COLORS[colorKey].name_en}</b>. Try again!`);
   }
 }
 // ============================================================
@@ -1144,7 +1180,7 @@ function renderBandQuiz() {
 
   const fb = document.getElementById('band-feedback');
   fb.className = 'feedback-bubble';
-  fb.textContent = '';
+  clearFeedback(fb);
   document.getElementById('band-finish-btn').style.display = 'none';
   bandDone = false;
 }
@@ -1164,7 +1200,7 @@ function selectBand(key) {
       if (b.dataset.key !== key) b.style.pointerEvents = 'none';
     });
     fb.className = 'feedback-bubble correct show';
-    fb.textContent = LANG==='ko' ? '정답이오!' : 'Correct! 👏';
+    setFeedback(fb, '정답이오!', 'Correct! 👏');
 
     setTimeout(() => {
       if (bandIndex < BAND_QUIZZES.length - 1) {
@@ -1172,7 +1208,7 @@ function selectBand(key) {
         renderBandQuiz();
       } else {
         // 모든 문제 완료
-        fb.textContent = LANG==='ko' ? '🎉 모든 띠 무늬를 복원했소!' : '🎉 All bands restored!';
+        setFeedback(fb, '🎉 모든 띠 무늬를 복원했소!', '🎉 All bands restored!');
         document.getElementById('band-finish-btn').style.display = 'inline-flex';
       }
     }, 1200);
@@ -1180,7 +1216,7 @@ function selectBand(key) {
     opt.classList.add('wrong');
     setTimeout(() => opt.classList.remove('wrong'), 600);
     fb.className = 'feedback-bubble wrong show';
-    fb.textContent = LANG==='ko' ? '다시 한 번 살펴보시오...' : 'Look carefully and try again!';
+    setFeedback(fb, '다시 한 번 살펴보시오...', 'Look carefully and try again!');
   }
 }
 
@@ -1259,7 +1295,7 @@ function renderL5Quiz() {
 
   const fb = document.getElementById('l5-feedback');
   fb.className = 'feedback-bubble';
-  fb.textContent = '';
+  clearFeedback(fb);
   document.getElementById('l5-finish-btn').style.display = 'none';
 }
 
@@ -1282,14 +1318,14 @@ function selectL5(key) {
     });
 
     fb.className = 'feedback-bubble correct show';
-    fb.textContent = LANG==='ko' ? '정답이오! 👏' : 'Correct! 👏';
+    setFeedback(fb, '정답이오! 👏', 'Correct! 👏');
 
     setTimeout(() => {
       if (l5Index < L5_QUIZZES.length - 1) {
         l5Index++;
         renderL5Quiz();
       } else {
-        fb.textContent = LANG==='ko' ? '🎉 모든 문양을 복원했소!' : '🎉 All patterns restored!';
+        setFeedback(fb, '🎉 모든 문양을 복원했소!', '🎉 All patterns restored!');
         document.getElementById('l5-finish-btn').style.display = 'flex';
       }
     }, 1200);
@@ -1297,7 +1333,7 @@ function selectL5(key) {
     opt.style.borderColor = '#c0392b';
     setTimeout(() => { opt.style.borderColor = 'var(--border-warm)'; }, 600);
     fb.className = 'feedback-bubble wrong show';
-    fb.textContent = LANG==='ko' ? '다시 한 번 살펴보시오...' : 'Look carefully and try again!';
+    setFeedback(fb, '다시 한 번 살펴보시오...', 'Look carefully and try again!');
   }
 }
 
