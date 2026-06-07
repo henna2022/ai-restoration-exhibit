@@ -16,16 +16,6 @@ function addScore(correct) {
   } else {
     TOTAL_SCORE -= 1;
   }
-  updateHeaderScore();
-}
-
-function updateHeaderScore() {
-  const el = document.getElementById('header-score-value');
-  if (!el) return;
-  el.textContent = Math.max(0, TOTAL_SCORE);
-  el.classList.remove('bump');
-  void el.offsetWidth;
-  el.classList.add('bump');
 }
 
 function getScorePercent() {
@@ -69,15 +59,30 @@ function setLang(lang) {
     }
   });
 
+  // ── 1b. 진행 상태 스냅샷 (완료 플래그 + 다음/완료 버튼 가시성) ──
+  // 일부 카드의 재렌더(renderL1Quiz 등)는 현재 문제를 새로 그리며 완료 플래그와
+  // 다음/완료 버튼을 초기화한다. 이미 푼 문제가 "언어 전환"만으로 리셋되어
+  // 다음 단계(특히 마지막 결과 화면)로 넘어가지 못하는 일이 없도록 보관 후 복원한다.
+  const flagSnapshot = { l1Answered, bandDone, l5Done };
+  const NAV_BUTTON_IDS = ['l1-next-btn', 'l1-finish-btn', 'band-finish-btn',
+                          'l2-next-btn', 'l2-finish-btn', 'l5-finish-btn'];
+  const btnSnapshot = {};
+  NAV_BUTTON_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) btnSnapshot[id] = { display: el.style.display, show: el.classList.contains('show') };
+  });
+
   // ── 2. 현재 보이는 카드의 동적 콘텐츠를 다시 렌더링 ──
   // 렌더 시점에 언어가 박히는 콘텐츠(문제·선택지·라벨)는 data-ko 일괄 교체로
   // 잡히지 않으므로, 보이는 모든 카드를 렌더 함수로 다시 그린다.
   // ※ data-ko 교체(4단계)보다 먼저 실행해야, 여기서 새로 생성된 data-ko
   //   스팬까지 4단계에서 함께 번역된다.
+  // ※ level2-card는 renderL2Quiz()가 진행 중인 빈칸/완료 상태까지 초기화하므로,
+  //   상태를 건드리지 않고 화면만 다시 그리는 grid/options 렌더만 호출한다.
   const LANG_RERENDERERS = {
     'level1-card':  () => renderL1Quiz(),
     'band-card':    () => renderBandQuiz(),
-    'level2-card':  () => renderL2Quiz(),
+    'level2-card':  () => { renderL2QuizGrid(); renderL2Options(); },
     'level3-card':  () => { renderDanchLegend(); renderDancheong(); renderDanchOptions(); updateDanchQuestion(); },
     'taegeuk-card': () => { updateTaegeukLabel(); renderTaegeukOptions(); updateTaegeukNumBadge(); },
     'level5-card':  () => { renderL5Badges(); renderL5Quiz(); },
@@ -89,6 +94,17 @@ function setLang(lang) {
       catch(e) { console.warn('lang re-render error [' + cardId + ']:', e); }
     }
   }
+
+  // ── 2b. 진행 상태 복원 (재렌더가 초기화한 완료 플래그 + 버튼 되돌리기) ──
+  l1Answered = flagSnapshot.l1Answered;
+  bandDone   = flagSnapshot.bandDone;
+  l5Done     = flagSnapshot.l5Done;
+  Object.entries(btnSnapshot).forEach(([id, s]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = s.display;
+    el.classList.toggle('show', s.show);
+  });
 
   // ── 3. 재렌더로 지워졌을 수 있는 피드백 복원 ──
   Object.entries(fbSnapshot).forEach(([id, s]) => {
@@ -154,9 +170,6 @@ const PATTERNS = {
   }
 };
 
-// All keys
-const P_KEYS = ['lotus','cloud','crane','plum','phoenix','wave','bamboo','turtle','peony'];
-
 function patternSVG(key) {
   return PATTERNS[key] ? PATTERNS[key].svg : '<svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="#ddd"/></svg>';
 }
@@ -167,16 +180,6 @@ function patternName(key) {
 // ============================================================
 // LEVEL 1 — fixed sequence quizzes
 // ============================================================
-// Fixed quizzes per spec:
-// Q1: lotus,cloud,lotus,cloud,lotus → answer: cloud (not plum — wait, spec says fix to 매화)
-// Re-reading spec: 1-1 correct=매화, 1-2 correct=매화, 1-3 correct=대나무
-// Build quizzes so these are indeed correct:
-// Q1 sequence: plum,cloud,plum,cloud,plum → answer: cloud  [No — spec says answer IS 매화]
-// Let's build: Q1: cloud,plum,cloud,plum,cloud → answer=plum(매화) ✓
-// Q2: phoenix,plum,phoenix,plum,phoenix → answer=plum(매화) ✓
-// Q3: bamboo,turtle,bamboo,turtle,bamboo → answer=turtle? No spec says 대나무
-// Q3: turtle,bamboo,turtle,bamboo,turtle → answer=bamboo(대나무) ✓
-
 // blankPos: '?' 칸의 위치 (0=처음, 1~3=중간, 4=끝)
 const L1_QUIZZES = [
   // 문제 1 (NEW): 맨 처음이 빈칸 - ?, 매화, 구름, 매화, 구름  → 답: 구름
@@ -286,17 +289,13 @@ function checkL1(btn, chosen, answer) {
   addScore(correct);  // ← 정답 스코어 추가
 
   document.querySelectorAll('#l1-quiz-container .quiz-option').forEach(b => {
-    const key = b.onclick.toString().match(/'([^']+)','([^']+)'/);
-    // identify by onclick text
     b.style.pointerEvents = 'none';
-  });
-  btn.classList.add(correct ? 'correct' : 'wrong');
-  // mark correct answer
-  document.querySelectorAll('#l1-quiz-container .quiz-option').forEach(b => {
+    // 정답 버튼 강조
     if (b.textContent.trim().includes(LANG==='ko'?PATTERNS[answer].name_ko:PATTERNS[answer].name_en)) {
       b.classList.add('correct');
     }
   });
+  btn.classList.add(correct ? 'correct' : 'wrong');
 
   const fb = document.getElementById('l1-feedback');
   fb.classList.remove('show','correct','wrong');
@@ -635,14 +634,8 @@ const DANCH_COLORS = {
 
 // Fixed pattern per spec: red -> green -> yellow (can be shuffled from base)
 let danchPattern = []; // 4-color keys for cycling
-let petalFill = [null, null, null, null, null, null, null, null]; // 8 petals: 0-3 example, 4-7 interactive, 8-9 auto-fill
-let selectedDanchColor = null; // 현재 미사용 (SVG 클릭 방식 대신 객관식 사용)
-
-// 8 petals total: 4 example (★) + 4 interactive (numbered 1,2,3,4) + 0 auto-filled (continuing pattern)
-// petalFill[0..7] for 8 petals
-// Indices 0,1,2 = examples (pre-filled, show ★)
-// Indices 3,4,5 = interactive (user clicks, numbered 1,2,3)
-// Indices 6,7 = auto-filled after user completes 3,4,5 (continuing pattern, invisible to interaction)
+// 8 petals total: 0-3 = 예시(★, 미리 채움), 4-7 = 객관식으로 채우는 칸(번호 1~4)
+let petalFill = [null, null, null, null, null, null, null, null];
 
 // 객관식 진행 상태
 let danchStep = 0; // 0 → 1번 꽃잎, 1 → 2번, 2 → 3번, 3 → 4번
@@ -655,7 +648,6 @@ function initDancheong() {
   for (let i = 0; i < 4; i++) petalFill[i] = danchPattern[i];
 
   danchStep = 0;
-  selectedDanchColor = null;
 
   renderDanchLegend();
   renderDancheong();
@@ -725,10 +717,9 @@ function answerDanch(colorKey) {
 
     updateDanchQuestion();
 
-    // 3개 다 맞히면 완료 버튼 표시
+    // 4개 다 맞히면 완료 버튼 표시
     if (danchStep >= 4) {
       document.getElementById('l3-finish-btn').style.display = 'flex';
-      /* document.getElementById('l3-finish-btn').style.margin = '14px auto 0'; 확인하기 */ 
     }
   } else {
     showDanchFeedback(false,
@@ -866,18 +857,6 @@ function showDanchFeedback(correct, ko, en) {
   setFeedback(fb, ko, en);
 }
 
-function updateDanchProgress() {
-  const filled = [petalFill[4], petalFill[5], petalFill[6], petalFill[7]].filter(Boolean).length;
-  const prog = document.getElementById('danch-progress');
-  prog.textContent = '';
-
-  if (filled === 4) {
-    const btn = document.getElementById('l3-finish-btn');
-    btn.style.display = 'flex';
-    btn.style.margin = '14px auto 0';
-  }
-}
-
 function finishLevel3() {
   document.getElementById('level3-card').classList.add('hidden-section');
   document.getElementById('taegeuk-card').classList.remove('hidden-section');
@@ -951,19 +930,6 @@ function showFinalCelebration() {
   setTimeout(() => spawnConfetti(50, 20, 50), 1900);   // 상단 중앙
   setTimeout(() => spawnConfetti(15, 45, 45), 2400);   // 좌측
   setTimeout(() => spawnConfetti(85, 45, 45), 2900);   // 우측
-}
-
-// ============================================================
-// STEP HELPERS
-// ============================================================
-function markStepDone(id) {
-  const el = document.getElementById(id);
-  el.classList.remove('active');
-  el.classList.add('done');
-  el.querySelector('.step-circle').textContent = '✓';
-}
-function markStepActive(id) {
-  document.getElementById(id).classList.add('active');
 }
 
 // ============================================================

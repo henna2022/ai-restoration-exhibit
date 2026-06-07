@@ -80,65 +80,6 @@ body {
 
 
 
-.progress-steps {
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-}
-.step-item {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:8px;
-  flex:1;
-  max-width:160px;
-  position:relative;
-}
-.step-item:not(:last-child)::after {
-  content:'';
-  position:absolute;
-  top:19px;
-  left:58%;
-  width:84%;
-  height:2px;
-  background:var(--border-warm);
-  z-index:0;
-}
-.step-item.done::after { background:var(--gold); }
-.step-circle {
-  width:38px; height:38px;
-  border-radius:50%;
-  border:2px solid var(--border-warm);
-  background:var(--bg-paper);
-  display:flex; align-items:center; justify-content:center;
-  font-size:17px;
-  font-weight:700;
-  color:var(--text-light);
-  transition:all .4s;
-  position:relative; z-index:1;
-  font-family:'Noto Serif KR',serif;
-}
-.step-item.active .step-circle {
-  border-color:var(--primary);
-  background:var(--primary);
-  color:white;
-  box-shadow:0 0 0 4px rgba(139,26,26,.15);
-}
-.step-item.done .step-circle {
-  border-color:var(--gold);
-  background:var(--gold);
-  color:white;
-  font-size:19px;
-}
-.step-label {
-  font-size:14px;
-  color:var(--text-light);
-  text-align:center;
-  line-height:1.4;
-  font-weight:500;
-}
-.step-item.active .step-label { color:var(--primary); font-weight:700; }
-
 /* ─── MAIN ─── */
 .main-content {
   max-width:1180px;
@@ -398,41 +339,6 @@ html { scroll-behavior:auto; }
 .next-btn.green-btn:hover { background:#3a8040; }
 
 /* ─── LEVEL 2 SYMMETRY ─── */
-.symmetry-container {
-  display:grid;
-  grid-template-columns:1fr 60px 1fr;
-  gap:12px;
-  align-items:center;
-  background:var(--bg-paper);
-  border-radius:14px;
-  border:1.5px solid var(--border-warm);
-  padding:20px;
-  margin-bottom:20px;
-}
-.sym-half {
-  border-radius:12px;
-  overflow:hidden;
-  border:1.5px solid var(--border-warm);
-  background:white;
-}
-.sym-half-label {
-  background:var(--primary-dark);
-  color:white;
-  text-align:center;
-  font-size:14px;
-  font-weight:700;
-  padding:6px;
-  letter-spacing:1px;
-}
-.sym-half-content {
-  padding:10px;
-  display:grid;
-  grid-template-columns:repeat(var(--sym-cols, 3), 1fr);
-  gap:4px;
-  min-height:100px;
-  align-content:start;
-  background:white;
-}
 .sym-cell {
   width:100%;
   aspect-ratio:1;
@@ -480,23 +386,6 @@ html { scroll-behavior:auto; }
   border-color:var(--success);
 }
 .sym-cell.filled-correct svg { opacity:1; }
-.sym-divider {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  color:var(--gold-dark);
-}
-.sym-divider-arrow {
-  font-size:23px;
-  font-weight:900;
-}
-.sym-divider-text {
-  font-size:14px;
-  color:var(--text-light);
-  font-weight:600;
-  letter-spacing:.5px;
-}
 
 /* ─── LEVEL 3 DANCHEONG ─── */
 .dancheong-container {
@@ -582,14 +471,6 @@ html { scroll-behavior:auto; }
   }
 }
 
-/* ─── MISC ─── */
-.danch-progress {
-  text-align:center;
-  margin-top:10px;
-  font-size:16px;
-  color:var(--text-medium);
-  font-weight:600;
-}
 /* ─── LEVEL 4 — 삼태극 ─── */
 #taegeuk-svg { max-width:400px; width:100%; }
 
@@ -628,7 +509,6 @@ html { scroll-behavior:auto; }
   .pattern-cell { width:76px; height:76px; }
   .pattern-cell svg { width:64px; height:64px; }
   .dancheong-svg-wrapper svg { max-width:260px; }
-  .symmetry-container { grid-template-columns:1fr 50px 1fr; gap:10px; }
   .site-header { padding:10px 20px; }
   .site-header .logo { font-size:16px; gap:10px; }
   .museum-logo-img { height:57px; }
@@ -641,9 +521,6 @@ html { scroll-behavior:auto; }
   .main-content { padding:0 14px 50px; }
   .section-card { padding:20px 18px; border-radius:14px; }
   .quiz-options { grid-template-columns:1fr; }
-  .symmetry-container { grid-template-columns:1fr; grid-template-rows:auto auto auto; }
-  .step-label { font-size:12px; }
-  .step-circle { width:32px; height:32px; font-size:15px; }
   .section-title { font-size:18px; }
   .section-subtitle { font-size:14px; }
   .quiz-option { font-size:15px; padding:12px 14px; }
@@ -757,119 +634,6 @@ html { scroll-behavior:auto; }
   .band-option { padding:14px; min-height: 90px; }
   .band-blank { width:80px; height:60px; font-size:24px; }
   .band-half { height:60px; }
-}
-/* ─── LEVEL INTRO OVERLAY (창호문 연출) ─── */
-.level-intro-overlay {
-  position:fixed;
-  top:0; left:0; right:0; bottom:0;
-  z-index:1000;
-  display:none;
-  background:linear-gradient(180deg, #2A1810 0%, #3D2818 100%);
-  overflow:hidden;
-}
-.level-intro-overlay.show { display:block; }
-
-/* 문 열리는 배경 영상 */
-.intro-video {
-  position:absolute;
-  top:0; left:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:1;
-  opacity:0;                /* 처음엔 숨겨져 있음 */
-  transition:opacity 0.4s ease;
-  background:#2A1810;
-}
-/* 2단계: 영상 재생 시 보임 */
-.level-intro-overlay.video-playing .intro-video { opacity:1; }
-
-/* 갈색 상자 콘텐츠 */
-.intro-content {
-  position:absolute;
-  top:50%; left:50%;
-  transform:translate(-50%, -50%);
-  z-index:2;
-  text-align:center;
-  color:white;
-  width:88%;
-  max-width:700px;
-  padding:50px 40px;
-  background:rgba(45, 30, 16, 0.92);
-  border:3px double var(--gold);
-  border-radius:8px;
-  box-shadow:0 12px 40px rgba(0,0,0,0.5);
-  opacity:0;
-  transition:opacity 0.5s ease;
-}
-/* 1단계: 갈색 상자 보임 */
-.level-intro-overlay.show-content .intro-content { opacity:1; }
-/* 2단계: 영상 재생 시 갈색 상자 페이드 아웃 */
-.level-intro-overlay.video-playing .intro-content {
-  opacity:0;
-  pointer-events:none;
-}
-
-.intro-progress {
-  display:flex;
-  justify-content:center;
-  gap:30px;
-  margin-bottom:32px;
-}
-.intro-progress .step-item {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:8px;
-  max-width:none;
-  flex:none;
-}
-.intro-progress .step-item::after { display:none !important; }
-.intro-progress .step-circle {
-  width:44px; height:44px;
-  border-radius:50%;
-  border:2px solid rgba(255,255,255,0.4);
-  background:rgba(255,255,255,0.1);
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px;
-  font-weight:700;
-  color:rgba(255,255,255,0.7);
-  font-family:'Noto Serif KR',serif;
-}
-.intro-progress .step-item.active .step-circle {
-  border-color:var(--gold);
-  background:var(--gold);
-  color:var(--primary-dark);
-  box-shadow:0 0 0 6px rgba(201,168,76,.3);
-}
-.intro-progress .step-item.done .step-circle {
-  border-color:var(--gold-light);
-  background:var(--gold-light);
-  color:var(--primary-dark);
-}
-.intro-progress .step-label {
-  font-size:13px;
-  color:rgba(255,255,255,0.8);
-}
-.intro-progress .step-item.active .step-label {
-  color:var(--gold);
-  font-weight:700;
-}
-
-.intro-title {
-  font-family:'Noto Serif KR',serif;
-  font-size:54px;
-  font-weight:900;
-  color:var(--gold);
-  margin-bottom:18px;
-  letter-spacing:2px;
-}
-.intro-desc {
-  font-size:20px;
-  line-height:1.7;
-  color:rgba(255,255,255,0.95);
-  max-width:600px;
-  margin:0 auto;
 }
 
 
@@ -1161,19 +925,12 @@ html, body {
 #danch-feedback {
   margin: 4px auto !important;
 }
-.danch-progress {
-  display: none !important;
-}
 #level3-card {
   display: flex;         
   flex-direction: column; 
   justify-content: flex-start !important;
   overflow-y: auto !important;
   height: 100% !important;
-}
-.color-circle {
-  width: 50px !important;
-  height: 50px !important;
 }
 #l3-finish-btn {
   flex-shrink: 0 !important;
@@ -1211,13 +968,6 @@ html, body {
   display: none;
   margin: 6px auto !important;
 }
-
-/* ─── 인트로 오버레이 (세로 모드 대응) ─── */
-.intro-title { font-size: 46px !important; }
-.intro-desc { font-size: 18px !important; }
-.intro-progress { gap: 22px !important; margin-bottom: 26px !important; }
-.intro-progress .step-circle { width: 40px !important; height: 40px !important; font-size: 18px !important; }
-.intro-progress .step-label { font-size: 12px !important; }
 
 /* ─── 최종 점수 로딩 오버레이 (레벨 5 → 두루마리 전환) ─── */
 .score-loading-overlay {
@@ -1507,37 +1257,4 @@ html, body {
   color: var(--primary-dark);
   border-color: var(--gold);
   font-weight: 800;
-}
-/* 헤더 실시간 점수 */
-.header-score {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 14px;
-  background: var(--primary-dark);
-  color: var(--gold);
-  border-radius: 999px;
-  font-family: 'Noto Serif KR', serif;
-  font-weight: 800;
-  font-size: 14px;
-  margin-right: 8px;
-  border: 2px solid var(--gold);
-  justify-content: center;
-}
-.header-score-label {
-  font-size: 13px;
-  letter-spacing: 2px;
-}
-.header-score-value {
-  font-size: 18px;
-  color: white;
-}
-.header-score-value.bump {
-  animation: score-bump 0.4s ease;
-}
-
-@keyframes score-bump {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.4); color: var(--gold); }
-  100% { transform: scale(1); }
 }
