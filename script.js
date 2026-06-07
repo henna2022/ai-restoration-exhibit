@@ -691,11 +691,14 @@ function updateDanchQuestion() {
   const scoreEl = document.getElementById('score-danch');
   if (scoreEl) scoreEl.textContent = `${Math.min(danchStep + 1, 4)} / 4`;
   if (danchStep >= 4) {
-    label.innerHTML = `<span data-ko="모두 맞히셨소!" data-en="All correct!">모두 맞히셨소!</span>`;
+    const ko = '모두 맞히셨소!', en = 'All correct!';
+    label.innerHTML = `<span data-ko="${ko}" data-en="${en}">${LANG==='ko'?ko:en}</span>`;
     return;
   }
   const num = danchStep + 1;
-  label.innerHTML = `<span data-ko="${num}번 꽃잎에 들어갈 색은?" data-en="What color goes in petal ${num}?">${num}번 꽃잎에 들어갈 색은?</span>`;
+  const ko = `${num}번 꽃잎에 들어갈 색은?`;
+  const en = `What color goes in petal ${num}?`;
+  label.innerHTML = `<span data-ko="${ko}" data-en="${en}">${LANG==='ko'?ko:en}</span>`;
 }
 
 // 객관식 답 처리
