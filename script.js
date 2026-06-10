@@ -1552,3 +1552,32 @@ function startGame() {
 // ============================================================
 setLang('ko');
 // 게임은 startGame() 버튼 클릭으로 시작
+
+// ============================================================
+// 이미지 프리로드 — 페이지 로드 직후(오프닝 영상 재생 동안) 모든 레벨
+// 이미지를 받아 디코딩까지 끝내 둔다. 단순히 캐시에 받아두기만 하면
+// .src 교체 시 메인 스레드에서 디코딩이 일어나 순간 멈칫(렉)이 생긴다.
+// img.decode()로 미리 디코딩하고, 참조를 PRELOADED에 보관해 디코딩된
+// 비트맵이 GC되지 않게 한다 → 병풍(레벨5) wallpaper 교체가 즉시 표시된다.
+// ============================================================
+const PRELOADED = [];
+function preloadGameImages() {
+  const imgs = [
+    'seoulraim_logo.png',
+    'taegeuk/taegeuk_1.png', 'taegeuk/taegeuk_2.png', 'taegeuk/taegeuk_3.png', 'taegeuk/taegeuk_finish.png',
+    'band/band_full_1.png', 'band/band_full_2.png', 'band/band_full_3.png',
+    'band/band_cloud.png', 'band/band_lotus.png', 'band/band_vine.png', 'band/band_wave.png', 'band/band_zigzag.png',
+    'minhwa/wallpaper.png', 'minhwa/wallpaper_1.png', 'minhwa/wallpaper_2.png', 'minhwa/wallpaper_3.png',
+    'loading/loading_1.png', 'loading/loading_2.png',
+  ];
+  ['bird', 'deer', 'flower'].forEach(cat => {
+    for (let i = 1; i <= 4; i++) imgs.push(`minhwa/${cat}_${i}.png`);
+  });
+  imgs.forEach(src => {
+    const im = new Image();
+    im.src = src;
+    PRELOADED.push(im);            // 참조 보관 → 디코딩된 비트맵 유지
+    if (im.decode) im.decode().catch(() => {});  // 미리 디코딩(실패해도 무시)
+  });
+}
+preloadGameImages();
