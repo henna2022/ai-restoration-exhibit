@@ -5,7 +5,7 @@
    (style.css / script.js 의 ?v= 를 올리는 것과 같은 습관)
    버전을 올리면 옛 캐시는 자동으로 비워지고 새 파일을 받습니다.
    ============================================================ */
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `nado-restorer-${CACHE_VERSION}`;
 
 /* 앱 껍데기(shell) — URL 이 고정된 핵심 파일만 미리 캐시.
@@ -14,6 +14,7 @@ const CACHE_NAME = `nado-restorer-${CACHE_VERSION}`;
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './admin.html',
   './manifest.json',
   './seoulraim_logo.png',
   './icon-192.png',
@@ -56,15 +57,18 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   // 페이지(HTML) 이동 요청 → 네트워크 우선, 실패 시 캐시(오프라인 대비)
+  // 각 페이지(index.html, admin.html …)를 자기 URL 로 캐시한다.
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then((res) => {
           const copy = res.clone();
-          caches.open(CACHE_NAME).then((c) => c.put('./index.html', copy));
+          caches.open(CACHE_NAME).then((c) => c.put(request, copy));
           return res;
         })
-        .catch(() => caches.match('./index.html').then((r) => r || caches.match('./')))
+        .catch(() => caches.match(request)
+          .then((r) => r || caches.match('./index.html'))
+          .then((r) => r || caches.match('./')))
     );
     return;
   }

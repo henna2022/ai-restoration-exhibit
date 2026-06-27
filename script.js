@@ -1,4 +1,43 @@
 // ============================================================
+// PLAY COUNTER (이 기기 localStorage 집계 — admin.html 에서 조회)
+// ============================================================
+const PlayCounter = (() => {
+  const KEY = 'nrx_stats';
+  const load = () => {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
+    catch (e) { return {}; }
+  };
+  const save = (s) => {
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+  };
+  const todayStr = () => {
+    const d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  };
+  // "수련 시작" 을 누른 횟수 (= 게임 시행 횟수)
+  const recordStart = () => {
+    const s = load();
+    s.plays = (s.plays || 0) + 1;
+    const now = new Date().toISOString();
+    if (!s.firstPlay) s.firstPlay = now;
+    s.lastPlay = now;
+    s.daily = s.daily || {};
+    const t = todayStr();
+    s.daily[t] = (s.daily[t] || 0) + 1;
+    save(s);
+  };
+  // 마지막 결과 화면까지 도달한 횟수 (= 완료 횟수)
+  const recordComplete = () => {
+    const s = load();
+    s.completions = (s.completions || 0) + 1;
+    save(s);
+  };
+  return { recordStart, recordComplete, load };
+})();
+
+// ============================================================
 // LANGUAGE SYSTEM
 // ============================================================
 let LANG = 'ko';
@@ -872,6 +911,7 @@ function finishTaegeuk() {
 }
 
 function showFinalCelebration() {
+  PlayCounter.recordComplete();   // 완료 횟수 +1
   const pct = getScorePercent();
   let rank, message;
 
@@ -1493,6 +1533,7 @@ function setStartLang(lang) {
 }
 
 function startGame() {
+  PlayCounter.recordStart();   // 시행 횟수 +1
   const screen = document.getElementById('game-start-screen');
   const video  = document.getElementById('start-video');
 
