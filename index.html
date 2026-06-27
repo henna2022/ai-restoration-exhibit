@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>나도 복원가 | 서울로봇인공지능과학관</title>
+
+<!-- ===== PWA (웹앱 설치 지원) ===== -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2A1810">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<!-- iOS 홈 화면 추가 지원 -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="나도 복원가">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <!-- Google Analytics -->
@@ -326,5 +338,16 @@
 </main>
 
 <script src="script.js?v=20260610b"></script>
+
+<!-- ===== PWA 서비스 워커 등록 (오프라인 지원) ===== -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function (err) {
+        console.warn('Service worker 등록 실패:', err);
+      });
+    });
+  }
+</script>
 </body>
 </html>

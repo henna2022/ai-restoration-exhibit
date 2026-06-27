@@ -1,0 +1,33 @@
+{
+  "name": "나도 복원가 | 서울로봇인공지능과학관",
+  "short_name": "나도 복원가",
+  "description": "한국 전통 문양을 복원하는 AI 체험. 패턴·대칭·색을 추론하며 참된 복원가로 거듭나는 수련을 시작하시오.",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#2A1810",
+  "theme_color": "#2A1810",
+  "categories": ["education", "games", "entertainment"],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
