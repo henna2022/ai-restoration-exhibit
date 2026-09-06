@@ -912,6 +912,7 @@ function finishTaegeuk() {
 
 function showFinalCelebration() {
   PlayCounter.recordComplete();   // 완료 횟수 +1
+  if (window.RaimCollect) RaimCollect.record('complete');   // 전시물 집계(태블릿 8대 합산)
   const pct = getScorePercent();
   let rank, message;
 
@@ -1534,6 +1535,7 @@ function setStartLang(lang) {
 
 function startGame() {
   PlayCounter.recordStart();   // 시행 횟수 +1
+  if (window.RaimCollect) RaimCollect.record('start');   // 전시물 집계(태블릿 8대 합산)
   const screen = document.getElementById('game-start-screen');
   const video  = document.getElementById('start-video');
 
