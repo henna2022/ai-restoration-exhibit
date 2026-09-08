@@ -5,7 +5,7 @@
    (style.css / script.js 의 ?v= 를 올리는 것과 같은 습관)
    버전을 올리면 옛 캐시는 자동으로 비워지고 새 파일을 받습니다.
    ============================================================ */
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `nado-restorer-${CACHE_VERSION}`;
 
 /* 앱 껍데기(shell) — URL 이 고정된 핵심 파일만 미리 캐시.
@@ -14,6 +14,7 @@ const CACHE_NAME = `nado-restorer-${CACHE_VERSION}`;
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './collect.js',
   './admin.html',
   './manifest.json',
   './seoulraim_logo.png',
