@@ -86,6 +86,7 @@ function clearFeedback(el) {
 
 function setLang(lang) {
   LANG = lang;
+  document.documentElement.lang = lang;   // 한국어 줄바꿈 CSS 가 lang="ko" 일 때만 걸리게
 
   // ── 1. 화면에 떠 있는 피드백을 스냅샷 ──
   // 일부 카드의 재렌더(renderL1Quiz 등)는 피드백을 지우므로, 언어만 바뀌고
