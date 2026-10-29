@@ -85,7 +85,7 @@
   #gate h2{color:var(--gold); font-weight:700; margin:0; letter-spacing:1px;}
   #gate p{color:rgba(255,255,255,.6); font-size:13px; margin:0;}
   #pin-input{
-    font-size:22px; text-align:center; letter-spacing:8px; width:200px;
+    font-size:22px; text-align:center; letter-spacing:4px; width:240px;
     padding:12px; border-radius:10px; border:1.5px solid var(--gold);
     background:rgba(255,255,255,.95); font-family:inherit;
   }
@@ -97,9 +97,9 @@
 <!-- ===== PIN 잠금 ===== -->
 <div id="gate">
   <h2>관리자 확인</h2>
-  <p>PIN 번호를 입력하시오</p>
-  <input id="pin-input" type="password" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="••••">
-  <div id="pin-err">PIN이 일치하지 않습니다.</div>
+  <p>비밀번호를 입력하시오</p>
+  <input id="pin-input" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="관리자 비밀번호">
+  <div id="pin-err">비밀번호가 일치하지 않습니다.</div>
   <button class="btn-main" onclick="unlock()">확인</button>
 </div>
 
@@ -142,8 +142,15 @@
 </main>
 
 <script>
-  // ⚠️ 관리자 PIN — 운영 시 반드시 아래 숫자를 바꾸시오. (소스에 노출되므로 강력한 보안은 아님)
-  const ADMIN_PIN = '2026';
+  // 관리자 비밀번호는 원문 대신 PBKDF2 해시만 둔다. 바꾸려면 아래 명령 결과로 ADMIN_HASH 교체:
+  // node -e "crypto.pbkdf2('새비밀번호','raim-admin',200000,32,'sha256',(e,k)=>console.log(k.toString('hex')))"
+  const ADMIN_HASH = '172a10f69de6c00d689e9cd5ea80d99cb34beefb88b0ffcf463125c320519bf9';
+  async function checkAdminPw(pw) {
+    const enc = new TextEncoder();
+    const key = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode('raim-admin'), iterations: 200000, hash: 'SHA-256' }, key, 256);
+    return [...new Uint8Array(bits)].map(b => b.toString(16).padStart(2, '0')).join('') === ADMIN_HASH;
+  }
   const KEY = 'nrx_stats';
 
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
@@ -153,9 +160,9 @@
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   };
 
-  function unlock() {
-    const v = document.getElementById('pin-input').value.trim();
-    if (v === ADMIN_PIN) {
+  async function unlock() {
+    const v = document.getElementById('pin-input').value;
+    if (v && await checkAdminPw(v)) {
       document.getElementById('gate').remove();
       document.getElementById('hdr').hidden = false;
       document.getElementById('dash').hidden = false;
@@ -194,10 +201,10 @@
       </div>`).join('');
   }
 
-  function resetData() {
-    const pin = prompt('초기화하려면 PIN을 다시 입력하시오:');
+  async function resetData() {
+    const pin = prompt('초기화하려면 비밀번호를 다시 입력하시오:');
     if (pin === null) return;
-    if (pin !== ADMIN_PIN) { alert('PIN이 일치하지 않습니다.'); return; }
+    if (!(await checkAdminPw(pin))) { alert('비밀번호가 일치하지 않습니다.'); return; }
     if (!confirm('이 기기의 모든 플레이 기록을 삭제합니다. 계속하시겠습니까?')) return;
     localStorage.removeItem(KEY);
     render();
